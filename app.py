@@ -7,8 +7,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24) 
 
 #Use pyMysSQL ofr the MySQL connection
-my_secret = os.getenv('db_config')
-app.config['SQLALCHEMY_DATABASE_URI'] =(my_secret)
+app.config['SQLALCHEMY_DATABASE_URI'] =os.getenv('db_config')
 db = SQLAlchemy(app)
 
 class User(db.Model):
