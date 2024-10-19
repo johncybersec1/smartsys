@@ -1,16 +1,9 @@
 from flask import Flask,render_template, request, redirect, url_for, flash, session
-import mysql.connector
+from . import stddb
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
 
 app = Flask(__name__)
 
-#database connection function
-def get_db_connection():
-    db_config = {
-        os.environ['db_config_dict']
-    }
-    return mysql.connector.connect(db_config)
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -44,7 +37,7 @@ def register():
         #hash password for security
         hashed_password = generate_password_hash(password, method='sha256')
         #connect to database
-        connection = get_db_connection()
+        connection = stddb.getdb()
         cursor = connection.cursor()
         #insert user data into students database
         query = """
@@ -65,7 +58,7 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         #connect to database
-        connection = get_db_connection()
+        connection = stddb.getdb()
         cursor = connection.cursor(dictionary = True)
         #Fetch user byt email
         cursor.execute("SELECT * FROM students WHERE email = %s", (email,))
