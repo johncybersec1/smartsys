@@ -41,8 +41,8 @@ def register():
 
         # Connect to database within the application context
         with app.app_context():
-            connection = stddb.connection  # Call your db function
-            cursor = connection.cursor()
+            # Call your db function
+            cursor = stddb.connection.cursor()
 
             # Insert user data into students database
             query = """
@@ -51,16 +51,16 @@ def register():
             """
             try:
                 cursor.execute(query, (first_name, last_name, email, hashed_password, phone, gender, date_of_birth, address, city, country))
-                connection.commit()
+                stddb.connection.commit()
                 flash('Registration successful! Please login.', 'success')
                 return redirect(url_for('login'))
             except Exception as e:
-                connection.rollback()  # Rollback on error
+                stddb.connection.rollback()  # Rollback on error
                 flash('Registration failed. Please try again.', 'danger')
                 print(e)  # Log the error (you might want to implement a proper logging mechanism)
             finally:
                 cursor.close()
-                connection.close()
+                stddb.connection.close()
 
     return render_template("register.html")
 
@@ -72,15 +72,14 @@ def login():
 
         # Connect to database within the application context
         with app.app_context():
-            connection = stddb.connection  # Call your db function
-            cursor = connection.cursor(dictionary=True)
+            cursor = stddb.connection.cursor(dictionary=True)
 
             # Fetch user by email
             cursor.execute("SELECT * FROM students WHERE email = %s", (email,))
             user = cursor.fetchone()
 
             cursor.close()
-            connection.close()
+            stddb.connection.close()
 
         if user and check_password_hash(user['password'], password):
             session["user_id"] = user['id']
