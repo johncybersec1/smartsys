@@ -1,22 +1,16 @@
-from flask import current_app, g
-import mysql.connector
+import pymysql
 import os
 
-
-def getdb():
-    if 'db' not in g or not g.db.is_connected():
-        g.db = mysql.connector.connect(
-            host=os.environ['host'],  # Accessing the environment variable
-            user=os.environ['user'],  # Accessing the environment variable
-            password=os.
-            environ['password'],  # Accessing the environment variable
-            database=os.environ['login'],  # Accessing the environment variable
-            ssl_verify_identity=
-            True,  # This may depend on your database settings
-        )
-    return g.db
-def closedb(e=None):
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
-    
+timeout = 10
+connection = pymysql.connect(
+  charset="utf8mb4",
+  connect_timeout=timeout,
+  cursorclass=pymysql.cursors.DictCursor,
+  db=os.environ['login'],
+  host=os.environ['host'],
+  password=os.environ['password'],
+  read_timeout=timeout,
+  port=24350,
+  user=os.environ['user'],
+  write_timeout=timeout,
+)

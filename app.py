@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, g
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import stddb
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -41,7 +41,7 @@ def register():
 
         # Connect to database within the application context
         with app.app_context():
-            connection = stddb.getdb()  # Call your db function
+            connection = stddb.connection  # Call your db function
             cursor = connection.cursor()
 
             # Insert user data into students database
@@ -72,7 +72,7 @@ def login():
 
         # Connect to database within the application context
         with app.app_context():
-            connection = stddb.getdb()
+            connection = stddb.connection  # Call your db function
             cursor = connection.cursor(dictionary=True)
 
             # Fetch user by email
