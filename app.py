@@ -36,31 +36,34 @@ def register():
         city = request.form.get('city')
         country = request.form.get('country')
 
-        # Hash password for security
+        # Hash the password for security
         hashed_password = generate_password_hash(password, method='sha256')
 
-        # Connect to database within the application context
-        with app.app_context():
-            # Call your db function
-            cursor = stddb.connection.cursor()
+        try:
+            # Connect to the database and insert user data
+            connection = stddb.getdb()  # Call the function to get the connection
+            cursor = connection.cursor()
 
-            # Insert user data into students database
+            # Insert user data into students table
             query = """
             INSERT INTO students (first_name, last_name, email, password, phone, gender, date_of_birth, address, city, country)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-            try:
-                cursor.execute(query, (first_name, last_name, email, hashed_password, phone, gender, date_of_birth, address, city, country))
-                stddb.connection.commit()
-                flash('Registration successful! Please login.', 'success')
-                return redirect(url_for('/login'))
-            except Exception as e:
-                stddb.connection.rollback()  # Rollback on error
-                flash('Registration failed. Please try again.', 'danger')
-                print(e)  # Log the error (you might want to implement a proper logging mechanism)
-            finally:
-                cursor.close()
-                stddb.connection.close()
+            cursor.execute(query, (first_name, last_name, email, hashed_password, phone, gender, date_of_birth, address, city, country))
+            connection.commit()
+
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))  # Redirect to login page after successful registration
+
+        except Exception as e:
+            # Rollback the transaction if there's an error
+            connection.rollback()
+            flash('Registration failed. Please try again.', 'danger')
+            print(f"Error: {e}")  # Log the error for debugging
+
+        finally:
+            cursor.close()
+            connection.close()  # Close the connection
 
     return render_template("register.html")
 
