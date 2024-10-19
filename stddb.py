@@ -2,7 +2,7 @@ import pymysql
 import os
 
 timeout = 10
-my_secret = os.environ['password']
+my_secret = os.environ['db_password']
 connection = pymysql.connect(
   charset="utf8mb4",
   connect_timeout=timeout,
