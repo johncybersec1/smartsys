@@ -37,17 +37,18 @@ def register():
         #hash password for security
         hashed_password = generate_password_hash(password, method='sha256')
         #connect to database
-        connection = stddb.getdb()
-        cursor = connection.cursor()
-        #insert user data into students database
-        query = """
-        INSERT INTO students (first_name, last_name, email, password, phone, gender, date_of_birth, address, city, country)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """
-        cursor.execute(query, (first_name, last_name, email, hashed_password, phone, gender, date_of_birth, address, city, country))
-        connection.commit()
-        cursor.close()
-        connection.close()
+        with app.app_context():
+            connection = stddb.getdb()
+            cursor = connection.cursor()
+            #insert user data into students database
+            query = """
+            INSERT INTO students (first_name, last_name, email, password, phone, gender, date_of_birth, address, city, country)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            cursor.execute(query, (first_name, last_name, email, hashed_password, phone, gender, date_of_birth, address, city, country))
+            connection.commit()
+            cursor.close()
+            connection.close()
         flash('Registration successful! Please login.', 'success')
         return redirect(url_for('login'))
     return render_template("register.html")
@@ -58,13 +59,14 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         #connect to database
-        connection = stddb.getdb()
-        cursor = connection.cursor(dictionary = True)
-        #Fetch user byt email
-        cursor.execute("SELECT * FROM students WHERE email = %s", (email,))
-        user = cursor.fetchone()
-        cursor.close()
-        connection.close()
+        with app.app_context():
+            connection = stddb.getdb()
+            cursor = connection.cursor(dictionary = True)
+            #Fetch user byt email
+            cursor.execute("SELECT * FROM students WHERE email = %s", (email,))
+            user = cursor.fetchone()
+            cursor.close()
+            connection.close()
         if user and check_password_hash(user['password'], password):
             session["user_id"] = user['id']
             session["first_name"] = user['first_name']
@@ -76,6 +78,15 @@ def login():
 @app.route('/stddashboard')
 def stddashboard():
     return render_template("stddashboard.html")
+@app.route("/some_other_route")
+def some_other_function():
+    with app.app_context():
+        conn = stddb.getdb()
+        # Perform your database operations here
+        # Remember to close the connection
+        conn.close()
+    return "Done!"
+
 
 if __name__ == "__main__":
   app.run(host= '0.0.0.0', debug=True)
