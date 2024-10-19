@@ -1,4 +1,5 @@
 import pymysql
+import os
 
 timeout = 10
 connection = pymysql.connect(
@@ -7,7 +8,7 @@ connection = pymysql.connect(
   cursorclass=pymysql.cursors.DictCursor,
   db="defaultdb",
   host="mysql-smartsys-smartsys-db.k.aivencloud.com",
-  password="************************",
+  password=os.environ['DB_PASS'],
   read_timeout=timeout,
   port=24350,
   user="avnadmin",
