@@ -3,4 +3,5 @@ mysql-connector-python
 gunicorn
 pymysql
 flask_sqlalchemy
+python-dotenv
 cryptography

@@ -2,12 +2,18 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+
 app = Flask(__name__)
 
 app.secret_key = os.urandom(24) 
 
+# Load environment variables from a .env file
+load_dotenv('/etc/secrets/<filename>')
+
 #Use pyMysSQL ofr the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] =os.getenv('db_config')
+print(app.config['SQLALCHEMY_DATABASE_URI'])
 db = SQLAlchemy(app)
 
 class User(db.Model):
