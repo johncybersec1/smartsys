@@ -53,7 +53,7 @@ def register():
                 cursor.execute(query, (first_name, last_name, email, hashed_password, phone, gender, date_of_birth, address, city, country))
                 stddb.connection.commit()
                 flash('Registration successful! Please login.', 'success')
-                return redirect(url_for('login'))
+                return redirect(url_for('/login'))
             except Exception as e:
                 stddb.connection.rollback()  # Rollback on error
                 flash('Registration failed. Please try again.', 'danger')
@@ -94,6 +94,12 @@ def login():
 @app.route('/stddashboard')
 def stddashboard():
     return render_template("stddashboard.html")
+    
+def api_response():
+    from flask import jsonify
+    if request.method == 'POST':
+        return jsonify(**request.json)
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
