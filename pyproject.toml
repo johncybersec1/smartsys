@@ -1,0 +1,10 @@
+[project]
+name = "repl-nix-smartsys"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "flask>=3.0.3",
+    "mysql-connector-python>=9.1.0",
+    "werkzeug>=3.0.4",
+]
