@@ -1,13 +1,14 @@
-from flask import Flask,render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g
 import stddb
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import os
 app = Flask(__name__)
+app.secret_key = os.urandom(24) 
 
 @app.route("/")
 def home():
     return render_template("home.html")
-    
+
 @app.route("/about")
 def about():
     return render_template("about.html")
@@ -20,9 +21,10 @@ def services():
 def contacts():
     return render_template("contacts.html")
 
-@app.route("/register", methods = ['GET', 'POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == "POST":
+        # Get form data
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         email = request.form.get('email')
@@ -34,39 +36,52 @@ def register():
         city = request.form.get('city')
         country = request.form.get('country')
 
-        #hash password for security
+        # Hash password for security
         hashed_password = generate_password_hash(password, method='sha256')
-        #connect to database
+
+        # Connect to database within the application context
         with app.app_context():
-            connection = stddb.getdb()
+            connection = stddb.getdb()  # Call your db function
             cursor = connection.cursor()
-            #insert user data into students database
+
+            # Insert user data into students database
             query = """
             INSERT INTO students (first_name, last_name, email, password, phone, gender, date_of_birth, address, city, country)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-            cursor.execute(query, (first_name, last_name, email, hashed_password, phone, gender, date_of_birth, address, city, country))
-            connection.commit()
-            cursor.close()
-            connection.close()
-        flash('Registration successful! Please login.', 'success')
-        return redirect(url_for('login'))
+            try:
+                cursor.execute(query, (first_name, last_name, email, hashed_password, phone, gender, date_of_birth, address, city, country))
+                connection.commit()
+                flash('Registration successful! Please login.', 'success')
+                return redirect(url_for('login'))
+            except Exception as e:
+                connection.rollback()  # Rollback on error
+                flash('Registration failed. Please try again.', 'danger')
+                print(e)  # Log the error (you might want to implement a proper logging mechanism)
+            finally:
+                cursor.close()
+                connection.close()
+
     return render_template("register.html")
-        
-@app.route("/login", methods = ['GET', 'POST'])
+
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        #connect to database
+
+        # Connect to database within the application context
         with app.app_context():
             connection = stddb.getdb()
-            cursor = connection.cursor(dictionary = True)
-            #Fetch user byt email
+            cursor = connection.cursor(dictionary=True)
+
+            # Fetch user by email
             cursor.execute("SELECT * FROM students WHERE email = %s", (email,))
             user = cursor.fetchone()
+
             cursor.close()
             connection.close()
+
         if user and check_password_hash(user['password'], password):
             session["user_id"] = user['id']
             session["first_name"] = user['first_name']
@@ -74,19 +89,12 @@ def login():
             return redirect(url_for('stddashboard'))
         else:
             flash("Login failed. Please check your email and password.", "danger")
+
     return render_template("login.html")
+
 @app.route('/stddashboard')
 def stddashboard():
     return render_template("stddashboard.html")
-@app.route("/some_other_route")
-def some_other_function():
-    with app.app_context():
-        conn = stddb.getdb()
-        # Perform your database operations here
-        # Remember to close the connection
-        conn.close()
-    return "Done!"
-
 
 if __name__ == "__main__":
-  app.run(host= '0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True)
