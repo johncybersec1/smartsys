@@ -12,7 +12,7 @@
 
         /* Make the profile card taller */
         .profile-card {
-            min-height: 400px; /* Minimum height for the profile section */
+            min-height: 250px; /* Minimum height for the profile section */
         }
 
         .card {
@@ -77,6 +77,30 @@
                             <li class="list-group-item">Data Security Management - <strong>25th Oct 2024</strong></li>
                             <li class="list-group-item">Cybersecurity - <strong>30th Oct 2024</strong></li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Message Composition Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5>Compose Message</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('send_message') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="recipient" class="form-label">To:</label>
+                                <input type="text" class="form-control" id="recipient" name="recipient" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-content" class="form-label">Message:</label>
+                                <textarea class="form-control" id="message-content" name="content" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                            <a href="{{ url_for('inbox') }}" class="btn btn-secondary">Go to Inbox</a>
+                        </form>
                     </div>
                 </div>
             </div>

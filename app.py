@@ -4,16 +4,76 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
-
-
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
 
 app.secret_key = os.urandom(24) 
+socketio = SocketIO(app)
 
-#Use pyMysSQL ofr the MySQL connection
+# Use pyMysSQL for the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
+
+class Message(db.Model):  # Corrected to db.Model
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('students.id'))
+    receiver_id = db.Column(db.Integer, db.ForeignKey('students.id'))
+    content = db.Column(db.String(600), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Message from {self.sender_id} to {self.receiver_id}>"
+
+# Real-time message handler
+@socketio.on('send_message')
+def handle_send_message(data):
+    sender_id = data['sender_id']
+    receiver_id = data['receiver_id']
+    content = data['content']
+
+    # Save message to the db
+    message = Message(sender_id=sender_id, receiver_id=receiver_id, content=content)
+    db.session.add(message)
+    db.session.commit()
+
+    # Broadcast the message to both the sender and receiver in real-time
+    emit('receive_message', {
+        'sender_id': sender_id, 
+        'receiver_id': receiver_id,
+        'content': content,
+        'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')  # Corrected to strftime
+    }, room=f"room_{sender_id}_{receiver_id}")
+
+@socketio.on('join_room')
+def join_room(data):
+    room = f"room_{data['sender_id']}_{data['receiver_id']}"
+    join_room(room)
+    emit('room_joined', {'room': room}, room=room)
+
+@app.route('/inbox')
+def inbox():
+    if 'user_id' not in session:
+        flash("You need to login first!", "danger")
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    # Fetch the messages for logged-in users
+    messages = Message.query.filter(
+        (Message.sender_id == user_id) | (Message.receiver_id == user_id)
+    ).order_by(Message.timestamp.desc()).all()
+
+    formatted_messages = []  # Corrected variable name
+    for message in messages:
+        formatted_messages.append({
+            'id': message.id,
+            'sender_id': message.sender_id,
+            'receiver_id': message.receiver_id,
+            'content': message.content,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')  # Add formatted timestamp
+        })
+
+    return render_template('inbox.html', messages=formatted_messages)
 
 class User(db.Model):
     __tablename__ = 'students'  # This matches the table name in your MySQL database
@@ -31,8 +91,10 @@ class User(db.Model):
     country = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())  # Auto timestamp for user creation
     profile_photo = db.Column(db.String(200))
+
     def __repr__(self):
         return f'<User {self.first_name}>'
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -50,7 +112,6 @@ def register():
 
         # Hash the password before storing it in the database
         hashed_password = generate_password_hash(password)
-        
 
         # Create a new user object
         new_user = User(
@@ -64,10 +125,9 @@ def register():
             address=address,
             city=city,
             country=country,
-            profile_photo = profile_photo
-            
+            profile_photo=profile_photo
         )
-        
+
         # Add the new user to the database
         try:
             db.session.add(new_user)
@@ -88,7 +148,7 @@ def login():
         # Retrieve the user from the database based on the email
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
-            #successful login
+            # Successful login
             session['user_id'] = user.id
             session['first_name'] = user.first_name
             session['last_name'] = user.last_name
@@ -100,7 +160,6 @@ def login():
         else:
             flash('Login failed. Please check your credentials.', 'danger')
     return render_template('login.html')
-
 
 @app.route("/")
 def home():
@@ -118,7 +177,7 @@ def services():
 def contacts():
     return render_template("contacts.html")
 
-#COMPUTER SCIENCE semester V academic year 2024/2025
+# COMPUTER SCIENCE semester V academic year 2024/2025
 @app.route('/stddashboard')
 def stddashboard():
     # Load the timetable from the Excel file
@@ -151,22 +210,4 @@ def stddashboard():
     # Replace \n characters with <br> for HTML line breaks
     timetable = timetable.applymap(lambda x: x.replace('\n', '<br>') if isinstance(x, str) else x)
 
-    # Convert the timetable to HTML with Bootstrap classes for styling
-    timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
-
-    # Render the dashboard template, passing the timetable
-    return render_template('stddashboard.html', timetable_html=timetable_html)
-
-
-#logout route
-@app.route('/logout', methods=['POST'])
-def logout():
-    session.pop('user_id', None)
-    flash('You have been logged out.', 'success')
-    return redirect(url_for('login'))
-
-
-
-if __name__ == '__main__':
-    app.debug = True
-    app.run()
+    # Convert the

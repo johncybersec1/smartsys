@@ -102,8 +102,8 @@ body {
     color: #dc3545;
 }
 .mypfp{
-    width: 300px; /* Adjust width */
-    height: 300px; /* Adjust height */
+    width: 150px; /* Adjust width */
+    height: 150px; /* Adjust height */
     object-fit: cover; /* Ensures the image covers the area without distortion */
     border-radius: 25px; /* Make it a circle */
     border: 2px solid #dc3545; /* Optional: Add a border */
