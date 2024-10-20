@@ -25,6 +25,27 @@ class Message(db.Model):  # Corrected to db.Model
     def __repr__(self):
         return f"<Message from {self.sender_id} to {self.receiver_id}>"
 
+@socketio.on('send_message')
+def handle_send_message(data):
+    sender_id = data['sender_id']
+    receiver_id = data['receiver_id']
+    content = data['content']
+
+    # Save the message to the database
+    message = Message(sender_id=sender_id, receiver_id=receiver_id, content=content)
+    db.session.add(message)
+    db.session.commit()
+
+    room = f"room_{sender_id}_{receiver_id}"
+    emit('receive_message', {'sender_id': sender_id, 'content': content, 'timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}, room=room)
+    # Also emit the message to the opposite room (if both users are in the chat)
+    room_reverse = f"room_{receiver_id}_{sender_id}"
+    emit('receive_message', {
+        'sender_id': sender_id,
+        'content': content,
+        'timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+    }, room=room_reverse)
+
 
 @socketio.on('join_room')
 def join_room(data):
@@ -57,6 +78,7 @@ def inbox(receiver_id):
         return redirect(url_for('login'))
 
     user_id = session['user_id']
+    receiver = User.query.filter_by(id=receiver_id).first()
 
     # Fetch messages between the current user and the selected receiver
     messages = Message.query.filter(
@@ -73,15 +95,6 @@ def inbox(receiver_id):
             'content': message.content,
             'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
         })
-
-    if request.method == 'POST':
-        content = request.form['content']
-        if content:
-            new_message = Message(sender_id=user_id, receiver_id=receiver_id, content=content)
-            db.session.add(new_message)
-            db.session.commit()
-            flash('Message sent!', 'success')
-            return redirect(url_for('inbox', receiver_id=receiver_id))
 
     return render_template('inbox.html', messages=formatted_messages, receiver = receiver, receiver_id=receiver_id)
 
@@ -159,6 +172,7 @@ def register():
             flash('Registration successful! You can now log in.', 'success')
             return redirect(url_for('login'))
         except Exception as e:
+            db.session.rollback()
             flash('Registration failed. Please try again.', 'danger')
             return redirect(url_for('register'))
     return render_template('register.html')
