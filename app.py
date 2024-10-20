@@ -105,14 +105,35 @@ def contacts():
     return render_template("contacts.html")
 
 
-@app.route('/stddashboard')
-def stddashboard():
-    if 'user_id' not in session:
-        flash('You must be logged in to access this page.', 'danger')
-        return redirect(url_for('login'))
-    #Fetch logged in users data
-    user = User.query.filter_by(id=session['user_id']).first()
-    return render_template("stddashboard.html")
+    @app.route('/stddashboard')
+    def stddashboard():
+        # Load the timetable from the Excel file
+        df = pd.read_excel('schedule.xlsx')
+        time_slots = df['Computer Science sem']
+        monday_schedule = df['Unnamed: 1']
+        tuesday_schedule = df['Unnamed: 2']
+        wednesday_schedule = df['Unnamed: 3']
+        thursday_schedule = df['Unnamed: 4']
+        friday_schedule = df['Unnamed: 5']
+
+        # Create the timetable DataFrame
+        timetable = pd.DataFrame({
+            'Time': time_slots,
+            'Monday': monday_schedule,
+            'Tuesday': tuesday_schedule,
+            'Wednesday': wednesday_schedule,
+            'Thursday': thursday_schedule,
+            'Friday': friday_schedule
+        })
+
+        # Clean the timetable
+        timetable_cleaned = timetable.dropna(how='all', subset=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'])
+
+        # Convert the timetable to HTML to pass to the template
+        timetable_html = timetable_cleaned.to_html(classes='table table-striped', index=False)
+
+        # Render the dashboard template, passing the timetable
+        return render_template('stddashboard.html', timetable_html=timetable_html)
 
 #logout route
 @app.route('/logout')
