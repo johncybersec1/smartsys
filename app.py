@@ -83,7 +83,7 @@ def inbox(receiver_id):
             flash('Message sent!', 'success')
             return redirect(url_for('inbox', receiver_id=receiver_id))
 
-    return render_template('inbox.html', messages=formatted_messages, receiver_id=receiver_id)
+    return render_template('inbox.html', messages=formatted_messages, receiver = receiver, receiver_id=receiver_id)
 
 @app.route('/contact')
 def contact():

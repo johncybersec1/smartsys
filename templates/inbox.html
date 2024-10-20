@@ -72,8 +72,9 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <h2 class="text-center mb-4">Chat</h2>
-
+                
                 <!-- Chat Messages -->
+                <h2>Chat with {{ receiver.first_name }} {{ receiver.last_name }}</h2>
                 <div class="chat-box" id="chat-box">
                     {% for message in messages %}
                     <div class="chat-message {% if message.sender_id == session['user_id'] %}me{% else %}them{% endif %}">
