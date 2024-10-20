@@ -7,9 +7,6 @@ app = Flask(__name__)
 
 app.secret_key = os.urandom(24) 
 
-# Load environment variables from a .env file
-load_dotenv('/etc/secrets/db_config.env')
-
 #Use pyMysSQL ofr the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
