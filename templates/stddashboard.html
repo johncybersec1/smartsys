@@ -16,9 +16,32 @@
             <p class="lead">Your learning journey starts here!</p>
         </div>
 
-        <!-- General Student Info -->
+        <!-- Profile Section -->
         <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-4 col-sm-12 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5>Profile</h5>
+                    </div>
+                    <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="file" accept="image/*" class="form-control mb-3" required>
+                        <button type="submit" class="btn btn-success">Upload Profile Photo</button>
+                    </form>
+
+                    <div class="card-body text-center">
+                        <img src="{{ url_for('static', filename='images/' + session.get('profile_photo', 'default_profile.png')) }}" alt="Profile Photo" class="img-fluid rounded-circle mb-3" id="profile-photo" width="150" height="150">
+                        <h5>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</h5>
+                        <p><strong>Email:</strong> {{ session.get('email', 'example@example.com') }}</p>
+                        <p><strong>Phone:</strong> {{ session.get('phone', 'N/A') }}</p>
+                        <form action="{{ url_for('logout') }}" method="POST">
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- General Student Info -->
+            <div class="col-md-8 col-sm-12">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5>Upcoming Exams</h5>
@@ -27,39 +50,6 @@
                         <ul class="list-group">
                             <li class="list-group-item">Data Security Management - <strong>25th Oct 2024</strong></li>
                             <li class="list-group-item">Cybersecurity - <strong>30th Oct 2024</strong></li>
-                            <!-- Fetch upcoming exams dynamically from the database -->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        <h5>Assignments Due</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">Group Project Submission - <strong>20th Oct 2024</strong></li>
-                            <li class="list-group-item">IT Security Audit Report - <strong>5th Nov 2024</strong></li>
-                            <!-- Fetch assignments dynamically from the database -->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- School Events -->
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-info text-white">
-                        <h5>Upcoming School Events</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">Annual Hackathon - <strong>15th Nov 2024</strong></li>
-                            <li class="list-group-item">Security Conference - <strong>25th Nov 2024</strong></li>
-                            <!-- Fetch school events dynamically from the database -->
                         </ul>
                     </div>
                 </div>

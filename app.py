@@ -4,15 +4,40 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+UPLOAD_FOLDER = 'static/images/'  # Specify the folder for uploaded images
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.urandom(24) 
 
 #Use pyMysSQL ofr the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+
+    file = request.files['file']
+
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        flash('File uploaded successfully')
+        return redirect(url_for('stddashboard'))
 class User(db.Model):
     __tablename__ = 'students'  # This matches the table name in your MySQL database
 
@@ -148,7 +173,7 @@ def stddashboard():
 
 
 #logout route
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None)
     flash('You have been logged out.', 'success')
