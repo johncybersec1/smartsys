@@ -25,25 +25,6 @@ class Message(db.Model):  # Corrected to db.Model
     def __repr__(self):
         return f"<Message from {self.sender_id} to {self.receiver_id}>"
 
-# Real-time message handler
-@socketio.on('send_message')
-def handle_send_message(data):
-    sender_id = data['sender_id']
-    receiver_id = data['receiver_id']
-    content = data['content']
-
-    # Save message to the db
-    message = Message(sender_id=sender_id, receiver_id=receiver_id, content=content)
-    db.session.add(message)
-    db.session.commit()
-
-    # Broadcast the message to both the sender and receiver in real-time
-    emit('receive_message', {
-        'sender_id': sender_id, 
-        'receiver_id': receiver_id,
-        'content': content,
-        'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')  # Corrected to strftime
-    }, room=f"room_{sender_id}_{receiver_id}")
 
 @socketio.on('join_room')
 def join_room(data):
@@ -51,29 +32,72 @@ def join_room(data):
     join_room(room)
     emit('room_joined', {'room': room}, room=room)
 
-@app.route('/inbox')
-def inbox():
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    if 'user_id' not in session:
+        flash("You need to login first!", "danger")
+        return redirect(url_for('login'))
+
+    sender_id = session['user_id']
+    receiver_id = request.form['receiver_id']  # Get the receiver_id from the form
+    content = request.form['content']  # Get the message content from the form
+
+    # Create the message object and save to the database
+    message = Message(sender_id=sender_id, receiver_id=receiver_id, content=content)
+    db.session.add(message)
+    db.session.commit()
+
+    flash('Message sent!', 'success')
+    return redirect(url_for('inbox'))
+
+    @app.route('/inbox/<int:receiver_id>', methods=['GET', 'POST'])
+    def inbox(receiver_id):
+        if 'user_id' not in session:
+            flash("You need to login first!", "danger")
+            return redirect(url_for('login'))
+
+        user_id = session['user_id']
+
+        # Fetch messages between the current user and the selected receiver
+        messages = Message.query.filter(
+            ((Message.sender_id == user_id) & (Message.receiver_id == receiver_id)) |
+            ((Message.sender_id == receiver_id) & (Message.receiver_id == user_id))
+        ).order_by(Message.timestamp.asc()).all()
+
+        formatted_messages = []
+        for message in messages:
+            formatted_messages.append({
+                'id': message.id,
+                'sender_id': message.sender_id,
+                'receiver_id': message.receiver_id,
+                'content': message.content,
+                'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        if request.method == 'POST':
+            content = request.form['content']
+            if content:
+                new_message = Message(sender_id=user_id, receiver_id=receiver_id, content=content)
+                db.session.add(new_message)
+                db.session.commit()
+                flash('Message sent!', 'success')
+                return redirect(url_for('inbox', receiver_id=receiver_id))
+
+        return render_template('inbox.html', messages=formatted_messages, receiver_id=receiver_id)
+
+@app.route('/contact')
+def contact():
     if 'user_id' not in session:
         flash("You need to login first!", "danger")
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    # Fetch the messages for logged-in users
-    messages = Message.query.filter(
-        (Message.sender_id == user_id) | (Message.receiver_id == user_id)
-    ).order_by(Message.timestamp.desc()).all()
+    # Fetch all users except the current one
+    users = User.query.filter(User.id != user_id).all()
 
-    formatted_messages = []  # Corrected variable name
-    for message in messages:
-        formatted_messages.append({
-            'id': message.id,
-            'sender_id': message.sender_id,
-            'receiver_id': message.receiver_id,
-            'content': message.content,
-            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')  # Add formatted timestamp
-        })
+    return render_template('contact.html', users=users)
 
-    return render_template('inbox.html', messages=formatted_messages)
+
 
 class User(db.Model):
     __tablename__ = 'students'  # This matches the table name in your MySQL database
