@@ -15,6 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
 
 class Message(db.Model):  # Corrected to db.Model
+    __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('students.id'))
     receiver_id = db.Column(db.Integer, db.ForeignKey('students.id'))
