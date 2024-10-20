@@ -125,10 +125,10 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-group">
-                            <li class="list-group-item"><a href="{{ url_for('view_grades') }}" class="text-decoration-none">View Grades</a></li>
-                            <li class="list-group-item"><a href="{{ url_for('check_attendance') }}" class="text-decoration-none">Check Attendance</a></li>
-                            <li class="list-group-item"><a href="{{ url_for('resources') }}" class="text-decoration-none">Access Resources</a></li>
-                            <li class="list-group-item"><a href="{{ url_for('support') }}" class="text-decoration-none">Contact Support</a></li>
+                            <li class="list-group-item"><a href="" class="text-decoration-none">View Grades</a></li>
+                            <li class="list-group-item"><a href="" class="text-decoration-none">Check Attendance</a></li>
+                            <li class="list-group-item"><a href="" class="text-decoration-none">Access Resources</a></li>
+                            <li class="list-group-item"><a href="" class="text-decoration-none">Contact Support</a></li>
                         </ul>
                     </div>
                 </div>
@@ -155,6 +155,7 @@
     <script>
         function loadTimetable() {
             document.getElementById('timetable-section').style.display = 'block';
+            document.querySelector('.mt-5').style.display = 'none'; // Hide the button when clicked
         }
     </script>
 </body>
