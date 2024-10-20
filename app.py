@@ -50,40 +50,40 @@ def send_message():
     flash('Message sent!', 'success')
     return redirect(url_for('inbox'))
 
-    @app.route('/inbox/<int:receiver_id>', methods=['GET', 'POST'])
-    def inbox(receiver_id):
-        if 'user_id' not in session:
-            flash("You need to login first!", "danger")
-            return redirect(url_for('login'))
+@app.route('/inbox/<int:receiver_id>', methods=['GET', 'POST'])
+def inbox(receiver_id):
+    if 'user_id' not in session:
+        flash("You need to login first!", "danger")
+        return redirect(url_for('login'))
 
-        user_id = session['user_id']
+    user_id = session['user_id']
 
-        # Fetch messages between the current user and the selected receiver
-        messages = Message.query.filter(
-            ((Message.sender_id == user_id) & (Message.receiver_id == receiver_id)) |
-            ((Message.sender_id == receiver_id) & (Message.receiver_id == user_id))
-        ).order_by(Message.timestamp.asc()).all()
+    # Fetch messages between the current user and the selected receiver
+    messages = Message.query.filter(
+        ((Message.sender_id == user_id) & (Message.receiver_id == receiver_id)) |
+        ((Message.sender_id == receiver_id) & (Message.receiver_id == user_id))
+    ).order_by(Message.timestamp.asc()).all()
 
-        formatted_messages = []
-        for message in messages:
-            formatted_messages.append({
-                'id': message.id,
-                'sender_id': message.sender_id,
-                'receiver_id': message.receiver_id,
-                'content': message.content,
-                'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-            })
+    formatted_messages = []
+    for message in messages:
+        formatted_messages.append({
+            'id': message.id,
+            'sender_id': message.sender_id,
+            'receiver_id': message.receiver_id,
+            'content': message.content,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        })
 
-        if request.method == 'POST':
-            content = request.form['content']
-            if content:
-                new_message = Message(sender_id=user_id, receiver_id=receiver_id, content=content)
-                db.session.add(new_message)
-                db.session.commit()
-                flash('Message sent!', 'success')
-                return redirect(url_for('inbox', receiver_id=receiver_id))
+    if request.method == 'POST':
+        content = request.form['content']
+        if content:
+            new_message = Message(sender_id=user_id, receiver_id=receiver_id, content=content)
+            db.session.add(new_message)
+            db.session.commit()
+            flash('Message sent!', 'success')
+            return redirect(url_for('inbox', receiver_id=receiver_id))
 
-        return render_template('inbox.html', messages=formatted_messages, receiver_id=receiver_id)
+    return render_template('inbox.html', messages=formatted_messages, receiver_id=receiver_id)
 
 @app.route('/contact')
 def contact():
