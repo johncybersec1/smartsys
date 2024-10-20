@@ -1,0 +1,13 @@
+<!-- inbox_list.html -->
+{% extends "inbox.html" %}
+
+{% block content %}
+<h2>Your Chats</h2>
+<ul>
+    {% for user in users %}
+        <li>
+            <a href="{{ url_for('inbox', receiver_id=user.id) }}">{{ user.first_name }} {{ user.last_name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

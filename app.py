@@ -98,6 +98,26 @@ def inbox(receiver_id):
 
     return render_template('inbox.html', messages=formatted_messages, receiver = receiver, receiver_id=receiver_id)
 
+@app.route('/inbox', methods=['GET'])
+def inbox_list():
+    if 'user_id' not in session:
+        flash("You need to login first!", "danger")
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+
+    # Fetch all unique users the current user has chatted with
+    unique_receivers = db.session.query(Message.receiver_id).filter(Message.sender_id == user_id).distinct()
+    unique_senders = db.session.query(Message.sender_id).filter(Message.receiver_id == user_id).distinct()
+
+    all_user_ids = unique_receivers.union(unique_senders).all()
+
+    # Fetch User objects for the unique IDs
+    unique_users = User.query.filter(User.id.in_([uid[0] for uid in all_user_ids])).all()
+
+    return render_template('inbox_list.html', users=unique_users)
+
+
 @app.route('/contact')
 def contact():
     if 'user_id' not in session:
@@ -285,7 +305,7 @@ def reply_message(message_id):
     else:
         flash('Message not found.', 'danger')
 
-    return redirect(url_for('stddashboard'))
+    return redirect(url_for('inbox', receiver_id=message.sender_id'))
 #logout route
 @app.route('/logout', methods=['POST'])
 def logout():
