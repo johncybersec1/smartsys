@@ -210,4 +210,22 @@ def stddashboard():
     # Replace \n characters with <br> for HTML line breaks
     timetable = timetable.applymap(lambda x: x.replace('\n', '<br>') if isinstance(x, str) else x)
 
-    # Convert the
+    # Convert the timetable to HTML with Bootstrap classes for styling
+    timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
+
+    # Render the dashboard template, passing the timetable
+    return render_template('stddashboard.html', timetable_html=timetable_html)
+
+
+#logout route
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
+
+
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
