@@ -263,7 +263,7 @@ def stddashboard():
     timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
 
     # Render the dashboard template, passing the timetable
-    return render_template('stddashboard.html', user = user, timetable_html=timetable_html, received_messages=received_messages)
+    return render_template('stddashboard.html', user = user, timetable_html=timetable_html, received_messages=received_messages, users=users)
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])
 def reply_message(message_id):
