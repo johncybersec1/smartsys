@@ -4,52 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard | SmartSchool</title>
-    <!-- Bootstrap CSS for styling the table -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS for better table appearance -->
-    <style>
-        .table {
-            margin-top: 20px;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        .table th, .table td {
-            padding: 12px;
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid #dee2e6;
-        }
-
-        .table thead th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Student Dashboard</h2>
+        <h2 class="text-center mb-4">Welcome, {{ session['first_name'] }}</h2>
 
-        <!-- Class Timetable Section -->
-        <div class="mb-5">
-            <h3 class="text-center mb-4">Class Timetable</h3>
-            <div class="table-responsive">
-                <!-- Timetable will be dynamically injected here from the Python backend -->
-                {{ timetable_html|safe }}
+        <!-- General Student Info -->
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Upcoming Exams</h4>
+                <ul>
+                    <li>Data Security Management - 25th Oct 2024</li>
+                    <li>Cybersecurity - 30th Oct 2024</li>
+                    <!-- Fetch upcoming exams dynamically from the database -->
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h4>Assignments Due</h4>
+                <ul>
+                    <li>Group Project Submission - 20th Oct 2024</li>
+                    <li>IT Security Audit Report - 5th Nov 2024</li>
+                    <!-- Fetch assignments dynamically from the database -->
+                </ul>
             </div>
         </div>
 
-        <!-- Additional dashboard content (assignments, announcements, etc.) -->
-        <div class="mt-4">
-            <h4>Recent Announcements</h4>
-            <p>No new announcements at this time.</p>
+        <!-- School Events -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h4>Upcoming School Events</h4>
+                <ul>
+                    <li>Annual Hackathon - 15th Nov 2024</li>
+                    <li>Security Conference - 25th Nov 2024</li>
+                    <!-- Fetch school events dynamically from the database -->
+                </ul>
+            </div>
         </div>
 
+        <!-- View Timetable Button -->
+        <div class="text-center mt-5">
+            <button class="btn btn-primary" onclick="loadTimetable()">View Timetable</button>
+        </div>
+
+        <!-- Timetable (initially hidden, will be shown on button click) -->
+        <div id="timetable-section" class="mt-4" style="display:none;">
+            <h4 class="text-center">Timetable</h4>
+            <div id="timetable-content">
+                {{ timetable_html | safe }}  <!-- This will hold the dynamically loaded timetable -->
+            </div>
+        </div>
     </div>
 
-    <!-- Bootstrap JS for table responsiveness -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript to dynamically show timetable -->
+    <script>
+        function loadTimetable() {
+            document.getElementById('timetable-section').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
-

@@ -133,7 +133,7 @@ def stddashboard():
     })
 
     # Replace NaN values with 'No class'
-    timetable.fillna('No class', inplace=True)
+    timetable.fillna(' - ', inplace=True)
 
     # Replace \n characters with <br> for HTML line breaks
     timetable = timetable.applymap(lambda x: x.replace('\n', '<br>') if isinstance(x, str) else x)
