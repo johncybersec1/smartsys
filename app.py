@@ -20,24 +20,6 @@ db = SQLAlchemy(app)
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-
-    file = request.files['file']
-
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-        flash('File uploaded successfully')
-        return redirect(url_for('stddashboard'))
 class User(db.Model):
     __tablename__ = 'students'  # This matches the table name in your MySQL database
 
@@ -53,6 +35,7 @@ class User(db.Model):
     city = db.Column(db.String(50), nullable=False)
     country = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())  # Auto timestamp for user creation
+    profile_photo = db.Column(db.String(200))
     def __repr__(self):
         return f'<User {self.first_name}>'
 @app.route('/register', methods=['GET', 'POST'])
@@ -71,6 +54,19 @@ def register():
 
         # Hash the password before storing it in the database
         hashed_password = generate_password_hash(password)
+        # Handle file upload
+        if 'profile_photo' not in request.files:
+            flash('No file part', 'danger')
+            return redirect(url_for('register'))
+        file = request.files['profile_photo']
+
+        if file.filename == '':
+            flash('No selected file', 'danger')
+            return redirect(url_for('register'))
+
+        # Save the file
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         # Create a new user object
         new_user = User(
@@ -85,6 +81,7 @@ def register():
             city=city,
             country=country
         )
+        
         # Add the new user to the database
         try:
             db.session.add(new_user)
