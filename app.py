@@ -223,7 +223,7 @@ def stddashboard():
         return redirect(url_for('login'))
 
     # Retrieve the current user from the database
-    users = User.query.filter(User.id != user_id).all()
+    user = User.query.get(user_id)
 
     # Fetch all messages received by the user
     received_messages = Message.query.filter_by(receiver_id=user_id).order_by(Message.timestamp.desc()).all()
