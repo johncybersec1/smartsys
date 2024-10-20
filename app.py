@@ -227,6 +227,8 @@ def stddashboard():
 
     # Fetch all messages received by the user
     received_messages = Message.query.filter_by(receiver_id=user_id).order_by(Message.timestamp.desc()).all()
+
+    users = User.query.filter(User.id != user_id).all()
     # Load the timetable from the Excel file
     df = pd.read_excel('schedule.xlsx')
 
