@@ -218,6 +218,12 @@ def contacts():
 # COMPUTER SCIENCE semester V academic year 2024/2025
 @app.route('/stddashboard')
 def stddashboard():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))  # Redirect to login if not logged in
+
+    # Retrieve the current user from the database
+    user = User.query.get(user_id)
     # Load the timetable from the Excel file
     df = pd.read_excel('schedule.xlsx')
 
@@ -252,7 +258,7 @@ def stddashboard():
     timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
 
     # Render the dashboard template, passing the timetable
-    return render_template('stddashboard.html', timetable_html=timetable_html)
+    return render_template('stddashboard.html', user = user, timetable_html=timetable_html)
 
 
 #logout route
