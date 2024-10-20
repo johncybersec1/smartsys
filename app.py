@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+import pandas as pd
 
 app = Flask(__name__)
 
