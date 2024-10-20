@@ -110,7 +110,7 @@ def contacts():
 def stddashboard():
     # Load the timetable from the Excel file
     df = pd.read_excel('schedule.xlsx')
-    time_slots = df['Computer Science sem']
+    time_slots = df['COMPUTER SCIENCE semester V academic year 2024/2025']
     monday_schedule = df['Unnamed: 1']
     tuesday_schedule = df['Unnamed: 2']
     wednesday_schedule = df['Unnamed: 3']
