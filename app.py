@@ -51,6 +51,7 @@ def register():
         address = request.form['address']
         city = request.form['city']
         country = request.form['country']
+        profile_photo = request.files['profile_photo']
 
         # Hash the password before storing it in the database
         hashed_password = generate_password_hash(password)
@@ -80,6 +81,8 @@ def register():
             address=address,
             city=city,
             country=country
+            profile_photo = profile_photo
+            
         )
         
         # Add the new user to the database
