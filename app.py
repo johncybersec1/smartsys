@@ -80,7 +80,7 @@ def register():
             date_of_birth=date_of_birth,
             address=address,
             city=city,
-            country=country
+            country=country,
             profile_photo = profile_photo
             
         )
