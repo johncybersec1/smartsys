@@ -4,23 +4,17 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
-from werkzeug.utils import secure_filename
+
 
 
 app = Flask(__name__)
-UPLOAD_FOLDER = 'static/images/'  # Specify the folder for uploaded images
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'uploads')
 app.secret_key = os.urandom(24) 
 
 #Use pyMysSQL ofr the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 class User(db.Model):
     __tablename__ = 'students'  # This matches the table name in your MySQL database
 
@@ -52,19 +46,11 @@ def register():
         address = request.form['address']
         city = request.form['city']
         country = request.form['country']
-        profile_photo = request.files['profile_photo']
+        profile_photo = request.form['profile_photo']
 
         # Hash the password before storing it in the database
         hashed_password = generate_password_hash(password)
-        # Check for file upload
-        if profile_photo and allowed_file(profile_photo.filename):
-            # Save the file
-            filename = secure_filename(profile_photo.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            profile_photo.save(file_path)  # Save the file to the specified folder
-        else:
-            flash('No selected file or invalid file type', 'danger')
-            return redirect(url_for('register'))
+        
 
         # Create a new user object
         new_user = User(
@@ -78,7 +64,7 @@ def register():
             address=address,
             city=city,
             country=country,
-            profile_photo = filename
+            profile_photo = profile_photo
             
         )
         
@@ -108,6 +94,7 @@ def login():
             session['last_name'] = user.last_name
             session['email'] = user.email
             session['phone'] = user.phone
+            session['profile_photo'] = user.profile_photo
             flash('Login successful!', 'success')
             return redirect(url_for('stddashboard'))
         else:
