@@ -305,7 +305,7 @@ def reply_message(message_id):
     else:
         flash('Message not found.', 'danger')
 
-    return redirect(url_for('inbox', receiver_id=message.sender_id'))
+    return redirect(url_for('inbox', receiver_id=message.sender_id))
 #logout route
 @app.route('/logout', methods=['POST'])
 def logout():
