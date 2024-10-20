@@ -110,12 +110,17 @@ def contacts():
 def stddashboard():
     # Load the timetable from the Excel file
     df = pd.read_excel('schedule.xlsx')
-    time_slots = df['COMPUTER SCIENCE semester V academic year 2024/2025']
-    monday_schedule = df['Unnamed: 1']
-    tuesday_schedule = df['Unnamed: 2']
-    wednesday_schedule = df['Unnamed: 3']
-    thursday_schedule = df['Unnamed: 4']
-    friday_schedule = df['Unnamed: 5']
+
+    # Filter out rows with 'DAY' and 'GROUP' in the 'Computer Science sem' column
+    df_filtered = df[~df['COMPUTER SCIENCE semester V academic year 2024/2025'].isin(['DAY', 'GROUP'])]
+
+    # Extract the required columns
+    time_slots = df_filtered['COMPUTER SCIENCE semester V academic year 2024/2025']
+    monday_schedule = df_filtered['Unnamed: 1']
+    tuesday_schedule = df_filtered['Unnamed: 2']
+    wednesday_schedule = df_filtered['Unnamed: 3']
+    thursday_schedule = df_filtered['Unnamed: 4']
+    friday_schedule = df_filtered['Unnamed: 5']
 
     # Create the timetable DataFrame
     timetable = pd.DataFrame({
@@ -130,11 +135,12 @@ def stddashboard():
     # Clean the timetable
     timetable_cleaned = timetable.dropna(how='all', subset=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'])
 
-    # Convert the timetable to HTML to pass to the template
-    timetable_html = timetable_cleaned.to_html(classes='table table-striped', index=False)
+    # Convert the timetable to HTML with Bootstrap classes for styling
+    timetable_html = timetable_cleaned.to_html(classes='table table-bordered table-striped text-center', index=False)
 
     # Render the dashboard template, passing the timetable
     return render_template('stddashboard.html', timetable_html=timetable_html)
+
 
 #logout route
 @app.route('/logout')
