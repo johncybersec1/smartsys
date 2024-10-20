@@ -4,4 +4,6 @@ gunicorn
 pymysql
 flask_sqlalchemy
 python-dotenv
+pandas 
+openpyxl
 cryptography
