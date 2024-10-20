@@ -112,7 +112,7 @@ def stddashboard():
     df = pd.read_excel('schedule.xlsx')
 
     # Filter out rows with 'DAY' and 'GROUP' in the 'Computer Science sem' column
-    df_filtered = df[~df['COMPUTER SCIENCE semester V academic year 2024/2025'].isin(['DAY', 'GROUP'])]
+    df_filtered = df[~df['COMPUTER SCIENCE semester V academic year 2024/2025'].isin(['DAY', 'GROUP', 'Exams: Data security management', 'HOUR'])]
 
     # Extract the required columns
     time_slots = df_filtered['COMPUTER SCIENCE semester V academic year 2024/2025']
