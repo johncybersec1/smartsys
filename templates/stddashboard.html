@@ -53,7 +53,8 @@
 
                     <div class="card-body text-center">
                         <!-- Display Profile Photo -->
-                        <img class = 'mypfp' src="{{ url_for('static', filename='upload/' + session.get('profile_photo', 'profile1.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo">
+                        <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo">
+
 
                         <h5>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</h5>
                         <p><strong>Email:</strong> {{ session.get('email', 'example@example.com') }}</p>
