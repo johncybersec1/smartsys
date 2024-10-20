@@ -6,4 +6,5 @@ flask_sqlalchemy
 python-dotenv
 pandas 
 openpyxl
+flask_socketio
 cryptography
