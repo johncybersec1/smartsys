@@ -105,7 +105,7 @@ def services():
 def contacts():
     return render_template("contacts.html")
 
-
+#COMPUTER SCIENCE semester V academic year 2024/2025
 @app.route('/stddashboard')
 def stddashboard():
     # Load the timetable from the Excel file
@@ -132,14 +132,18 @@ def stddashboard():
         'Friday': friday_schedule
     })
 
-    # Clean the timetable
-    timetable_cleaned = timetable.dropna(how='all', subset=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'])
+    # Replace NaN values with 'No class'
+    timetable.fillna('No class', inplace=True)
+
+    # Replace \n characters with <br> for HTML line breaks
+    timetable = timetable.applymap(lambda x: x.replace('\n', '<br>') if isinstance(x, str) else x)
 
     # Convert the timetable to HTML with Bootstrap classes for styling
-    timetable_html = timetable_cleaned.to_html(classes='table table-bordered table-striped text-center', index=False)
+    timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
 
     # Render the dashboard template, passing the timetable
     return render_template('stddashboard.html', timetable_html=timetable_html)
+
 
 
 #logout route
