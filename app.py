@@ -69,7 +69,7 @@ def send_message():
     db.session.commit()
 
     flash('Message sent!', 'success')
-    return redirect(url_for('inbox'))
+    return redirect(url_for('inbox', receiver_id=receiver_id))
 
 @app.route('/inbox/<int:receiver_id>', methods=['GET', 'POST'])
 def inbox(receiver_id):
