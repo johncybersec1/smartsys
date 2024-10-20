@@ -112,7 +112,6 @@ def stddashboard():
         return redirect(url_for('login'))
     #Fetch logged in users data
     user = User.query.filter_by(id=session['user_id']).first()
-    return f"Welcome, {user.first_name}! This is your dashboard."
     return render_template("stddashboard.html")
 
 #logout route
