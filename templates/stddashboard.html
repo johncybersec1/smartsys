@@ -20,7 +20,7 @@
 
         /* Make the profile card taller */
         .profile-card {
-            min-height: 600px; /* Minimum height for the profile section */
+            min-height: 400px; /* Minimum height for the profile section */
         }
 
         .card {
@@ -61,7 +61,7 @@
 
                     <div class="card-body text-center">
                         <!-- Display Profile Photo -->
-                        <img src="{{ url_for('static', filename='upload/' + session.get('profile_photo', 'default_profile.png')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo">
+                        <img src="{{ url_for('static', filename='upload/' + session.get('profile1.jpg', 'profile2.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo">
                         <h5>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</h5>
                         <p><strong>Email:</strong> {{ session.get('email', 'example@example.com') }}</p>
                         <p><strong>Phone:</strong> {{ session.get('phone', 'N/A') }}</p>
