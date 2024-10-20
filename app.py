@@ -108,6 +108,9 @@ def login():
             #successful login
             session['user_id'] = user.id
             session['first_name'] = user.first_name
+            session['last_name'] = user.last_name
+            session['email'] = user.email
+            session['phone'] = user.phone
             flash('Login successful!', 'success')
             return redirect(url_for('stddashboard'))
         else:

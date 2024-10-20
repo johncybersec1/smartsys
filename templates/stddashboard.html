@@ -23,10 +23,6 @@
                     <div class="card-header bg-secondary text-white">
                         <h5>Profile</h5>
                     </div>
-                    <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="file" accept="image/*" class="form-control mb-3" required>
-                        <button type="submit" class="btn btn-success">Upload Profile Photo</button>
-                    </form>
 
                     <div class="card-body text-center">
                         <img src="{{ url_for('static', filename='images/' + session.get('profile_photo', 'default_profile.png')) }}" alt="Profile Photo" class="img-fluid rounded-circle mb-3" id="profile-photo" width="150" height="150">
@@ -56,6 +52,23 @@
             </div>
         </div>
 
+        <!-- Profile Photo Upload Section -->
+        <div class="row mb-4">
+            <div class="col-md-4 col-sm-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5>Upload Profile Photo</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="file" accept="image/*" class="form-control mb-3" required>
+                            <button type="submit" class="btn btn-success">Upload Photo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- View Timetable Button -->
         <div class="text-center mt-5">
             <button class="btn btn-primary btn-lg" onclick="loadTimetable()">View Timetable</button>
@@ -66,6 +79,37 @@
             <h4 class="text-center">Your Timetable</h4>
             <div id="timetable-content">
                 {{ timetable_html | safe }}  <!-- This will hold the dynamically loaded timetable -->
+            </div>
+        </div>
+
+        <!-- Additional Information Section -->
+        <div class="row mt-5">
+            <div class="col-md-6 col-sm-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5>Important Announcements</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">Mid-semester exams will start on <strong>1st November 2024</strong>.</li>
+                            <li class="list-group-item">Mandatory meeting for all students on <strong>5th November 2024</strong> in Hall A.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-white">
+                        <h5>Recent Activities</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">Participated in the coding competition on <strong>15th October 2024</strong>.</li>
+                            <li class="list-group-item">Attended guest lecture on <strong>20th October 2024</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
