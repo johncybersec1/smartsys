@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ class User(db.Model):
     address = db.Column(db.String(200), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     country = db.Column(db.String(50), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Auto timestamp for user creation
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())  # Auto timestamp for user creation
     def __repr__(self):
         return f'<User {self.first_name}>'
 @app.route('/register', methods=['GET', 'POST'])
