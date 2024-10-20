@@ -17,16 +17,25 @@
             border-radius: 50%; /* Make it a circle */
             border: 2px solid #dc3545; /* Optional: Add a border */
         }
+
+        /* Make the profile card taller */
+        .profile-card {
+            min-height: 300px; /* Minimum height for the profile section */
+        }
+
         .card {
             margin-bottom: 20px; /* Add space between cards */
         }
+
         .card-header {
             font-weight: bold;
         }
+
         .list-group-item {
             display: flex;
             justify-content: space-between;
         }
+
         .announcement {
             background-color: #e9ecef;
             border-left: 4px solid #dc3545;
@@ -45,7 +54,7 @@
         <!-- Profile Section -->
         <div class="row mb-4">
             <div class="col-md-4 col-sm-12 mb-3">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm profile-card"> <!-- Added a custom class for height -->
                     <div class="card-header bg-secondary text-white">
                         <h5>Profile</h5>
                     </div>
@@ -155,8 +164,6 @@
     <script>
         function loadTimetable() {
             document.getElementById('timetable-section').style.display = 'block';
-            document.querySelector('.mt-5').style.display = 'none'; // Hide the button when clicked
-        }
     </script>
 </body>
 </html>
