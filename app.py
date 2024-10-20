@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
 from flask_socketio import SocketIO, emit, join_room, leave_room
-
 app = Flask(__name__)
 
 app.secret_key = os.urandom(24) 
@@ -216,14 +215,17 @@ def contacts():
     return render_template("contacts.html")
 
 # COMPUTER SCIENCE semester V academic year 2024/2025
-@app.route('/stddashboard')
+@app.route('/stddashboard', methods=['GET', 'POST'])
 def stddashboard():
     user_id = session.get('user_id')
     if not user_id:
-        return redirect(url_for('login'))  # Redirect to login if not logged in
+        return redirect(url_for('login'))
 
     # Retrieve the current user from the database
-    user = User.query.get(user_id)
+    users = User.query.filter(User.id != user_id).all()
+
+    # Fetch all messages received by the user
+    received_messages = Message.query.filter_by(receiver_id=user_id).order_by(Message.timestamp.desc()).all()
     # Load the timetable from the Excel file
     df = pd.read_excel('schedule.xlsx')
 
@@ -258,9 +260,29 @@ def stddashboard():
     timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
 
     # Render the dashboard template, passing the timetable
-    return render_template('stddashboard.html', user = user, timetable_html=timetable_html)
+    return render_template('stddashboard.html', user = user, timetable_html=timetable_html, received_messages=received_messages)
 
+@app.route('/reply_message/<int:message_id>', methods=['POST'])
+def reply_message(message_id):
+    if 'user_id' not in session:
+        flash("You need to login first!", "danger")
+        return redirect(url_for('login'))
 
+    sender_id = session['user_id']
+    message = Message.query.get(message_id)
+
+    if message:
+        # Create a reply message
+        reply_content = request.form['reply_content']
+        reply_message = Message(sender_id=sender_id, receiver_id=message.sender_id, content=reply_content)
+
+        db.session.add(reply_message)
+        db.session.commit()
+        flash('Reply sent!', 'success')
+    else:
+        flash('Message not found.', 'danger')
+
+    return redirect(url_for('stddashboard'))
 #logout route
 @app.route('/logout', methods=['POST'])
 def logout():

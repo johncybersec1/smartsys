@@ -81,34 +81,53 @@
                 </div>
             </div>
         </div>
-        <!-- Message Composition Section -->
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-info text-white">
-                        <h5>Compose Message</h5>
+        <!-- Section for sending messages -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Send a Message</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('send_message') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="recipient" class="form-label">To:</label>
+                        <select class="form-select" id="recipient" name="receiver_id" required>
+                            <option value="" disabled selected>Select Recipient</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="card-body">
-                        <form action="{{ url_for('send_message') }}" method="POST">
-                            <div class="mb-3">
-                                <label for="recipient" class="form-label">To:</label>
-                                <input type="text" class="form-control" id="recipient" name="recipient" placeholder="Enter recipient's ID" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="message-content" class="form-label">Message:</label>
-                                <textarea class="form-control" id="message-content" name="content" rows="3" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Send</button>
+                    <div class="mb-3">
+                        <label for="message-content" class="form-label">Message:</label>
+                        <textarea class="form-control" id="message-content" name="content" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </div>
 
-                            <!-- Ensure user is defined and using correct receiver_id for chat link -->
-                            {% if user %}
-                                <a href="{{ url_for('inbox', receiver_id=user.id) }}" class="btn btn-primary">Chat</a>
-                            {% else %}
-                                <p>User not defined, cannot generate chat link.</p>
-                            {% endif %}
+        <!-- Section for viewing received messages -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Received Messages</h5>
+            </div>
+            <div class="card-body">
+                {% for message in received_messages %}
+                    <div class="message">
+                        <strong>From: {{ message.sender_id }}</strong>  <!-- Adjust to show sender name if available -->
+                        <p>{{ message.content }}</p>
+                        <small>{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                        <form action="{{ url_for('reply_message', message_id=message.id) }}" method="POST">
+                            <div class="mb-3">
+                                <textarea class="form-control" name="reply_content" rows="1" required placeholder="Reply..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">Reply</button>
                         </form>
                     </div>
-                </div>
+                    <hr>
+                {% else %}
+                    <p>No messages received.</p>
+                {% endfor %}
             </div>
         </div>
 
