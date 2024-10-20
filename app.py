@@ -82,6 +82,7 @@ def login():
         if user and check_password_hash(user.password, password):
             #successful login
             session['user_id'] = user.id
+            session['first_name'] = user.first_name
             flash('Login successful!', 'success')
             return redirect(url_for('stddashboard'))
         else:
