@@ -6,11 +6,12 @@ import datetime
 import pandas as pd
 from werkzeug.utils import secure_filename
 
+
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static/images/'  # Specify the folder for uploaded images
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'uploads')
 app.secret_key = os.urandom(24) 
 
 #Use pyMysSQL ofr the MySQL connection
@@ -55,19 +56,15 @@ def register():
 
         # Hash the password before storing it in the database
         hashed_password = generate_password_hash(password)
-        # Handle file upload
-        if 'profile_photo' not in request.files:
-            flash('No file part', 'danger')
+        # Check for file upload
+        if profile_photo and allowed_file(profile_photo.filename):
+            # Save the file
+            filename = secure_filename(profile_photo.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            profile_photo.save(file_path)  # Save the file to the specified folder
+        else:
+            flash('No selected file or invalid file type', 'danger')
             return redirect(url_for('register'))
-        file = request.files['profile_photo']
-
-        if file.filename == '':
-            flash('No selected file', 'danger')
-            return redirect(url_for('register'))
-
-        # Save the file
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         # Create a new user object
         new_user = User(
@@ -81,7 +78,7 @@ def register():
             address=address,
             city=city,
             country=country,
-            profile_photo = profile_photo
+            profile_photo = filename
             
         )
         
@@ -174,13 +171,14 @@ def stddashboard():
     return render_template('stddashboard.html', timetable_html=timetable_html)
 
 
-
 #logout route
 @app.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None)
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
+
+
 
 if __name__ == '__main__':
     app.debug = True
