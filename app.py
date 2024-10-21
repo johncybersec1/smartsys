@@ -21,6 +21,8 @@ class Message(db.Model):  # Corrected to db.Model
     receiver_id = db.Column(db.Integer, db.ForeignKey('students.id'))
     content = db.Column(db.String(600), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
 
     def __repr__(self):
         return f"<Message from {self.sender_id} to {self.receiver_id}>"
@@ -50,7 +52,7 @@ def handle_send_message(data):
 @socketio.on('join_room')
 def join_room(data):
     sender_id = data['sender_id']
-    room = f"room_{data[sender_id]}_{data['receiver_id']}"
+    room = f"room_{sender_id}_{data['receiver_id']}"
     join_room(room)
     emit('room_joined', {'room': room}, room=room)
 
