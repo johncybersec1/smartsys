@@ -252,6 +252,17 @@ def stddashboard():
     received_messages = Message.query.filter_by(receiver_id=user_id).order_by(Message.timestamp.desc()).all()
 
     users = User.query.filter(User.id != user_id).all()
+
+    return render_template('stddashboard.html', user=user, received_messages=received_messages, users=users)
+
+# New route for the timetable
+@app.route('/timetable')
+def timetable():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("You need to login first!", "danger")
+        return redirect(url_for('login'))
+
     # Load the timetable from the Excel file
     df = pd.read_excel('schedule.xlsx')
 
@@ -285,8 +296,8 @@ def stddashboard():
     # Convert the timetable to HTML with Bootstrap classes for styling
     timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
 
-    # Render the dashboard template, passing the timetable
-    return render_template('stddashboard.html', user = user, timetable_html=timetable_html, received_messages=received_messages, users=users)
+    # Render the timetable template
+    return render_template('timetable.html', timetable_html=timetable_html)
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])
 def reply_message(message_id):
@@ -320,4 +331,4 @@ def logout():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run()
+    socketio.run(app)

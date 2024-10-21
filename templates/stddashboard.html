@@ -206,13 +206,17 @@
     <!-- JavaScript to dynamically show timetable -->
     <script>
         function loadTimetable() {
-    fetch('/timetable')  // Assuming /timetable is the endpoint
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('timetable-section').style.display = 'block';
-            document.getElementById('timetable-content').innerHTML = data;
-        });
-}
+            fetch('/timetable')  // Assuming /timetable is the endpoint
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('timetable-section').style.display = 'block';
+                    document.getElementById('timetable-content').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching timetable:', error);
+                });
+        }
     </script>
+</div>
 </body>
 </html>
