@@ -5,10 +5,28 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
+/* Navbar Styles */
+.navbar {
+    background-color: #dc3545; /* Red background for the navbar */
+}
+
+.navbar-brand {
+    color: #fff !important; /* White brand color */
+    font-weight: bold;
+    font-size: 1.8rem; /* Larger font size for brand */
+}
+
+.navbar-nav .nav-link {
+    color: #fff !important; /* White color for nav links */
+    font-weight: bold; /* Bold font for links */
+}
+
 /* Card Styles */
 .card {
     border-radius: 15px; /* Rounded corners for cards */
     transition: all 0.3s ease; /* Smooth transition for hover effects */
+    border: none; /* Remove border */
+    margin-bottom: 12px;
 }
 
 .card:hover {
@@ -43,10 +61,45 @@ body {
     bottom: 0;
     width: 100%;
     text-align: center; /* Center footer text */
+    margin-top: 10px;
 }
 
 /* Button Styles */
 .btn {
     border-radius: 50px; /* Rounded buttons */
     padding: 10px 20px; /* Button padding */
+    margin-bottom: 12px;
+}
+
+.btn-primary {
+    background-color: #007bff; /* Primary button color */
+    border: none; /* Remove border */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Danger button color */
+}
+
+.btn-danger:hover {
+    background-color: #b21f2d; /* Darker red on hover */
+}
+
+/* Profile Picture Styles */
+.mypfp {
+    width: 150px; /* Adjust width */
+    height: 150px; /* Adjust height */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-radius: 25px; /* Make it a circle */
+    border: 2px solid #dc3545; /* Optional: Add a border */
+    max-width: 100%; /* Responsive image */
+}
+
+/* Message Container */
+.message-container {
+    max-height: 300px; /* Max height for the container */
+    overflow-y: auto; /* Scroll if overflow */
 }
