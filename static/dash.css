@@ -1,29 +1,52 @@
-/* dash.css */
+/* General Styles */
 body {
-    background-color: #f8f9fa; /* Light background for a clean look */
+    background-color: #f0f4f8; /* Soft background color for contrast */
+    color: #495057; /* Darker text color for better readability */
+    font-family: 'Arial', sans-serif;
 }
 
+/* Card Styles */
 .card {
-    border-radius: 10px; /* Rounded corners for cards */
+    border-radius: 15px; /* Rounded corners for cards */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
 }
 
-.card-header {
-    border-bottom: 2px solid #007bff; /* A distinct bottom border */
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
 }
 
-.list-group-item {
-    border: none; /* Remove borders for a cleaner list */
-    transition: background-color 0.3s;
+/* Profile Card */
+.profile-card {
+    background: linear-gradient(135deg, #6a82fb, #fc5c7d); /* Attractive gradient */
+    color: white;
 }
 
-.list-group-item:hover {
-    background-color: #f0f0f0; /* Highlight on hover */
+.profile-card img {
+    border-radius: 50%; /* Circular profile picture */
+    border: 3px solid white; /* Border for profile picture */
 }
 
-.btn-success {
-    transition: background-color 0.3s;
+/* Announcement Styles */
+.announcement {
+    background-color: #ffeeba; /* Light yellow for announcements */
+    border-left: 5px solid #ffc107; /* Left border */
+    padding: 15px; /* Padding for spacing */
+    margin-bottom: 10px; /* Space between announcements */
 }
 
-.btn-success:hover {
-    background-color: #28a745; /* Darker shade on hover */
+/* Footer Styles */
+.footer {
+    background-color: #343a40; /* Dark footer background */
+    color: white;
+    padding: 15px 0; /* Padding for footer */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    text-align: center; /* Center footer text */
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 50px; /* Rounded buttons */
+    padding: 10px 20px; /* Button padding */
 }

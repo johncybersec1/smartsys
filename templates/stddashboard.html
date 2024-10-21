@@ -4,34 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard | SmartSchool</title>
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
     <style>
-        /* Make the profile card taller */
-        .profile-card {
-            min-height: 250px; /* Minimum height for the profile section */
+        /* Override Bootstrap styles for a custom look */
+        body {
+            background-color: #f4f7fa; /* Light background for better contrast */
+            font-family: 'Arial', sans-serif;
         }
-
+        h2 {
+            color: #343a40; /* Darker text color for headings */
+        }
         .card {
-            margin-bottom: 20px; /* Add space between cards */
+            border-radius: 15px; /* Rounded corners for cards */
+            transition: transform 0.2s; /* Smooth hover effect */
         }
-
-        .card-header {
-            font-weight: bold;
+        .card:hover {
+            transform: scale(1.02); /* Scale up on hover */
         }
-
-        .list-group-item {
-            display: flex;
-            justify-content: space-between;
+        .profile-card {
+            background: linear-gradient(45deg, #6f42c1, #e83e8c); /* Gradient background */
+            color: white; /* White text for contrast */
         }
-
+        .profile-card img {
+            border-radius: 50%; /* Circular profile picture */
+            border: 3px solid white; /* Border around the profile picture */
+        }
         .announcement {
-            background-color: #e9ecef;
-            border-left: 4px solid #dc3545;
-            padding: 10px;
-            margin-bottom: 10px;
+            background-color: #ffeeba; /* Light yellow for announcements */
+            border-left: 5px solid #ffc107; /* Yellow left border */
+            padding: 15px; /* Padding for better spacing */
+            margin-bottom: 15px; /* Space between announcements */
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0; /* Padding for footer */
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
@@ -45,15 +60,13 @@
         <!-- Profile Section -->
         <div class="row mb-4">
             <div class="col-md-4 col-sm-12 mb-3">
-                <div class="card shadow-sm profile-card"> <!-- Added a custom class for height -->
-                    <div class="card-header bg-secondary text-white">
+                <div class="card shadow profile-card"> <!-- Added a custom class for height -->
+                    <div class="card-header">
                         <h5>Profile</h5>
                     </div>
 
                     <div class="card-body text-center">
-                        <!-- Display Profile Photo -->
-                        <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo">
-
+                        <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo" width="100">
                         <h5>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</h5>
                         <p><strong>Email:</strong> {{ session.get('email', 'example@example.com') }}</p>
                         <p><strong>Phone:</strong> {{ session.get('phone', 'N/A') }}</p>
@@ -66,7 +79,7 @@
 
             <!-- Upcoming Exams -->
             <div class="col-md-8 col-sm-12">
-                <div class="card shadow-sm">
+                <div class="card shadow">
                     <div class="card-header bg-primary text-white">
                         <h5>Upcoming Exams</h5>
                     </div>
@@ -119,7 +132,7 @@
         <!-- Recent Activities Section -->
         <div class="row mb-4">
             <div class="col-md-12">
-                <div class="card shadow-sm">
+                <div class="card shadow">
                     <div class="card-header bg-success text-white">
                         <h5>Recent Activities</h5>
                     </div>
@@ -137,7 +150,7 @@
         <!-- Important Announcements -->
         <div class="row mb-4">
             <div class="col-md-12">
-                <div class="card shadow-sm">
+                <div class="card shadow">
                     <div class="card-header bg-warning text-white">
                         <h5>Important Announcements</h5>
                     </div>
@@ -156,7 +169,7 @@
         <!-- Quick Links Section -->
         <div class="row mb-4">
             <div class="col-md-12">
-                <div class="card shadow-sm">
+                <div class="card shadow">
                     <div class="card-header bg-info text-white">
                         <h5>Quick Links</h5>
                     </div>
@@ -184,6 +197,14 @@
                 {{ timetable_html | safe }}  <!-- This will hold the dynamically loaded timetable -->
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 SmartSchool. All rights reserved.</p>
+            <p>
+                <a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a>
+            </p>
+        </footer>
     </div>
 
     <!-- Bootstrap JS -->
