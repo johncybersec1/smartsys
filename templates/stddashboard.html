@@ -114,7 +114,8 @@
             <div class="card-body">
                 {% for message in received_messages %}
                     <div class="message">
-                        <strong>From: {{ message.sender_id }}</strong>  <!-- Adjust to show sender name if available -->
+                        <strong>From: {{ message.sender.first_name }} {{ message.sender.last_name }}</strong>
+  <!-- Adjust to show sender name if available -->
                         <p>{{ message.content }}</p>
                         <small>{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
                         <form action="{{ url_for('reply_message', message_id=message.id) }}" method="POST">
@@ -205,8 +206,13 @@
     <!-- JavaScript to dynamically show timetable -->
     <script>
         function loadTimetable() {
+    fetch('/timetable')  // Assuming /timetable is the endpoint
+        .then(response => response.text())
+        .then(data => {
             document.getElementById('timetable-section').style.display = 'block';
-        }
+            document.getElementById('timetable-content').innerHTML = data;
+        });
+}
     </script>
 </body>
 </html>

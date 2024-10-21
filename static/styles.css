@@ -107,5 +107,18 @@ body {
     object-fit: cover; /* Ensures the image covers the area without distortion */
     border-radius: 25px; /* Make it a circle */
     border: 2px solid #dc3545; /* Optional: Add a border */
-    max-width = 100%;
+    max-width: 100%;
+}
+
+.message-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+button.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+button.btn-primary:hover {
+    background-color: #0056b3;
 }

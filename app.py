@@ -49,7 +49,8 @@ def handle_send_message(data):
 
 @socketio.on('join_room')
 def join_room(data):
-    room = f"room_{data['sender_id']}_{data['receiver_id']}"
+    sender_id = data['sender_id']
+    room = f"room_{data[sender_id]}_{data['receiver_id']}"
     join_room(room)
     emit('room_joined', {'room': room}, room=room)
 
@@ -96,7 +97,9 @@ def inbox(receiver_id):
             'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
         })
 
-    return render_template('inbox.html', messages=formatted_messages, receiver = receiver, receiver_id=receiver_id)
+    users = User.query.filter(User.id != user_id).all()  # Get list of other users for the conversation list
+
+    return render_template('inbox_list.html', messages=formatted_messages, receiver = receiver, users=users, receiver_id=receiver_id)
 
 @app.route('/inbox', methods=['GET'])
 def inbox_list():
