@@ -4,7 +4,9 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
-from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_socketio import SocketIO, emit, join_room
+import math
+
 app = Flask(__name__)
 
 app.secret_key = os.urandom(24) 
@@ -257,7 +259,7 @@ def stddashboard():
 
     return render_template('stddashboard.html', user=user, received_messages=received_messages, users=users)
 
-# New route for the timetable
+# New route for the timetable with pagination
 @app.route('/timetable')
 def timetable():
     user_id = session.get('user_id')
@@ -295,11 +297,21 @@ def timetable():
     # Replace \n characters with <br> for HTML line breaks
     timetable = timetable.applymap(lambda x: x.replace('\n', '<br>') if isinstance(x, str) else x)
 
-    # Convert the timetable to HTML with Bootstrap classes for styling
-    timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
+    # Pagination
+    per_page = 10  # Number of rows per page
+    page = request.args.get('page', 1, type=int)  # Get the page number from the query string
+    total_rows = len(timetable)
+    total_pages = math.ceil(total_rows / per_page)
 
-    # Render the timetable template
-    return render_template('timetable.html', timetable_html=timetable_html)
+    # Slice the timetable for the current page
+    start_row = (page - 1) * per_page
+    end_row = start_row + per_page
+    timetable_page = timetable.iloc[start_row:end_row]
+
+    # Convert the sliced timetable to HTML
+    timetable_html = timetable_page.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
+
+    return render_template('timetable.html', timetable_html=timetable_html, page=page, total_pages=total_pages)
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])
 def reply_message(message_id):
