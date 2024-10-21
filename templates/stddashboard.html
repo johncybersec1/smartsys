@@ -107,28 +107,14 @@
         </div>
 
         <!-- Section for viewing received messages -->
+        <!-- Section for viewing received messages -->
         <div class="card mt-4">
             <div class="card-header">
-                <h5>Received Messages</h5>
+                <h5>Messages</h5>
             </div>
-            <div class="card-body">
-                {% for message in received_messages %}
-                    <div class="message">
-                        <strong>From: {{ message.sender.first_name }} {{ message.sender.last_name }}</strong>
-  <!-- Adjust to show sender name if available -->
-                        <p>{{ message.content }}</p>
-                        <small>{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                        <form action="{{ url_for('reply_message', message_id=message.id) }}" method="POST">
-                            <div class="mb-3">
-                                <textarea class="form-control" name="reply_content" rows="1" required placeholder="Reply..."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-secondary">Reply</button>
-                        </form>
-                    </div>
-                    <hr>
-                {% else %}
-                    <p>No messages received.</p>
-                {% endfor %}
+            <div class="card-body text-center">
+                <p>View Inbox.</p>
+                <a href="{{ url_for('inbox') }}" class="btn btn-primary">View Inbox</a>
             </div>
         </div>
 
