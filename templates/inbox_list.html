@@ -3,89 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages | SmartSchool</title>
+    <title>Inbox - SmartSchool</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .message-list {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .chat-container {
-            display: flex;
-            height: 100%;
-        }
-
-        .chat-list {
-            width: 30%;
-            border-right: 1px solid #ddd;
-        }
-
-        .chat-box {
-            width: 70%;
-            padding-left: 20px;
-        }
-
-        .chat-header {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .chat-message {
-            border-bottom: 1px solid #eee;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        .send-message-form {
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="chat-container">
-            <!-- Left Panel: List of Conversations -->
-            <div class="chat-list">
-                <h5>Your Conversations</h5>
-                <ul class="list-group message-list">
-                    {% for user in users %}
-                        <li class="list-group-item">
-                            <a href="{{ url_for('inbox', receiver_id=user.id) }}">{{ user.first_name }} {{ user.last_name }}</a>
-                        </li>
-                    {% endfor %}
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">SmartSchool</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contacts') }}">Contacts</a></li>
                 </ul>
             </div>
+        </div>
+    </nav>
 
-            <!-- Right Panel: Chat Box -->
-            <div class="chat-box">
-                {% if receiver %}
-                    <div class="chat-header">Chat with {{ receiver.first_name }} {{ receiver.last_name }}</div>
-
-                    <div class="chat-messages">
-                        {% for message in messages %}
-                            <div class="chat-message {{ 'text-end' if message.sender_id == session['user_id'] else '' }}">
-                                <strong>{{ 'You' if message.sender_id == session['user_id'] else receiver.first_name }}:</strong>
-                                <p>{{ message.content }}</p>
-                                <small class="text-muted">{{ message.timestamp }}</small>
-                            </div>
+    <section class="inbox-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Inbox</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="text-muted">Conversations</h5>
+                    <ul class="list-group">
+                        {% for user in users %}
+                            <li class="list-group-item">
+                                <a href="{{ url_for('inbox', receiver_id=user.id) }}" class="text-decoration-none">
+                                    {{ user.first_name }} {{ user.last_name }}
+                                </a>
+                            </li>
                         {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-8">
+                    <h5 class="text-muted">Messages with {{ receiver.first_name if receiver else 'Select a user' }}</h5>
+                    <div class="message-container border rounded p-3 mb-3">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="mb-3">
+                                    <strong>{% if message.sender_id == session['user_id'] %}You{% else %}{{ receiver.first_name }}{% endif %}</strong>:
+                                    <p class="d-inline">{{ message.content }}</p>
+                                    <small class="text-muted float-end">{{ message.timestamp }}</small>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No messages found. Select a conversation to start chatting!</p>
+                        {% endif %}
                     </div>
-
-                    <!-- Reply Form -->
-                    <form class="send-message-form" action="{{ url_for('send_message') }}" method="POST">
-                        <input type="hidden" name="receiver_id" value="{{ receiver.id }}">
-                        <div class="mb-3">
-                            <textarea class="form-control" name="content" rows="3" required placeholder="Type your message..."></textarea>
+                    <form action="{{ url_for('send_message') }}" method="POST">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="content" placeholder="Type your message here..." required>
+                            <input type="hidden" name="receiver_id" value="{{ receiver_id }}">
+                            <button class="btn btn-primary" type="submit">Send</button>
                         </div>
-                        <button type="submit" class="btn btn-primary">Send</button>
                     </form>
-                {% else %}
-                    <p>Select a conversation to view your chat history.</p>
-                {% endif %}
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 SmartSchool. All rights reserved.</p>
+            <p>
+                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

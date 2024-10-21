@@ -96,7 +96,7 @@ def inbox(receiver_id):
             'sender_id': message.sender_id,
             'receiver_id': message.receiver_id,
             'content': message.content,
-            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M')
         })
 
     users = User.query.filter(User.id != user_id).all()  # Get list of other users for the conversation list
