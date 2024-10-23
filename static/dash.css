@@ -8,10 +8,10 @@ body {
 /* Custom Styles */
 .container {
     display: flex;
-    margin-left: 1000px; /* Adjust based on sidebar width */
     flex-wrap: wrap; /* Allows content to wrap on smaller screens */
     padding: 20px; /* Added padding for inner spacing */
 }
+
 
 
 /* Main content */
@@ -91,15 +91,6 @@ body {
     background-color: #b21f2d; /* Darker red on hover */
 }
 
-/* Profile Picture Styles */
-.mypfp {
-    width: 150px; /* Adjust width */
-    height: 150px; /* Adjust height */
-    object-fit: cover; /* Ensures the image covers the area without distortion */
-    border-radius: 25px; /* Make it a circle */
-    border: 2px solid #dc3545; /* Optional: Add a border */
-    max-width: 100%; /* Responsive image */
-}
 
 /* Message Container */
 .message-container {

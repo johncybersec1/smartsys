@@ -20,11 +20,14 @@
         }
         .card {
             width: 100%; /* Ensure cards take full width */
-            max-width: 100%; /* Prevent overflow */
             margin-bottom: 20px; /* Space between cards */
             border-radius: 15px; /* Rounded corners for cards */
             transition: transform 0.2s; /* Smooth hover effect */
-            margin-left: 150px;
+        }
+        .card-container{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         .card-body {
             overflow: hidden; /* Prevent overflow */
@@ -32,7 +35,7 @@
             white-space: nowrap; /* Prevent text from wrapping */
         }
         .card-today{
-            margin-left: 20px;
+            margin-left: 1.25rem;
         }
         .card:hover {
             transform: scale(1.02); /* Scale up on hover */
@@ -40,8 +43,6 @@
         .profile-card {
             background: linear-gradient(45deg, #6f42c1, #e83e8c); /* Gradient background */
             color: white; /* White text for contrast */
-            width: 450px;
-            margin-right: 10px;
         }
         .profile-card img {
             border-radius: 50%; /* Circular profile picture */
@@ -159,8 +160,7 @@
         }
         /* Custom Styles */
         .container {
-            display: flex;
-            margin-left: 250px; /* Adjust based on sidebar width */
+            display: flex; /* Adjust based on sidebar width */
             flex-wrap: wrap; /* Allows content to wrap on smaller screens */
             padding: 20px; /* Added padding for inner spacing */
             justify-content: center;
@@ -182,18 +182,43 @@
             font-weight: bold; /* Bold font for links */
         }
         .lead{
-            margin-left: 200px;
+            margin-left: 12.5rem;
             font-weight: bold;
         }
         .mybtn{
-            margin-left: 650px;
+            margin-left: 37.5rem;
         }
         .mytt{
             display: flex;
             color: #fff !important; /* White brand color */
             font-weight: bold;
             font-size: 1.8rem; /* Larger font size for brand */
-            margin-left: 700px;
+            margin-left: 43.75rem;
+        }
+        @media (max-width: 576px) {
+            .profile-card,
+            .card {
+                width: 100%;
+            }
+
+            .cardtoday {
+                flex-direction: column;
+                margin-left: 0;
+            }
+
+            .card-today {
+                margin-left: 0;
+            }
+
+            .mytt {
+                margin-left: 0;
+                text-align: center;
+            }
+
+            .lead {
+                margin-left: 0;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -230,7 +255,7 @@
 
         <div class="row mb-4">
             <!-- Profile Section -->
-            <div class="col-md-4 col-sm-12 mb-3">
+            <div class="col-12 col-md-4 col-sm-12 mb-3">
                 <div class="card shadow profile-card">
                     <div class="card-header">
                         <h5>Profile</h5>
@@ -349,25 +374,26 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Quick Links Section -->
-        <div class="col-md-4 col-sm-12 mb-3">
-            <div class="col-md-12">
-                <div class="card shadow">
-                    <div class="card-header bg-info text-white">
-                        <h5>Quick Links</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item"><a href="" class="text-decoration-none">View Grades</a></li>
-                            <li class="list-group-item"><a href="" class="text-decoration-none">Check Attendance</a></li>
-                            <li class="list-group-item"><a href="" class="text-decoration-none">Access Resources</a></li>
-                            <li class="list-group-item"><a href="" class="text-decoration-none">Contact Support</a></li>
-                        </ul>
+                <!-- New Row for Quick Links Section -->
+            <div class="row">
+                <div class="col-md-4 col-sm-12 mb-3">
+                    <div class="col-md-12">
+                        <div class="card shadow">
+                            <div class="card-header bg-info text-white">
+                                <h5>Quick Links</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item"><a href="" class="text-decoration-none">View Grades</a></li>
+                                    <li class="list-group-item"><a href="" class="text-decoration-none">Check Attendance</a></li>
+                                    <li class="list-group-item"><a href="" class="text-decoration-none">Access Resources</a></li>
+                                    <li class="list-group-item"><a href="" class="text-decoration-none">Contact Support</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 
