@@ -31,6 +31,9 @@
             text-overflow: ellipsis; /* Add ellipsis for long text */
             white-space: nowrap; /* Prevent text from wrapping */
         }
+        .card-today{
+            margin-left: 20px;
+        }
         .card:hover {
             transform: scale(1.02); /* Scale up on hover */
         }
@@ -166,7 +169,6 @@
         .navbar {
             background-color: #dc3545; /* Red background for the navbar */
             width: 100%; /* Full width navbar */
-            margin-left: 250px;
         }
 
         .navbar-brand {
@@ -179,22 +181,19 @@
             color: #fff !important; /* White color for nav links */
             font-weight: bold; /* Bold font for links */
         }
-        .navbar-btn{
-            margin-left: 100px;
-        }
         .lead{
             margin-left: 200px;
             font-weight: bold;
         }
         .mybtn{
-            margin-left: 500px;
+            margin-left: 650px;
         }
         .mytt{
             display: flex;
             color: #fff !important; /* White brand color */
             font-weight: bold;
             font-size: 1.8rem; /* Larger font size for brand */
-            margin-left: 400px;
+            margin-left: 700px;
         }
     </style>
 </head>
@@ -203,8 +202,8 @@
     <div class="sidebar" id="sidebar">
         <a class="navbar-brand" href="{{ url_for('stddashboard') }}">SmartSchool</a>
         <hr>
-        <a href="#">Timetable</a>
-        <a href="#">Inbox</a>
+        <a href="{{ url_for('timetable') }}">Timetable</a>
+        <a href="{{ url_for('inbox_list') }}">Inbox</a>
         <a href="#">Live Classes</a>
         <a href="#">Recorded Classes</a>
         <a href="#">Library</a>
@@ -322,7 +321,7 @@
         <!-- Today’s Classes Section -->
         <div class="col-md-8">
             <h5>Classes Today</h5>
-            <div class="row">
+            <div class="cardtoday row">
                 <div class="col-md-4 mb-4"> <!-- Adjusted mb-3 to mb-4 for more space -->
                     <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
                         <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
@@ -352,45 +351,9 @@
                 </div>
             </div>
         </div>
-        <!-- Section for sending messages -->
-        <div class="card">
-            <div class="card-header">
-                <h5>Send a Message</h5>
-            </div>
-            <div class="card-body">
-                <form action="{{ url_for('send_message') }}" method="POST">
-                    <div class="mb-3">
-                        <label for="recipient" class="form-label">To:</label>
-                        <select class="form-select" id="recipient" name="receiver_id" required>
-                            <option value="" disabled selected>Select Recipient</option>
-                            {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="message-content" class="form-label">Message:</label>
-                        <textarea class="form-control" id="message-content" name="content" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Section for viewing received messages -->
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5>Messages</h5>
-            </div>
-            <div class="card-body text-center">
-                <p>View Inbox.</p>
-                <a href="{{ url_for('inbox_list') }}" class="btn btn-primary">View Inbox</a>
-            </div>
-        </div>
-
 
         <!-- Quick Links Section -->
-        <div class="row mb-4">
+        <div class="col-md-4 col-sm-12 mb-3">
             <div class="col-md-12">
                 <div class="card shadow">
                     <div class="card-header bg-info text-white">
@@ -406,11 +369,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- View Timetable Button -->
-        <div class="text-center mt-5">
-            <a href="{{ url_for('timetable') }}" class="btn btn-primary">View Timetable</a> <!-- Updated to link to the timetable page -->
         </div>
 
         <!-- Footer -->
