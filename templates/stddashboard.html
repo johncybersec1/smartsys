@@ -19,8 +19,16 @@
             color: #343a40; /* Darker text color for headings */
         }
         .card {
+            width: 100%; /* Ensure cards take full width */
+            max-width: 100%; /* Prevent overflow */
+            margin-bottom: 20px; /* Space between cards */
             border-radius: 15px; /* Rounded corners for cards */
             transition: transform 0.2s; /* Smooth hover effect */
+        }
+        .card-body {
+            overflow: hidden; /* Prevent overflow */
+            text-overflow: ellipsis; /* Add ellipsis for long text */
+            white-space: nowrap; /* Prevent text from wrapping */
         }
         .card:hover {
             transform: scale(1.02); /* Scale up on hover */
@@ -131,38 +139,38 @@
         .sidebar.hidden {
             transform: translateX(-100%); /* Move sidebar out of view */
         }
-        /* Media query for smaller screens */
-        @media (min-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%); /* Hide sidebar off-screen */
-                transition: transform 0.3s ease;
-            }
-            .sidebar.show {
-                transform: translateX(0); /* Show sidebar */
-            }
-        }
         @media (max-width: 768px) {
             .container {
                 margin-left: 0; /* Remove margin on small screens */
+            }
+
+            .sidebar {
+                position: absolute; /* Change to absolute for better toggling */
+                transform: translateX(-100%); /* Hide off-screen */
+            }
+
+            .sidebar.show {
+                transform: translateX(0); /* Show sidebar */
             }
         }
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('stddashboard') }}">SmartSchool</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <!-- Add a button to toggle the sidebar -->
-            <button class="btn btn-outline-light ms-auto" id="sidebarToggle">☰</button>
+            <button class="btn btn-outline-light ms-2" id="sidebarToggle" type="button">
+                ☰
+            </button>
         </div>
     </nav>
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <a href="#">Timetable</a>
         <a href="#">Inbox</a>
         <a href="#">Live Classes</a>
@@ -218,7 +226,7 @@
             <div class="col-md-8 col-sm-12 mb-3">
                 <div class="row">
                     <!-- Upcoming Exams Section -->
-                    <div class="col-12 mb-3 ms-7">
+                    <div class="col-12 mb-3 ms-6">
                         <div class="card shadow">
                             <div class="card-header bg-primary text-white">
                                 <h5>Upcoming Exams</h5>
@@ -233,7 +241,7 @@
                     </div>
         
                     <!-- Recent Activities Section -->
-                    <div class="col-12 mb-3 ms-7">
+                    <div class="col-12 mb-3 ms-6">
                         <div class="card shadow">
                             <div class="card-header bg-success text-white">
                                 <h5>Recent Activities</h5>
@@ -249,7 +257,7 @@
                     </div>
         
                     <!-- Important Announcements Section -->
-                    <div class="col-12 mb-3 ms-7">
+                    <div class="col-12 mb-3 ms-6">
                         <div class="card shadow">
                             <div class="card-header bg-warning text-white">
                                 <h5>Important Announcements</h5>
@@ -426,9 +434,10 @@
         window.onload = generateCalendar;
     </script>
     <script>
+        // Toggle sidebar visibility
         document.getElementById('sidebarToggle').addEventListener('click', function() {
             var sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden'); // Toggle the 'hidden' class
+            sidebar.classList.toggle('show');
         });
     </script>
 </body>

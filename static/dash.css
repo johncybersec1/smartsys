@@ -7,8 +7,10 @@ body {
 
 /* Custom Styles */
 .container {
-    padding: 15px; /* Adjust padding for mobile view */
-    margin-left: 250px; /* Leave space for the sidebar */
+    display: flex;
+    margin-left: 250px; /* Adjust based on sidebar width */
+    flex-wrap: wrap; /* Allows content to wrap on smaller screens */
+    padding: 20px; /* Added padding for inner spacing */
 }
 
 /* Navbar Styles */
@@ -28,13 +30,12 @@ body {
     color: #fff !important; /* White color for nav links */
     font-weight: bold; /* Bold font for links */
 }
-/* Ensure content starts below the navbar */
+
 /* Main content */
 .main-content {
     padding: 20px; /* Add padding for a clean layout */
 }
 
-/* Ensure content starts below the navbar */
 .main-content h1, .main-content p {
     padding-top: 20px; /* Adds some spacing below the navbar */
 }
@@ -87,6 +88,7 @@ body {
     border-radius: 50px; /* Rounded buttons */
     padding: 10px 20px; /* Button padding */
     margin-bottom: 12px;
+    transition: background-color 0.3s ease; /* Added transition for hover effect */
 }
 
 .btn-primary {
@@ -121,6 +123,7 @@ body {
     max-height: 300px; /* Max height for the container */
     overflow-y: auto; /* Scroll if overflow */
 }
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .profile-card {
