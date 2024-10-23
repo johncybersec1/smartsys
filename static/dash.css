@@ -5,6 +5,11 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
+/* Custom Styles */
+.container {
+    padding: 15px; /* Adjust padding for mobile view */
+}
+
 /* Navbar Styles */
 .navbar {
     background-color: #dc3545; /* Red background for the navbar */
@@ -24,7 +29,6 @@ body {
 /* Ensure content starts below the navbar */
 /* Main content */
 .main-content {
-    margin-left: 250px; /* Offset by the sidebar's width */
     padding: 20px; /* Add padding for a clean layout */
 }
 
@@ -114,4 +118,27 @@ body {
 .message-container {
     max-height: 300px; /* Max height for the container */
     overflow-y: auto; /* Scroll if overflow */
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-card {
+        width: 100%; /* Full width on smaller screens */
+        margin: 0 auto; /* Center the profile card */
+    }
+    
+    .card {
+        margin: 10px 0; /* Space between cards */
+    }
+
+    .sidebar {
+        min-width: 100%; /* Sidebar takes full width on mobile */
+    }
+
+    .sidebar a {
+        font-size: 14px; /* Slightly smaller text for sidebar links */
+    }
+
+    .calendar h6 {
+        font-size: 1rem; /* Adjust font size for calendar heading */
+    }
 }

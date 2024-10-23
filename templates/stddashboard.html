@@ -102,9 +102,10 @@
             position: fixed;
             min-width: 250px;
             min-height: 100vh;
-            padding-top: 20px;
+            padding: 20px;
             float: left; /* Sidebar floats to the left of the content */
             height: 100%;
+            transition: transform 0.3s ease; /* Smooth transition */
         }
         .sidebar a {
             color: #ddd;
@@ -125,6 +126,19 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        /* Hide sidebar by default on small screens */
+        .sidebar.hidden {
+            transform: translateX(-100%); /* Move sidebar out of view */
+        }
+        /* Media query for smaller screens */
+        @media (min-width: 768px) {
+            .sidebar {
+                display: block; /* Show sidebar normally on larger screens */
+            }
+            .sidebar.hidden {
+                display: none; /* Prevent hidden sidebar from taking space */
+            }
+        }
     </style>
 </head>
 <body>
@@ -135,13 +149,13 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- Add a button to toggle the sidebar -->
+            <button class="btn btn-outline-light ms-auto" id="sidebarToggle">☰</button>
         </div>
     </nav>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <h4 class="text-center">SmartSchool</h4>
-        <hr>
         <a href="#">Timetable</a>
         <a href="#">Inbox</a>
         <a href="#">Live Classes</a>
@@ -197,7 +211,7 @@
             <div class="col-md-8 col-sm-12 mb-3">
                 <div class="row">
                     <!-- Upcoming Exams Section -->
-                    <div class="col-12 mb-3 ms-10">
+                    <div class="col-12 mb-3 ms-8">
                         <div class="card shadow">
                             <div class="card-header bg-primary text-white">
                                 <h5>Upcoming Exams</h5>
@@ -212,7 +226,7 @@
                     </div>
         
                     <!-- Recent Activities Section -->
-                    <div class="col-12 mb-3 ms-10">
+                    <div class="col-12 mb-3 ms-8">
                         <div class="card shadow">
                             <div class="card-header bg-success text-white">
                                 <h5>Recent Activities</h5>
@@ -228,7 +242,7 @@
                     </div>
         
                     <!-- Important Announcements Section -->
-                    <div class="col-12 mb-3 ms-10">
+                    <div class="col-12 mb-3 ms-8">
                         <div class="card shadow">
                             <div class="card-header bg-warning text-white">
                                 <h5>Important Announcements</h5>
@@ -403,6 +417,12 @@
         }
 
         window.onload = generateCalendar;
+    </script>
+    <script>
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden'); // Toggle the 'hidden' class
+        });
     </script>
 </body>
 </html>
