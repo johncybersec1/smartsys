@@ -101,11 +101,12 @@
             color: white;
             position: fixed;
             min-width: 250px;
-            min-height: 100vh;
-            padding: 20px;
+            margin-top: 0;
+            padding-top: 20px;
             float: left; /* Sidebar floats to the left of the content */
             height: 100%;
             transition: transform 0.3s ease; /* Smooth transition */
+            z-index: 1000; /* Ensures sidebar is on top */
         }
         .sidebar a {
             color: #ddd;
@@ -133,10 +134,16 @@
         /* Media query for smaller screens */
         @media (min-width: 768px) {
             .sidebar {
-                display: block; /* Show sidebar normally on larger screens */
+                transform: translateX(-100%); /* Hide sidebar off-screen */
+                transition: transform 0.3s ease;
             }
-            .sidebar.hidden {
-                display: none; /* Prevent hidden sidebar from taking space */
+            .sidebar.show {
+                transform: translateX(0); /* Show sidebar */
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin-left: 0; /* Remove margin on small screens */
             }
         }
     </style>
@@ -211,7 +218,7 @@
             <div class="col-md-8 col-sm-12 mb-3">
                 <div class="row">
                     <!-- Upcoming Exams Section -->
-                    <div class="col-12 mb-3 ms-8">
+                    <div class="col-12 mb-3 ms-7">
                         <div class="card shadow">
                             <div class="card-header bg-primary text-white">
                                 <h5>Upcoming Exams</h5>
@@ -226,7 +233,7 @@
                     </div>
         
                     <!-- Recent Activities Section -->
-                    <div class="col-12 mb-3 ms-8">
+                    <div class="col-12 mb-3 ms-7">
                         <div class="card shadow">
                             <div class="card-header bg-success text-white">
                                 <h5>Recent Activities</h5>
@@ -242,7 +249,7 @@
                     </div>
         
                     <!-- Important Announcements Section -->
-                    <div class="col-12 mb-3 ms-8">
+                    <div class="col-12 mb-3 ms-7">
                         <div class="card shadow">
                             <div class="card-header bg-warning text-white">
                                 <h5>Important Announcements</h5>

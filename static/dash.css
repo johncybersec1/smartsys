@@ -14,6 +14,7 @@ body {
 .navbar {
     background-color: #dc3545; /* Red background for the navbar */
     width: 100%; /* Full width navbar */
+    margin-left: 250px;
 }
 
 .navbar-brand {
