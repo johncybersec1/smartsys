@@ -8,6 +8,7 @@ body {
 /* Custom Styles */
 .container {
     padding: 15px; /* Adjust padding for mobile view */
+    margin-left: 250px; /* Leave space for the sidebar */
 }
 
 /* Navbar Styles */
