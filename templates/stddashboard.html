@@ -99,6 +99,7 @@
         .sidebar {
             background-color: #343a40;
             color: white;
+            position: fixed;
             min-width: 250px;
             min-height: 100vh;
             padding-top: 20px;
@@ -130,7 +131,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('home') }}">SmartSchool</a>
+            <h3>SmartSchool</h3>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -196,7 +197,7 @@
             <div class="col-md-8 col-sm-12 mb-3">
                 <div class="row">
                     <!-- Upcoming Exams Section -->
-                    <div class="col-12 mb-3 ms-3">
+                    <div class="col-12 mb-3 ms-5">
                         <div class="card shadow">
                             <div class="card-header bg-primary text-white">
                                 <h5>Upcoming Exams</h5>
@@ -211,7 +212,7 @@
                     </div>
         
                     <!-- Recent Activities Section -->
-                    <div class="col-12 mb-3 ms-3">
+                    <div class="col-12 mb-3 ms-5">
                         <div class="card shadow">
                             <div class="card-header bg-success text-white">
                                 <h5>Recent Activities</h5>
@@ -227,7 +228,7 @@
                     </div>
         
                     <!-- Important Announcements Section -->
-                    <div class="col-12 mb-3 ms-3">
+                    <div class="col-12 mb-3 ms-5">
                         <div class="card shadow">
                             <div class="card-header bg-warning text-white">
                                 <h5>Important Announcements</h5>

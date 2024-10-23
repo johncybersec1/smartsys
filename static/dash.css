@@ -8,11 +8,8 @@ body {
 /* Navbar Styles */
 .navbar {
     background-color: #dc3545; /* Red background for the navbar */
-    position: relative;
-    top: 0; /* Align it to the top of the viewport */
-    width: calc(100% - 260px); /* Adjust width to leave space for the sidebar */
-    z-index: 1000; /* Ensures navbar stays above other content */
-    left: 260px; /* Align with the sidebar */
+    width: 100%; /* Full width navbar */
+    margin-left: 250px; /* Leave space for sidebar */
 }
 
 .navbar-brand {
@@ -25,12 +22,17 @@ body {
     color: #fff !important; /* White color for nav links */
     font-weight: bold; /* Bold font for links */
 }
-
 /* Ensure content starts below the navbar */
+/* Main content */
 .main-content {
-    padding-top: 70px; /* Adjust according to navbar height */
+    margin-left: 250px; /* Offset by the sidebar's width */
+    padding: 20px; /* Add padding for a clean layout */
 }
 
+/* Ensure content starts below the navbar */
+.main-content h1, .main-content p {
+    padding-top: 20px; /* Adds some spacing below the navbar */
+}
 
 /* Card Styles */
 .card {
