@@ -131,7 +131,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <h3>SmartSchool</h3>
+            <a class="navbar-brand" href="{{ url_for('stddashboard') }}">SmartSchool</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -197,7 +197,7 @@
             <div class="col-md-8 col-sm-12 mb-3">
                 <div class="row">
                     <!-- Upcoming Exams Section -->
-                    <div class="col-12 mb-3 ms-5">
+                    <div class="col-12 mb-3 ms-10">
                         <div class="card shadow">
                             <div class="card-header bg-primary text-white">
                                 <h5>Upcoming Exams</h5>
@@ -212,7 +212,7 @@
                     </div>
         
                     <!-- Recent Activities Section -->
-                    <div class="col-12 mb-3 ms-5">
+                    <div class="col-12 mb-3 ms-10">
                         <div class="card shadow">
                             <div class="card-header bg-success text-white">
                                 <h5>Recent Activities</h5>
@@ -228,7 +228,7 @@
                     </div>
         
                     <!-- Important Announcements Section -->
-                    <div class="col-12 mb-3 ms-5">
+                    <div class="col-12 mb-3 ms-10">
                         <div class="card shadow">
                             <div class="card-header bg-warning text-white">
                                 <h5>Important Announcements</h5>
@@ -251,30 +251,30 @@
         <div class="col-md-8">
             <h5>Classes Today</h5>
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <div class="card card-today shadow">
-                        <div class="card-body">
-                            <h6>Mathematics</h6>
-                            <p>9:00 AM - 10:30 AM</p>
-                            <p>Room 101</p>
+                <div class="col-md-4 mb-4"> <!-- Adjusted mb-3 to mb-4 for more space -->
+                    <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
+                        <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
+                            <h6 class="card-title" style="font-size: 1.2rem;">Mathematics</h6> <!-- Increased font size -->
+                            <p style="margin-bottom: 0.5rem;">9:00 AM - 10:30 AM</p>
+                            <p style="margin-bottom: 0;">Room 101</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card card-today shadow">
-                        <div class="card-body">
-                            <h6>Science</h6>
-                            <p>11:00 AM - 12:30 PM</p>
-                            <p>Room 202</p>
+                <div class="col-md-4 mb-4"> <!-- Adjusted mb-3 to mb-4 for more space -->
+                    <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
+                        <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
+                            <h6 class="card-title" style="font-size: 1.2rem;">Science</h6> <!-- Increased font size -->
+                            <p style="margin-bottom: 0.5rem;">11:00 AM - 12:30 PM</p>
+                            <p style="margin-bottom: 0;">Room 202</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card card-today shadow">
-                        <div class="card-body">
-                            <h6>History</h6>
-                            <p>2:00 PM - 3:30 PM</p>
-                            <p>Room 303</p>
+                <div class="col-md-4 mb-4"> <!-- Adjusted mb-3 to mb-4 for more space -->
+                    <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
+                        <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
+                            <h6 class="card-title" style="font-size: 1.2rem;">History</h6> <!-- Increased font size -->
+                            <p style="margin-bottom: 0.5rem;">2:00 PM - 3:30 PM</p>
+                            <p style="margin-bottom: 0;">Room 303</p>
                         </div>
                     </div>
                 </div>
