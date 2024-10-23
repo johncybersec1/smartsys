@@ -48,6 +48,89 @@
             bottom: 0;
             width: 100%;
         }
+        /* Dynamic Calendar styling */
+        .calendar {
+            background-color: white;
+            color: #343a40;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Soft shadow */
+            transition: transform 0.3s;
+        }
+
+        .calendar:hover {
+            transform: scale(1.03); /* Slight zoom on hover */
+        }
+
+        .calendar h6 {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #6f42c1;
+        }
+
+        .calendar table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        .calendar th, .calendar td {
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .calendar td {
+            cursor: pointer;
+        }
+
+        .calendar td:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Highlight current day */
+        .current-day {
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3); /* Shadow around the current day */
+        }
+        /* Sidebar Styling */
+        .sidebar {
+            background-color: #343a40;
+            color: white;
+            min-width: 250px;
+            min-height: 100vh;
+            padding-top: 20px;
+            float: left; /* Sidebar floats to the left of the content */
+        }
+
+        .sidebar a {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+            transform: translateX(5px); /* Smooth sliding effect */
+        }
+
+        /* Sidebar Title */
+        .sidebar h4 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -59,23 +142,25 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('services') }}">Services</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('contacts') }}">Contacts</a>
-                    </li>
-                </ul>
+                <form action="{{ url_for('logout') }}" method="POST">
+                    <button type="submit" class="btn">Logout</button>
+                </form>
+                </div>
             </div>
         </div>
     </nav>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h4 class="text-center">SmartSchool</h4>
+        <hr>
+        <a href="#">Timetable</a>
+        <a href="#">Inbox</a>
+        <a href="#">Live Classes</a>
+        <a href="#">Recorded Classes</a>
+        <a href="#">Library</a>
+        <hr>
+        <a href="#" class="text-danger">Logout</a>
+    </div>
     <div class="container mt-5">
         <div class="text-center mb-4">
             <h2>Welcome, {{ session.get('first_name', 'Student') }}</h2>
@@ -114,11 +199,6 @@
                                 <!-- Dynamic Calendar -->
                             </tbody>
                         </table>
-                    </div>
-                        <form action="{{ url_for('logout') }}" method="POST">
-                            <button type="submit" class="btn btn-danger">Logout</button>
-                        </form>
-                    </div>
                 </div>
             </div>
 
@@ -133,6 +213,37 @@
                             <li class="list-group-item">Data Security Management - <strong>25th Oct 2024</strong></li>
                             <li class="list-group-item">Cybersecurity - <strong>30th Oct 2024</strong></li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 col-sm-12 mb-3">
+                    <div class="card shadow">
+                        <div class="card-header bg-success text-white">
+                            <h5>Recent Activities</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">Submitted assignment for Cybersecurity - <strong>Oct 15, 2024</strong></li>
+                                <li class="list-group-item">Participated in group discussion for Data Security Management - <strong>Oct 18, 2024</strong></li>
+                                <li class="list-group-item">Updated profile information - <strong>Oct 20, 2024</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-3">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-white">
+                        <h5>Important Announcements</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="announcement">
+                            <strong>Notice:</strong> All students must complete the course feedback form by Oct 25, 2024.
+                        </div>
+                        <div class="announcement">
+                            <strong>Reminder:</strong> Exam timetable will be released on Oct 22, 2024.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -170,41 +281,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Recent Activities and Important Announcements Sections Side by Side -->
-        <div class="row mb-4">
-            <div class="col-md-6 col-sm-12 mb-3">
-                <div class="card shadow">
-                    <div class="card-header bg-success text-white">
-                        <h5>Recent Activities</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">Submitted assignment for Cybersecurity - <strong>Oct 15, 2024</strong></li>
-                            <li class="list-group-item">Participated in group discussion for Data Security Management - <strong>Oct 18, 2024</strong></li>
-                            <li class="list-group-item">Updated profile information - <strong>Oct 20, 2024</strong></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-sm-12 mb-3">
-                <div class="card shadow">
-                    <div class="card-header bg-warning text-white">
-                        <h5>Important Announcements</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="announcement">
-                            <strong>Notice:</strong> All students must complete the course feedback form by Oct 25, 2024.
-                        </div>
-                        <div class="announcement">
-                            <strong>Reminder:</strong> Exam timetable will be released on Oct 22, 2024.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Section for sending messages -->
         <div class="card">
             <div class="card-header">
