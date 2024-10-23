@@ -10,213 +10,47 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
     <style>
-        /* General Styles */
+        /* Override Bootstrap styles for a custom look */
         body {
-            background-color: #f0f4f8; /* Soft background color */
+            background-color: #f4f7fa; /* Light background for better contrast */
             font-family: 'Arial', sans-serif;
-            display: flex;
         }
-
-        /* Sidebar Styling */
-        .sidebar {
-            background-color: #343a40;
-            color: white;
-            min-width: 250px;
-            min-height: 100vh;
-            position: fixed;
-            padding-top: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-            transition: all 0.3s ease;
+        h2 {
+            color: #343a40; /* Darker text color for headings */
         }
-
-        .sidebar a {
-            color: #ddd;
-            text-decoration: none;
-            display: block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background-color 0.3s, transform 0.3s ease;
+        .card {
+            border-radius: 15px; /* Rounded corners for cards */
+            transition: transform 0.2s; /* Smooth hover effect */
         }
-
-        .sidebar a:hover {
-            background-color: #495057;
-            transform: translateX(5px); /* Smooth sliding effect */
+        .card:hover {
+            transform: scale(1.02); /* Scale up on hover */
         }
-
-        /* Sidebar Title */
-        .sidebar h4 {
-            font-size: 1.5rem;
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* Main content area */
-        .main-content {
-            margin-left: 260px;
-            padding: 20px;
-            width: calc(100% - 260px);
-        }
-
-        /* Profile Card */
         .profile-card {
-            background: linear-gradient(45deg, #6f42c1, #e83e8c); /* Vibrant gradient */
-            color: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-            transition: transform 0.3s ease-in-out;
-            width: 450px;
+            background: linear-gradient(45deg, #6f42c1, #e83e8c); /* Gradient background */
+            color: white; /* White text for contrast */
         }
-
-        .profile-card:hover {
-            transform: scale(1.02); /* Slight scale-up on hover */
-        }
-
         .profile-card img {
-            border-radius: 50%;
-            border: 3px solid white;
-            width: 100px;
-            margin-bottom: 15px;
+            border-radius: 50%; /* Circular profile picture */
+            border: 3px solid white; /* Border around the profile picture */
         }
-
-        .profile-card h5, .profile-card p {
-            margin: 0;
-            font-size: 1rem;
+        .announcement {
+            background-color: #ffeeba; /* Light yellow for announcements */
+            border-left: 5px solid #ffc107; /* Yellow left border */
+            padding: 15px; /* Padding for better spacing */
+            margin-bottom: 15px; /* Space between announcements */
         }
-
-        /* Dynamic Calendar styling */
-        .calendar {
-            background-color: white;
-            color: #343a40;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Soft shadow */
-            transition: transform 0.3s;
-        }
-
-        .calendar:hover {
-            transform: scale(1.03); /* Slight zoom on hover */
-        }
-
-        .calendar h6 {
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            color: #6f42c1;
-        }
-
-        .calendar table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-        }
-
-        .calendar th, .calendar td {
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .calendar td {
-            cursor: pointer;
-        }
-
-        .calendar td:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Highlight current day */
-        .current-day {
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3); /* Shadow around the current day */
-        }
-
-        /* Classes Today Cards */
-        .card-today {
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        }
-
-        .card-today:hover {
-            transform: translateY(-10px); /* Lift the card on hover */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Deepen shadow on hover */
-        }
-
-        .card-today h6 {
-            font-size: 1.1rem;
-            color: #6f42c1;
-            margin-bottom: 5px;
-        }
-
-        .card-today p {
-            font-size: 0.9rem;
-            color: #343a40;
-        }
-
-        /* Footer */
         .footer {
             background-color: #343a40;
             color: white;
-            padding: 10px;
+            padding: 10px 0; /* Padding for footer */
             text-align: center;
-            position: fixed;
+            position: relative;
             bottom: 0;
-            width: calc(100% - 260px);
-            margin-left: 260px;
-            font-size: 0.9rem;
-            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Announcements */
-        .announcement {
-            background-color: #ffeeba;
-            border-left: 5px solid #ffc107;
-            padding: 15px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            transition: transform 0.2s ease;
-            border-radius: 8px;
-        }
-
-        .announcement:hover {
-            transform: scale(1.02);
-        }
-
-        /* Quick Links */
-        .quick-links li {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            padding: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .quick-links li:hover {
-            background-color: #e9ecef;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h4 class="text-center">SmartSchool</h4>
-        <hr>
-        <a href="#">Timetable</a>
-        <a href="#">Live Classes</a>
-        <a href="#">Recorded Classes</a>
-        <a href="#">Library</a>
-        <hr>
-        <a href="#" class="text-danger">Logout</a>
-    </div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
@@ -225,9 +59,20 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <form action="{{ url_for('logout') }}" method="POST">
-                    <button type="submit" class="btn btn-danger">Logout</button>
-                </form>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('services') }}">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contacts') }}">Contacts</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -269,20 +114,26 @@
                                 <!-- Dynamic Calendar -->
                             </tbody>
                         </table>
+                    </div>
+                        <form action="{{ url_for('logout') }}" method="POST">
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Upcoming Exams Section -->
-        <div class="col-md-8 col-sm-12">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h5>Upcoming Exams</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group">
-                        <li class="list-group-item">Data Security Management - <strong>25th Oct 2024</strong></li>
-                        <li class="list-group-item">Cybersecurity - <strong>30th Oct 2024</strong></li>
-                    </ul>
+
+            <!-- Upcoming Exams Section -->
+            <div class="col-md-8 col-sm-12">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5>Upcoming Exams</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">Data Security Management - <strong>25th Oct 2024</strong></li>
+                            <li class="list-group-item">Cybersecurity - <strong>30th Oct 2024</strong></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
