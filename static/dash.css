@@ -8,28 +8,11 @@ body {
 /* Custom Styles */
 .container {
     display: flex;
-    margin-left: 250px; /* Adjust based on sidebar width */
+    margin-left: 1000px; /* Adjust based on sidebar width */
     flex-wrap: wrap; /* Allows content to wrap on smaller screens */
     padding: 20px; /* Added padding for inner spacing */
 }
 
-/* Navbar Styles */
-.navbar {
-    background-color: #dc3545; /* Red background for the navbar */
-    width: 100%; /* Full width navbar */
-    margin-left: 250px;
-}
-
-.navbar-brand {
-    color: #fff !important; /* White brand color */
-    font-weight: bold;
-    font-size: 1.8rem; /* Larger font size for brand */
-}
-
-.navbar-nav .nav-link {
-    color: #fff !important; /* White color for nav links */
-    font-weight: bold; /* Bold font for links */
-}
 
 /* Main content */
 .main-content {

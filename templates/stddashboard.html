@@ -24,6 +24,7 @@
             margin-bottom: 20px; /* Space between cards */
             border-radius: 15px; /* Rounded corners for cards */
             transition: transform 0.2s; /* Smooth hover effect */
+            margin-left: 150px;
         }
         .card-body {
             overflow: hidden; /* Prevent overflow */
@@ -153,24 +154,55 @@
                 transform: translateX(0); /* Show sidebar */
             }
         }
+        /* Custom Styles */
+        .container {
+            display: flex;
+            margin-left: 250px; /* Adjust based on sidebar width */
+            flex-wrap: wrap; /* Allows content to wrap on smaller screens */
+            padding: 20px; /* Added padding for inner spacing */
+            justify-content: center;
+        }
+        /* Navbar Styles */
+        .navbar {
+            background-color: #dc3545; /* Red background for the navbar */
+            width: 100%; /* Full width navbar */
+            margin-left: 250px;
+        }
+
+        .navbar-brand {
+            color: #fff !important; /* White brand color */
+            font-weight: bold;
+            font-size: 1.8rem; /* Larger font size for brand */
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff !important; /* White color for nav links */
+            font-weight: bold; /* Bold font for links */
+        }
+        .navbar-btn{
+            margin-left: 100px;
+        }
+        .lead{
+            margin-left: 200px;
+            font-weight: bold;
+        }
+        .mybtn{
+            margin-left: 500px;
+        }
+        .mytt{
+            display: flex;
+            color: #fff !important; /* White brand color */
+            font-weight: bold;
+            font-size: 1.8rem; /* Larger font size for brand */
+            margin-left: 400px;
+        }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('stddashboard') }}">SmartSchool</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <button class="btn btn-outline-light ms-2" id="sidebarToggle" type="button">
-                ☰
-            </button>
-        </div>
-    </nav>
-
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
+        <a class="navbar-brand" href="{{ url_for('stddashboard') }}">SmartSchool</a>
+        <hr>
         <a href="#">Timetable</a>
         <a href="#">Inbox</a>
         <a href="#">Live Classes</a>
@@ -179,10 +211,21 @@
         <hr>
         <a href="#" class="text-danger">Logout</a>
     </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <h4 class="mytt">Dashboard</h4>
+            <div class="mybtn">
+                <button class="btn btn-outline-light ms-2" id="sidebarToggle" type="button">
+                    ☰
+                </button>
+            </div>
+        </div>
+    </nav>
     
-    <div class="container mt-5">
+    <div class="container mt-5" id="welcome">
         <div class="text-center mb-4">
-            <h2>Welcome, {{ session.get('first_name', 'Student') }}</h2>
+            <h2 class="lead">Welcome, {{ session.get('first_name', 'Student') }}</h2>
             <p class="lead">Your learning journey starts here!</p>
         </div>
 
