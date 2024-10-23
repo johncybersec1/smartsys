@@ -23,11 +23,9 @@
             margin-bottom: 20px; /* Space between cards */
             border-radius: 15px; /* Rounded corners for cards */
             transition: transform 0.2s; /* Smooth hover effect */
-        }
-        .card-container{
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            max-width: 100%;
+            box-sizing: border-box;
+            margin-left: 250px;
         }
         .card-body {
             overflow: hidden; /* Prevent overflow */
@@ -35,7 +33,7 @@
             white-space: nowrap; /* Prevent text from wrapping */
         }
         .card-today{
-            margin-left: 1.25rem;
+            margin-left: 200px
         }
         .card:hover {
             transform: scale(1.02); /* Scale up on hover */
@@ -43,6 +41,8 @@
         .profile-card {
             background: linear-gradient(45deg, #6f42c1, #e83e8c); /* Gradient background */
             color: white; /* White text for contrast */
+            width: 450px;
+            margin-right: 10px;
         }
         .profile-card img {
             border-radius: 50%; /* Circular profile picture */
@@ -186,7 +186,7 @@
             font-weight: bold;
         }
         .mybtn{
-            margin-left: 37.5rem;
+            margin-left: auto;
         }
         .mytt{
             display: flex;
@@ -246,7 +246,6 @@
             </div>
         </div>
     </nav>
-    
     <div class="container mt-5" id="welcome">
         <div class="text-center mb-4">
             <h2 class="lead">Welcome, {{ session.get('first_name', 'Student') }}</h2>
@@ -255,7 +254,7 @@
 
         <div class="row mb-4">
             <!-- Profile Section -->
-            <div class="col-12 col-md-4 col-sm-12 mb-3">
+            <div class="col-5 col-md-4 col-sm-12 mb-3">
                 <div class="card shadow profile-card">
                     <div class="card-header">
                         <h5>Profile</h5>
@@ -290,10 +289,10 @@
             </div>
         
             <!-- Right Side Section Container -->
-            <div class="col-md-8 col-sm-12 mb-3">
+            <div class="col-md-8 mb-3">
                 <div class="row">
                     <!-- Upcoming Exams Section -->
-                    <div class="col-12 mb-3 ms-6">
+                    <div class="col-8 mb-3">
                         <div class="card shadow">
                             <div class="card-header bg-primary text-white">
                                 <h5>Upcoming Exams</h5>
@@ -306,9 +305,9 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Recent Activities Section -->
-                    <div class="col-12 mb-3 ms-6">
+                    <div class="col-8 mb-3">
                         <div class="card shadow">
                             <div class="card-header bg-success text-white">
                                 <h5>Recent Activities</h5>
@@ -322,9 +321,9 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Important Announcements Section -->
-                    <div class="col-12 mb-3 ms-6">
+                    <div class="col-8 mb-3">
                         <div class="card shadow">
                             <div class="card-header bg-warning text-white">
                                 <h5>Important Announcements</h5>
@@ -341,11 +340,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-
+<hr>
         <!-- Today’s Classes Section -->
         <div class="col-md-8">
-            <h5>Classes Today</h5>
+            <h5 class="card-today">Classes Today</h5>
             <div class="cardtoday row">
                 <div class="col-md-4 mb-4"> <!-- Adjusted mb-3 to mb-4 for more space -->
                     <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
@@ -373,7 +371,8 @@
                             <p style="margin-bottom: 0;">Room 303</p>
                         </div>
                     </div>
-                </div>
+                    <hr>
+                </div>              
                 <!-- New Row for Quick Links Section -->
             <div class="row">
                 <div class="col-md-4 col-sm-12 mb-3">
