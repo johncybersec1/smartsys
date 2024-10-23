@@ -3,7 +3,6 @@ body {
     background-color: #f0f4f8; /* Soft background color for contrast */
     color: #495057; /* Darker text color for better readability */
     font-family: 'Arial', sans-serif;
-    flex-direction: column; /* Ensure the body layout is vertical for the top navbar */
 }
 
 .navbar {
