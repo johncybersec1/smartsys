@@ -240,7 +240,7 @@ def login():
             session['email'] = teacher.email
             session['role'] = teacher.role  # Store teacher role in session
             flash('Login successful!', 'success')
-            return redirect(url_for('/teacher/dashboard'))
+            return redirect(url_for('teacher_dashboard'))
 
         # If login fails for both student and teacher
         flash('Login failed. Please check your credentials.', 'danger')
