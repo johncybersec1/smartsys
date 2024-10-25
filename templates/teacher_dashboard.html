@@ -7,8 +7,27 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Teacher Dashboard</title>
+    <style>
+        .mytt{
+            display: flex;
+            color: #fff !important; /* White brand color */
+            font-weight: bold;
+            font-size: 1.8rem; /* Larger font size for brand */
+            margin-left: 500px;
+        }
+        .navbar {
+            background-color: #dc3545; /* Red background for the navbar */
+            width: 100%; /* Full width navbar */
+        }
+    </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <h4 class="mytt">Dashboard</h4>
+        </div>
+    </nav>
     <div class="container mt-5">
         <h2 class="text-center">Welcome, {{ teacher.name }}!</h2>
         <div class="row mt-4">
