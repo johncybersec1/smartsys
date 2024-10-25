@@ -44,6 +44,17 @@
         .btn-primary:hover {
             background-color: #0056b3; /* Darker on hover */
         }
+        .card {
+            margin: 15px; /* Space between cards */
+            transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+            border: none; /* Remove default border */
+            border-radius: 15px; /* Rounded corners */
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Slightly scale the card on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+        }
     </style>
 </head>
 <body>
@@ -69,21 +80,22 @@
         <h4 class="text-center">Get Started</h4>
         <div class="row justify-content-center">
             <!-- Student Card -->
-            <div class="card" style="width: 18rem;">
-                <img src="{{ url_for('static', filename='student.jpg') }}" class="card-img-top" alt="Teacher">
+            <div class="card" style="width: 18rem; margin: 20px; transition: transform 0.3s, box-shadow 0.3s;">
+                <img src="{{ url_for('static', filename='student.jpg') }}" class="card-img-top" alt="Student">
                 <div class="card-body">
-                  <h5 class="card-title">Student</h5>
-                  <p class="card-text">Empower future leaders by joining our community of educators. Connect with enthusiastic students and enhance their learning experience. Make a lasting difference—sign up today!</p>
-                  <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
+                    <h5 class="card-title">Student</h5>
+                    <p class="card-text">Empower future leaders by joining our community of educators. Connect with enthusiastic students and enhance their learning experience. Make a lasting difference—sign up today!</p>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
                 </div>
             </div>
-            <!--Teacher card-->
-            <div class="card" style="width: 18rem;">
+
+            <!-- Teacher Card -->
+            <div class="card" style="width: 18rem; margin: 20px; transition: transform 0.3s, box-shadow 0.3s;">
                 <img src="{{ url_for('static', filename='teach.jpg') }}" class="card-img-top" alt="Teacher">
                 <div class="card-body">
-                  <h5 class="card-title">Teacher</h5>
-                  <p class="card-text">Inspire the next generation by signing up to connect with eager learners. Make a meaningful impact in their lives and access valuable teaching resources. Sign up today!</p>
-                  <a href="{{ url_for('teacher_register') }}" class="btn btn-primary">Register</a>
+                    <h5 class="card-title">Teacher</h5>
+                    <p class="card-text">Inspire the next generation by signing up to connect with eager learners. Make a meaningful impact in their lives and access valuable teaching resources. Sign up today!</p>
+                    <a href="{{ url_for('teacher_register') }}" class="btn btn-primary">Register</a>
                 </div>
             </div>
         </div>
