@@ -25,23 +25,15 @@
             transition: transform 0.2s; /* Smooth hover effect */
             max-width: 100%;
             box-sizing: border-box;
-            margin-left: 250px;
-        }
-        .card-body {
-            overflow: hidden; /* Prevent overflow */
-            text-overflow: ellipsis; /* Add ellipsis for long text */
-            white-space: nowrap; /* Prevent text from wrapping */
-        }
-        .card-today{
-            margin-left: 200px
         }
         .card:hover {
             transform: scale(1.02); /* Scale up on hover */
         }
         .profile-card {
             background: linear-gradient(45deg, #6f42c1, #e83e8c); /* Gradient background */
-            color: white; /* White text for contrast */
-            width: 450px;
+            color: white;
+            width: 100%; /* Use full width */
+            max-width: 450px; /* Ensure it doesn't exceed 450px on larger screens */
             margin-right: 10px;
         }
         .profile-card img {
@@ -53,15 +45,6 @@
             border-left: 5px solid #ffc107; /* Yellow left border */
             padding: 15px; /* Padding for better spacing */
             margin-bottom: 15px; /* Space between announcements */
-        }
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 10px 0; /* Padding for footer */
-            text-align: center;
-            position: relative;
-            bottom: 0;
-            width: 100%;
         }
         /* Dynamic Calendar styling */
         .calendar {
@@ -160,10 +143,51 @@
         }
         /* Custom Styles */
         .container {
-            display: flex; /* Adjust based on sidebar width */
-            flex-wrap: wrap; /* Allows content to wrap on smaller screens */
-            padding: 20px; /* Added padding for inner spacing */
-            justify-content: center;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px; /* Ensures inner spacing */
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box; /* Ensures padding doesn't expand beyond screen width */
+            border: 3px solid black;
+        }
+        /* Apply margin-left on screens wider than 992px (like laptops and desktops) */
+        @media (min-width: 992px) {
+            .container {
+                margin-left: 250px; /* Add margin only on larger screens */
+                width: calc(100% - 250px); /* Ensure container takes the remaining width */
+            }
+            .lead {
+                margin-left: 320px; /* Apply 500px left margin only on larger screens */
+                font-weight: bold;
+                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            }
+            .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0; /* Padding for footer */
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        }
+
+        /* Remove margin-left on smaller screens to use full width */
+        @media (max-width: 991px) {
+            .container {
+                margin-left: 0; /* Remove the left margin on mobile */
+                width: 100%; /* Use full width on smaller screens */
+            }
+            .footer {
+                background-color: #343a40;
+                color: white;
+                padding: 10px 0; /* Padding for footer */
+                text-align: center;
+                position: relative;
+                bottom: 0;
+                width: 60%;
+            }
         }
         /* Navbar Styles */
         .navbar {
@@ -181,10 +205,6 @@
             color: #fff !important; /* White color for nav links */
             font-weight: bold; /* Bold font for links */
         }
-        .lead{
-            margin-left: 12.5rem;
-            font-weight: bold;
-        }
         .mybtn{
             margin-left: auto;
         }
@@ -193,10 +213,22 @@
             color: #fff !important; /* White brand color */
             font-weight: bold;
             font-size: 1.8rem; /* Larger font size for brand */
-            margin-left: 43.75rem;
+            margin-left: 500px;
+        }
+        .card-body {
+            word-wrap: break-word; /* Ensures long words will break and wrap within the card */
+            overflow-wrap: break-word; /* Allows wrapping for lengthy text */
+            white-space: nowrap; /* Prevent text from wrapping */
+            overflow:hidden;
+        }
+
+        /* Optional: For very small screens, ensure padding adjusts */
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 10px;
+            }
         }
         @media (max-width: 576px) {
-            .profile-card,
             .card {
                 width: 100%;
             }
@@ -216,9 +248,10 @@
             }
 
             .lead {
-                margin-left: 0;
+                margin-left:0;
                 text-align: center;
             }
+            
         }
     </style>
 </head>
@@ -254,7 +287,7 @@
 
         <div class="row mb-4">
             <!-- Profile Section -->
-            <div class="col-5 col-md-4 col-sm-12 mb-3">
+            <div class="col-7 col-md-4 col-sm-12 mb-3">
                 <div class="card shadow profile-card">
                     <div class="card-header">
                         <h5>Profile</h5>
@@ -292,14 +325,14 @@
             <div class="col-md-8 mb-3">
                 <div class="row">
                     <!-- Upcoming Exams Section -->
-                    <div class="col-8 mb-3">
+                    <div class="col-md-12 col-7 mb-3">
                         <div class="card shadow">
                             <div class="card-header bg-primary text-white">
                                 <h5>Upcoming Exams</h5>
                             </div>
                             <div class="card-body">
                                 <ul class="list-group">
-                                    <li class="list-group-item">Data Security Management - <strong>25th Oct 2024</strong></li>
+                                    <li class="list-group-item">Data S Management - <strong>25th Oct 2024</strong></li>
                                     <li class="list-group-item">Cybersecurity - <strong>30th Oct 2024</strong></li>
                                 </ul>
                             </div>
@@ -307,15 +340,15 @@
                     </div>
 
                     <!-- Recent Activities Section -->
-                    <div class="col-8 mb-3">
+                    <div class="col-md-12 col-7 mb-3">
                         <div class="card shadow">
                             <div class="card-header bg-success text-white">
                                 <h5>Recent Activities</h5>
                             </div>
                             <div class="card-body">
                                 <ul class="list-group">
-                                    <li class="list-group-item">Submitted assignment for Cybersecurity - <strong>Oct 15, 2024</strong></li>
-                                    <li class="list-group-item">Participated in group discussion for Data Security Management - <strong>Oct 18, 2024</strong></li>
+                                    <li class="list-group-item">Submitted assignment for Cybersecurity</li>
+                                    <li class="list-group-item">Participated in group discussion</li>
                                     <li class="list-group-item">Updated profile information - <strong>Oct 20, 2024</strong></li>
                                 </ul>
                             </div>
@@ -323,7 +356,7 @@
                     </div>
 
                     <!-- Important Announcements Section -->
-                    <div class="col-8 mb-3">
+                    <div class="col-md-12 col-7 mb-3">
                         <div class="card shadow">
                             <div class="card-header bg-warning text-white">
                                 <h5>Important Announcements</h5>
@@ -343,9 +376,8 @@
 <hr>
         <!-- Today’s Classes Section -->
         <div class="col-md-8">
-            <h5 class="card-today">Classes Today</h5>
             <div class="cardtoday row">
-                <div class="col-md-4 mb-4"> <!-- Adjusted mb-3 to mb-4 for more space -->
+                <div class="col-md-12 col-7 mb-3"> <!-- Adjusted mb-3 to mb-4 for more space -->
                     <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
                         <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
                             <h6 class="card-title" style="font-size: 1.2rem;">Mathematics</h6> <!-- Increased font size -->
@@ -354,7 +386,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4"> <!-- Adjusted mb-3 to mb-4 for more space -->
+                <div class="col-md-12 col-7 mb-3"> <!-- Adjusted mb-3 to mb-4 for more space -->
                     <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
                         <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
                             <h6 class="card-title" style="font-size: 1.2rem;">Science</h6> <!-- Increased font size -->
@@ -363,7 +395,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4"> <!-- Adjusted mb-3 to mb-4 for more space -->
+                <div class="col-md-12 col-7 mb-3"> <!-- Adjusted mb-3 to mb-4 for more space -->
                     <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
                         <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
                             <h6 class="card-title" style="font-size: 1.2rem;">History</h6> <!-- Increased font size -->
@@ -375,7 +407,7 @@
                 </div>              
                 <!-- New Row for Quick Links Section -->
             <div class="row">
-                <div class="col-md-4 col-sm-12 mb-3">
+                <div class="col-md-12 col-7 mb-3">
                     <div class="col-md-12">
                         <div class="card shadow">
                             <div class="card-header bg-info text-white">
