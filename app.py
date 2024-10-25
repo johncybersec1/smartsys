@@ -219,28 +219,39 @@ def login():
 
         # Check if the user is a student
         user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
-            # Successful login for student
-            session['user_id'] = user.id
-            session['first_name'] = user.first_name
-            session['last_name'] = user.last_name
-            session['email'] = user.email
-            session['phone'] = user.phone
-            session['profile_photo'] = user.profile_photo
-            session['role'] = user.role  # Store user role in session
-            flash('Login successful!', 'success')
-            return redirect(url_for('stddashboard'))
+        if user:
+            print(f"Student found: {user.first_name} {user.last_name}")
+            if check_password_hash(user.password, password):
+                # Successful login for student
+                session['user_id'] = user.id
+                session['first_name'] = user.first_name
+                session['last_name'] = user.last_name
+                session['email'] = user.email
+                session['phone'] = user.phone
+                session['profile_photo'] = user.profile_photo
+                session['role'] = user.role  # Store user role in session
+                flash('Login successful!', 'success')
+                return redirect(url_for('stddashboard'))
+            else:
+                print("Incorrect password for student.")
+        else:
+            print("No student found with that email.")
 
-        # Check if the user is a teacher
         teacher = Teacher.query.filter_by(email=email).first()
-        if teacher and check_password_hash(teacher.password, password):
-            # Successful login for teacher
-            session['teacher_id'] = teacher.id
-            session['name'] = teacher.name
-            session['email'] = teacher.email
-            session['role'] = teacher.role  # Store teacher role in session
-            flash('Login successful!', 'success')
-            return redirect(url_for('teacher_dashboard'))
+        if teacher:
+            print(f"Teacher found: {teacher.name}")
+            if check_password_hash(teacher.password, password):
+                # Successful login for teacher
+                session['teacher_id'] = teacher.id
+                session['name'] = teacher.name
+                session['email'] = teacher.email
+                session['role'] = teacher.role  # Store teacher role in session
+                flash('Login successful!', 'success')
+                return redirect(url_for('teacher_dashboard'))
+            else:
+                print("Incorrect password for teacher.")
+        else:
+            print("No teacher found with that email.")
 
         # If login fails for both student and teacher
         flash('Login failed. Please check your credentials.', 'danger')
