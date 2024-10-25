@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
 from flask_socketio import SocketIO, emit, join_room
+from sqlalchemy import Enum as SQLAEnum
+from enum import Enum as PyEnum
 
 app = Flask(__name__)
 
@@ -14,6 +16,10 @@ socketio = SocketIO(app)
 # Use pyMysSQL for the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
+
+class UserRole(PyEnum):
+    STUDENT = 'student'
+    TEACHER = 'teacher'
 
 class Message(db.Model):  # Corrected to db.Model
     __tablename__ = 'messages'
@@ -154,6 +160,8 @@ class User(db.Model):
     country = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())  # Auto timestamp for user creation
     profile_photo = db.Column(db.String(200))
+    role = db.Column(SQLAEnum(UserRole), default=UserRole.STUDENT, nullable=False)
+
 
     def __repr__(self):
         return f'<User {self.first_name}>'
@@ -209,20 +217,33 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        # Retrieve the user from the database based on the email
+        # Check if the user is a student
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
-            # Successful login
+            # Successful login for student
             session['user_id'] = user.id
             session['first_name'] = user.first_name
             session['last_name'] = user.last_name
             session['email'] = user.email
             session['phone'] = user.phone
             session['profile_photo'] = user.profile_photo
+            session['role'] = user.role  # Store user role in session
             flash('Login successful!', 'success')
             return redirect(url_for('stddashboard'))
-        else:
-            flash('Login failed. Please check your credentials.', 'danger')
+
+        # Check if the user is a teacher
+        teacher = Teacher.query.filter_by(email=email).first()
+        if teacher and check_password_hash(teacher.password, password):
+            # Successful login for teacher
+            session['teacher_id'] = teacher.id
+            session['name'] = teacher.name
+            session['email'] = teacher.email
+            session['role'] = teacher.role  # Store teacher role in session
+            flash('Login successful!', 'success')
+            return redirect(url_for('/teacher/dashboard'))
+
+        # If login fails for both student and teacher
+        flash('Login failed. Please check your credentials.', 'danger')
     return render_template('login.html')
 
 @app.route("/")
@@ -322,14 +343,121 @@ def reply_message(message_id):
         flash('Message not found.', 'danger')
 
     return redirect(url_for('inbox', receiver_id=message.sender_id))
-#logout route
+#Teacher section
+
+class Teacher(db.Model):
+    __tablename__ = 'teachers'
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(100), nullable = False)
+    email = db.Column(db.String(100), unique = True, nullable = False)
+    password = db.Column(db.String(200), nullable = False)
+    school = db.Column(db.String(200), nullable = False)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
+    role = db.Column(SQLAEnum(UserRole), default=UserRole.TEACHER, nullable=False)
+
+    def __repr__(self):
+        return f'<Teacher {self.name}>'
+
+class Assignment(db.Model):
+    __tablename__ = 'assignments'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    due_date = db.Column(db.DateTime, nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
+    teacher = db.relationship('Teacher', backref='assignments')
+
+class Announcement(db.Model):
+    __tablename__ = 'announcements'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
+    teacher = db.relationship('Teacher', backref='announcements')
+
+@app.route('/teacher/register', methods = ['GET', 'POST'])
+def teacher_register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = generate_password_hash(request.form['password'])
+        school = request.form['school']
+
+        new_teacher = Teacher(name = name, email = email, password = password, school = school)
+        db.session.add(new_teacher)
+        db.session.commit()
+        flash('Teacher registered successfully!', 'success')
+        return redirect(url_for('teacher_login'))
+    return render_template('teacher_register.html')
+
+@app.route('/teacher/dashboard')
+def teacher_dashboard():
+    if 'teacher_id' not in session:
+        return redirect(url_for('teacher_login'))
+    teacher_id = session['teacher_id']
+    assignments = Assignment.query.filter_by(teacher_id=teacher_id).all()
+    announcements = Announcement.query.filter_by(teacher_id=teacher_id).all()
+    
+    return render_template('teacher_dashboard.html', assignments=assignments, announcements=announcements)
+@app.route('/teacher/assignments/create', methods=['GET', 'POST'])
+def create_assignment():
+    if 'teacher_id' not in session:
+        return redirect(url_for('teacher_login'))
+
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        due_date = datetime.datetime.strptime(request.form['due_date'], '%Y-%m-%d')
+        
+        assignment = Assignment(
+            title=title, 
+            description=description, 
+            due_date=due_date, 
+            teacher_id=session['teacher_id']
+        )
+        db.session.add(assignment)
+        db.session.commit()
+        flash('Assignment created successfully!', 'success')
+        return redirect(url_for('teacher_dashboard'))
+
+    return render_template('create_assignment.html')
+
+
+@app.route('/teacher/announcements/create', methods=['GET', 'POST'])
+def create_announcement():
+    if 'teacher_id' not in session:
+        return redirect(url_for('teacher_login'))
+    
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        
+        announcement = Announcement(
+            title=title, 
+            content=content, 
+            teacher_id=session['teacher_id']
+        )
+        db.session.add(announcement)
+        db.session.commit()
+        flash('Announcement created successfully!', 'success')
+        return redirect(url_for('teacher_dashboard'))
+    
+    return render_template('create_announcement.html')
+
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.pop('user_id', None)
-    flash('You have been logged out.', 'success')
+    if 'user_id' in session:
+        session.pop('user_id', None)
+        flash('You have been logged out.', 'success')
+    elif 'teacher_id' in session:
+        session.pop('teacher_id', None)
+        flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
-
+@app.route('/get-started')
+def get_started():
+    return render_template('get_started.html')
 
 if __name__ == '__main__':
     app.debug = True
