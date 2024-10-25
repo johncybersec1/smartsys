@@ -229,7 +229,7 @@ def login():
                 session['email'] = user.email
                 session['phone'] = user.phone
                 session['profile_photo'] = user.profile_photo
-                session['role'] = user.role  # Store user role in session
+                session['role'] = str(user.role)  # Store user role in session
                 flash('Login successful!', 'success')
                 return redirect(url_for('stddashboard'))
             else:
@@ -245,7 +245,7 @@ def login():
                 session['teacher_id'] = teacher.id
                 session['name'] = teacher.name
                 session['email'] = teacher.email
-                session['role'] = teacher.role  # Store teacher role in session
+                session['role'] = str(teacher.role)
                 flash('Login successful!', 'success')
                 return redirect(url_for('teacher_dashboard'))
             else:
