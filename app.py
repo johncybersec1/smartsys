@@ -297,21 +297,10 @@ def timetable():
     # Replace \n characters with <br> for HTML line breaks
     timetable = timetable.applymap(lambda x: x.replace('\n', '<br>') if isinstance(x, str) else x)
 
-    # Pagination
-    per_page = 10  # Number of rows per page
-    page = request.args.get('page', 1, type=int)  # Get the page number from the query string
-    total_rows = len(timetable)
-    total_pages = math.ceil(total_rows / per_page)
+    # Convert the full timetable to HTML
+    timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
 
-    # Slice the timetable for the current page
-    start_row = (page - 1) * per_page
-    end_row = start_row + per_page
-    timetable_page = timetable.iloc[start_row:end_row]
-
-    # Convert the sliced timetable to HTML
-    timetable_html = timetable_page.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
-
-    return render_template('timetable.html', timetable_html=timetable_html, page=page, total_pages=total_pages)
+    return render_template('timetable.html', timetable_html=timetable_html)
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])
 def reply_message(message_id):

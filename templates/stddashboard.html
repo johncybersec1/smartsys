@@ -166,25 +166,25 @@
                 width: calc(100% - 250px); /* Ensure container takes the remaining width */
             }
             .lead {
-                margin-left: 320px; /* Apply 500px left margin only on larger screens */
+                margin-left: 340px; /* Apply 500px left margin only on larger screens */
                 font-weight: bold;
                 font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             }
             .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 10px 0; /* Padding for footer */
-            text-align: center;
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
+                background-color: #343a40;
+                color: white;
+                padding: 10px 0; /* Padding for footer */
+                text-align: center;
+                position: relative;
+                bottom: 0;
+                width: 100%;
+            }
         }
 
         /* Remove margin-left on smaller screens to use full width */
         @media (max-width: 991px) {
             .container {
-                margin-left: 0; /* Remove the left margin on mobile */
+                margin-left:0px; /* Remove the left margin on mobile */
                 width: 100%; /* Use full width on smaller screens */
             }
             .footer {
@@ -195,6 +195,11 @@
                 position: relative;
                 bottom: 0;
                 width: 60%;
+            }
+            .lead {
+                margin-left: 10px; /* Apply 500px left margin only on larger screens */
+                font-weight: bold;
+                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             }
         }
         /* Navbar Styles */
