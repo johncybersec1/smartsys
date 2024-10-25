@@ -18,8 +18,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
 
 class UserRole(PyEnum):
-    STUDENT = 'student'
-    TEACHER = 'teacher'
+    student = 'student'
+    teacher = 'teacher'
 
 class Message(db.Model):  # Corrected to db.Model
     __tablename__ = 'messages'
