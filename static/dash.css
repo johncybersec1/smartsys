@@ -12,8 +12,6 @@ body {
     padding: 20px; /* Added padding for inner spacing */
 }
 
-
-
 /* Main content */
 .main-content {
     padding: 20px; /* Add padding for a clean layout */
@@ -46,6 +44,13 @@ body {
     border: 3px solid white; /* Border for profile picture */
 }
 
+/* Announcement Styles */
+.announcement {
+    background-color: #ffeeba; /* Light yellow for announcements */
+    border-left: 5px solid #ffc107; /* Left border */
+    padding: 15px; /* Padding for spacing */
+    margin-bottom: 10px; /* Space between announcements */
+}
 
 
 /* Button Styles */
@@ -72,7 +77,6 @@ body {
 .btn-danger:hover {
     background-color: #b21f2d; /* Darker red on hover */
 }
-
 
 /* Message Container */
 .message-container {
