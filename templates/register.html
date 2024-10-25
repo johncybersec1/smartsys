@@ -135,17 +135,6 @@
                     <div class="invalid-feedback">
                         Please provide your country.
                     </div>
-                <label for="profile_photo">Choose a Profile Photo:</label><br>
-                <div class="d-flex flex-wrap">
-                    {% for photo in ['profile1.jpg', 'profile2.jpg', 'profile3.jpg', 'profile4.jpg', 'profile5.jpg'] %}
-                    <div class="form-check mr-3">
-                        <input class="form-check-input" type="radio" name="profile_photo" id="{{ photo }}" value="{{ photo }}" required>
-                        <label class="form-check-label" for="{{ photo }}">
-                            <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo">
-                        </label>
-                    </div>
-                    {% endfor %}
-                </div>
             </div>
 
             <div class="mb-3 text-center">

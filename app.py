@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pandas as pd
 from flask_socketio import SocketIO, emit, join_room
-import math
 
 app = Flask(__name__)
 
@@ -172,7 +171,7 @@ def register():
         address = request.form['address']
         city = request.form['city']
         country = request.form['country']
-        profile_photo = request.form['profile_photo']
+        profile_photo = 'p1.jpg'
 
         # Hash the password before storing it in the database
         hashed_password = generate_password_hash(password)
