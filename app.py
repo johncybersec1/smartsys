@@ -399,7 +399,7 @@ def teacher_register():
         db.session.add(new_teacher)
         db.session.commit()
         flash('Teacher registered successfully!', 'success')
-        return redirect(url_for('teacher_login'))
+        return redirect(url_for('login'))
     return render_template('teacher_register.html')
 
 @app.route('/teacher/dashboard')
