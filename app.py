@@ -160,7 +160,7 @@ class User(db.Model):
     country = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())  # Auto timestamp for user creation
     profile_photo = db.Column(db.String(200))
-    role = db.Column(SQLAEnum(UserRole), default=UserRole.STUDENT, nullable=False)
+    role = db.Column(SQLAEnum(UserRole), default=UserRole.student, nullable=False)
 
 
     def __repr__(self):
@@ -353,7 +353,7 @@ class Teacher(db.Model):
     password = db.Column(db.String(200), nullable = False)
     school = db.Column(db.String(200), nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
-    role = db.Column(SQLAEnum(UserRole), default=UserRole.TEACHER, nullable=False)
+    role = db.Column(SQLAEnum(UserRole), default=UserRole.teacher, nullable=False)
 
     def __repr__(self):
         return f'<Teacher {self.name}>'
