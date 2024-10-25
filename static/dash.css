@@ -46,25 +46,7 @@ body {
     border: 3px solid white; /* Border for profile picture */
 }
 
-/* Announcement Styles */
-.announcement {
-    background-color: #ffeeba; /* Light yellow for announcements */
-    border-left: 5px solid #ffc107; /* Left border */
-    padding: 15px; /* Padding for spacing */
-    margin-bottom: 10px; /* Space between announcements */
-}
 
-/* Footer Styles */
-.footer {
-    background-color: #343a40; /* Dark footer background */
-    color: white;
-    padding: 15px 0; /* Padding for footer */
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    text-align: center; /* Center footer text */
-    margin-top: 10px;
-}
 
 /* Button Styles */
 .btn {
