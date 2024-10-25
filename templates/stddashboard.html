@@ -166,7 +166,7 @@
                 width: calc(100% - 250px); /* Ensure container takes the remaining width */
             }
             .lead {
-                margin-left: 340px; /* Apply 500px left margin only on larger screens */
+                margin-left: 400px; /* Apply 500px left margin only on larger screens */
                 font-weight: bold;
                 font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             }
@@ -279,7 +279,7 @@
         <a href="#">Recorded Classes</a>
         <a href="#">Library</a>
         <hr>
-        <a href="#" class="text-danger">Logout</a>
+        <a href="{{ url_for('login') }}" class="text-danger">Logout</a>
     </div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
