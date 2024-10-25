@@ -404,15 +404,20 @@ def teacher_register():
 
 @app.route('/teacher/dashboard')
 def teacher_dashboard():
-    teacher_id = session.get('teacher_id')
     if 'teacher_id' not in session:
         return redirect(url_for('teacher_login'))
-    teacher = Teacher.query.get(teacher_id)
+
     teacher_id = session['teacher_id']
+    teacher = Teacher.query.get(teacher_id)
+
+    if teacher is None:
+        flash('Teacher not found.', 'danger')
+        return redirect(url_for('teacher_login'))
+
     assignments = Assignment.query.filter_by(teacher_id=teacher_id).all()
     announcements = Announcement.query.filter_by(teacher_id=teacher_id).all()
-    
-    return render_template('teacher_dashboard.html', teacher = teacher, assignments=assignments, announcements=announcements)
+
+    return render_template('teacher_dashboard.html', teacher=teacher, assignments=assignments, announcements=announcements)
 @app.route('/teacher/assignments/create', methods=['GET', 'POST'])
 def create_assignment():
     if 'teacher_id' not in session:
