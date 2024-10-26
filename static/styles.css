@@ -21,7 +21,7 @@ body {
 
 /* Hero Section */
 .hero-section {
-    background-image: url('https://source.unsplash.com/1600x900/?school,education');
+    background-color: linear-gradient(to right, #fe7b7b, #fa6363);
     background-size: cover;
     background-position: center;
     color: black;
