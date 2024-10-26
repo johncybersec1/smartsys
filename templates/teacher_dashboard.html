@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,28 +13,49 @@
             background-color: #f4f7fa;
             font-family: 'Arial', sans-serif;
         }
+
         /* Navbar */
         .navbar {
             background-color: #dc3545;
         }
+
         .navbar-brand img {
             height: 40px;
             margin-right: 8px;
             border-radius: 50%;
         }
+
         .navbar a.navbar-brand {
             color: white;
             font-weight: bold;
             font-size: 1.8rem;
         }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #fff;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .sidebar a {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .sidebar a:hover {
+            background-color: #f1f1f1;
+        }
+
         /* Dashboard Title */
         h2 {
             margin-top: 20px;
             color: #333;
         }
+
         h4 {
             color: #dc3545;
         }
+
         /* Dashboard Card */
         .dashboard-section {
             padding: 20px;
@@ -42,37 +64,47 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
         }
+
         .dashboard-section:hover {
             transform: translateY(-5px);
         }
+
         .list-group-item {
             background-color: #fff;
             border-radius: 10px;
             margin-bottom: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .btn {
             border-radius: 20px;
             padding: 10px 20px;
         }
-        .btn-success, .btn-info {
+
+        .btn-success,
+        .btn-info {
             border: none;
         }
+
         .btn-view {
             color: #007bff;
             cursor: pointer;
         }
+
         .badge-due-soon {
             background-color: #ffc107;
             color: #333;
         }
+
         .badge-overdue {
             background-color: #dc3545;
         }
+
         .badge-recent {
             background-color: #17a2b8;
             color: white;
         }
+
         footer {
             margin-top: 30px;
             text-align: center;
@@ -81,11 +113,24 @@
             color: white;
             border-radius: 0 0 10px 10px;
         }
-        .assignment-details, .announcement-details {
+
+        .assignment-details,
+        .announcement-details {
             display: none;
+        }
+
+        /* Notification Styles */
+        .notification {
+            background-color: #f8d7da;
+            border-left: 5px solid #dc3545;
+        }
+
+        .chart-container {
+            height: 300px;
         }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
@@ -96,71 +141,114 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h2 class="text-center">Welcome, {{ teacher.name }}!</h2>
-
-        <!-- Dashboard Sections -->
-        <div class="row mt-4">
-            <!-- Assignments Section -->
-            <div class="col-md-6 dashboard-section">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4><i class="fas fa-tasks"></i> Your Assignments</h4>
-                    <span class="badge badge-primary badge-recent">New</span>
-                </div>
-                <ul class="list-group">
-                    {% for assignment in assignments %}
-                    <li class="list-group-item">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h5>{{ assignment.title }} 
-                                    {% if assignment.is_due_soon %}
-                                    <span class="badge badge-due-soon">Due Soon</span>
-                                    {% elif assignment.is_overdue %}
-                                    <span class="badge badge-overdue">Overdue</span>
-                                    {% endif %}
-                                </h5>
-                                <p>{{ assignment.description }}</p>
-                                <p><strong>Due:</strong> {{ assignment.due_date.strftime('%Y-%m-%d') }}</p>
-                            </div>
-                            <span class="btn-view" onclick="toggleDetails('assignment-{{ assignment.id }}')">View Details</span>
-                        </div>
-                        <div id="assignment-{{ assignment.id }}" class="assignment-details">
-                            <p><strong>Assigned to:</strong> {{ assignment.assigned_students }}</p>
-                        </div>
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 sidebar p-4">
+                <h4>Navigation</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
                     </li>
-                    {% else %}
-                    <li class="list-group-item">No assignments yet.</li>
-                    {% endfor %}
-                </ul>
-                <a href="{{ url_for('create_assignment') }}" class="btn btn-success mt-3">Create Assignment</a>
-            </div>
-
-            <!-- Announcements Section -->
-            <div class="col-md-6 dashboard-section">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4><i class="fas fa-bullhorn"></i> Your Announcements</h4>
-                    <span class="badge badge-primary badge-recent">New</span>
-                </div>
-                <ul class="list-group">
-                    {% for announcement in announcements %}
-                    <li class="list-group-item">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h5>{{ announcement.title }}</h5>
-                                <p>{{ announcement.content }}</p>
-                                <p><strong>Created at:</strong> {{ announcement.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
-                            </div>
-                            <span class="btn-view" onclick="toggleDetails('announcement-{{ announcement.id }}')">View Details</span>
-                        </div>
-                        <div id="announcement-{{ announcement.id }}" class="announcement-details">
-                            <p><strong>Audience:</strong> {{ announcement.audience }}</p>
-                        </div>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('assignments') }}"><i class="fas fa-tasks"></i> Assignments</a>
                     </li>
-                    {% else %}
-                    <li class="list-group-item">No announcements yet.</li>
-                    {% endfor %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('announcements') }}"><i class="fas fa-bullhorn"></i> Announcements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('grades') }}"><i class="fas fa-graduation-cap"></i> Grades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('settings') }}"><i class="fas fa-cog"></i> Settings</a>
+                    </li>
                 </ul>
-                <a href="{{ url_for('create_announcement') }}" class="btn btn-info mt-3">Create Announcement</a>
+            </nav>
+
+            <div class="col-md-10">
+                <h2 class="text-center">Welcome, {{ teacher.name }}!</h2>
+
+                <!-- Notifications Section -->
+                <div class="notification p-3 mt-3">
+                    <h5><i class="fas fa-info-circle"></i> Notifications</h5>
+                    <ul class="list-unstyled">
+                        <li>Don't forget to submit your grades by next Friday!</li>
+                        <li>Your assignment on "Math Basics" is due tomorrow.</li>
+                    </ul>
+                </div>
+
+                <!-- Dashboard Sections -->
+                <div class="row mt-4">
+                    <!-- Assignments Section -->
+                    <div class="col-md-6 dashboard-section">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4><i class="fas fa-tasks"></i> Your Assignments</h4>
+                            <span class="badge badge-primary badge-recent">New</span>
+                        </div>
+                        <ul class="list-group">
+                            {% for assignment in assignments %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5>{{ assignment.title }}
+                                            {% if assignment.is_due_soon %}
+                                            <span class="badge badge-due-soon">Due Soon</span>
+                                            {% elif assignment.is_overdue %}
+                                            <span class="badge badge-overdue">Overdue</span>
+                                            {% endif %}
+                                        </h5>
+                                        <p>{{ assignment.description }}</p>
+                                        <p><strong>Due:</strong> {{ assignment.due_date.strftime('%Y-%m-%d') }}</p>
+                                    </div>
+                                    <span class="btn-view" onclick="toggleDetails('assignment-{{ assignment.id }}')">View Details</span>
+                                </div>
+                                <div id="assignment-{{ assignment.id }}" class="assignment-details">
+                                    <p><strong>Assigned to:</strong> {{ assignment.assigned_students }}</p>
+                                </div>
+                            </li>
+                            {% else %}
+                            <li class="list-group-item">No assignments yet.</li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{{ url_for('create_assignment') }}" class="btn btn-success mt-3">Create Assignment</a>
+                    </div>
+
+                    <!-- Announcements Section -->
+                    <div class="col-md-6 dashboard-section">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4><i class="fas fa-bullhorn"></i> Your Announcements</h4>
+                            <span class="badge badge-primary badge-recent">New</span>
+                        </div>
+                        <ul class="list-group">
+                            {% for announcement in announcements %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5>{{ announcement.title }}</h5>
+                                        <p>{{ announcement.content }}</p>
+                                        <p><strong>Created at:</strong> {{ announcement.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                                    </div>
+                                    <span class="btn-view" onclick="toggleDetails('announcement-{{ announcement.id }}')">View Details</span>
+                                </div>
+                                <div id="announcement-{{ announcement.id }}" class="announcement-details">
+                                    <p><strong>Audience:</strong> {{ announcement.audience }}</p>
+                                </div>
+                            </li>
+                            {% else %}
+                            <li class="list-group-item">No announcements yet.</li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{{ url_for('create_announcement') }}" class="btn btn-info mt-3">Create Announcement</a>
+                    </div>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="row mt-4">
+                    <div class="col-md-12 dashboard-section">
+                        <h4><i class="fas fa-chart-bar"></i> Assignment Overview</h4>
+                        <div class="chart-container" id="assignmentChart"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -172,11 +260,44 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function toggleDetails(id) {
             const element = document.getElementById(id);
             element.style.display = element.style.display === "none" ? "block" : "none";
         }
+
+        // Sample data for the chart
+        const ctx = document.getElementById('assignmentChart').getContext('2d');
+        const assignmentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Completed', 'Pending', 'Overdue'],
+                datasets: [{
+                    label: 'Assignments',
+                    data: [12, 5, 3],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     </script>
 </body>
+
 </html>

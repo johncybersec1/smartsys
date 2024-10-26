@@ -1,7 +1,7 @@
 /* General styling */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
+    background-color:linear-gradient(to right, #fe7b7b, #fa6363);
 }
 
 .navbar {
