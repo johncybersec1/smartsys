@@ -3,37 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Teacher Registration</title>
+    <title>Teacher Registration | SmartSchool</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        /* Background */
+        body {
+            background: linear-gradient(to right, #fe7b7b, #fa6363);
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar {
+            background-color: transparent;
+        }
+        .navbar-brand img {
+            height: 40px;
+            width: auto;
+            margin-right: 6px;
+            border-radius: 50px;
+        }
+        .navbar a.navbar-brand {
+            font-weight: bold;
+            color: white;
+            font-size: 1.8rem;
+        }
+        .navbar .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        /* Registration Card */
+        .register-card {
+            max-width: 500px;
+            margin: 5% auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.8s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .register-card h2 {
+            color: #f36349;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .form-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 0.8rem;
+        }
+        .btn-cta {
+            width: 100%;
+            background: linear-gradient(to right, #ff5f5f, #fe7b7b);
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        .btn-cta:hover {
+            background: linear-gradient(to right, #fe7b7b, #fa6363);
+        }
+
+        /* Custom Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 3rem;
+            padding: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">Teacher Registration</h2>
-        <form method="POST" class="mt-4">
-            <div class="form-group">
-                <label for="name">Full Name</label>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='S.png') }}" alt="SmartSchool Logo">
+                SmartSchool
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('services') }}">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contacts') }}">Contacts</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Registration Card -->
+    <div class="register-card">
+        <h2>Teacher Registration</h2>
+        <form method="POST">
+            <div class="mb-4">
+                <label for="name" class="form-label">Full Name</label>
                 <input type="text" class="form-control" id="name" name="name" required>
             </div>
-            <div class="form-group">
-                <label for="email">Email Address</label>
+            <div class="mb-4">
+                <label for="email" class="form-label">Email Address</label>
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <div class="form-group">
-                <label for="school">School</label>
+            <div class="mb-4">
+                <label for="school" class="form-label">School</label>
                 <input type="text" class="form-control" id="school" name="school" required>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
-        </form>r5
+            <button type="submit" class="btn btn-cta">Register</button>
+        </form>
 
         <div class="text-center mt-3">
-            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+            <p>Already have an account? <a href="{{ url_for('login') }}" class="text-decoration-none" style="color: #ff7e5f;">Login here</a></p>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 SmartSchool. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

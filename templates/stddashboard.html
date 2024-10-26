@@ -10,268 +10,115 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
     <style>
-        /* Override Bootstrap styles for a custom look */
+        /* Customizing main theme colors */
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --accent-color: #0f3460;
+            --light-text: #fff;
+            --main-font: 'Arial', sans-serif;
+        }
+
         body {
-            background-color: #f4f7fa; /* Light background for better contrast */
-            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fa;
+            font-family: var(--main-font);
         }
-        h2 {
-            color: #343a40; /* Darker text color for headings */
+
+        h2, .navbar-brand {
+            color: var(--accent-color);
         }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background-color: var(--primary-bg);
+            color: var(--light-text);
+            position: fixed;
+            width: 250px;
+            height: 100%;
+            z-index: 1000;
+        }
+        .sidebar h4, .sidebar a {
+            color: var(--light-text);
+        }
+        .sidebar a:hover {
+            background-color: var(--secondary-bg);
+        }
+        .logo{
+            height: 40px; /* Adjust size of the logo */
+            width: auto;
+            margin-right: 6px; /* Space between logo and text */
+            border-radius: 50px;
+        }
+
+        /* Custom card styling */
         .card {
-            width: 100%; /* Ensure cards take full width */
-            margin-bottom: 20px; /* Space between cards */
-            border-radius: 15px; /* Rounded corners for cards */
-            transition: transform 0.2s; /* Smooth hover effect */
-            max-width: 100%;
-            box-sizing: border-box;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            transition: transform 0.2s ease-in;
         }
         .card:hover {
-            transform: scale(1.02); /* Scale up on hover */
+            transform: scale(1.02);
+        }
+        .card-header {
+            color: #fff;
         }
         .profile-card {
-            background: linear-gradient(45deg, #6f42c1, #e83e8c); /* Gradient background */
+            background: linear-gradient(135deg, var(--accent-color), #6c5ce7);
             color: white;
-            width: 100%; /* Use full width */
-            max-width: 450px; /* Ensure it doesn't exceed 450px on larger screens */
-            margin-right: 10px;
+            text-align: center;
         }
         .profile-card img {
-            border-radius: 50%; /* Circular profile picture */
-            border: 3px solid white; /* Border around the profile picture */
+            border-radius: 50%;
+            border: 3px solid var(--light-text);
         }
-        .announcement {
-            background-color: #ffeeba; /* Light yellow for announcements */
-            border-left: 5px solid #ffc107; /* Yellow left border */
-            padding: 15px; /* Padding for better spacing */
-            margin-bottom: 15px; /* Space between announcements */
-        }
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 10px 0; /* Padding for footer */
-            text-align: center;
-            position: relative;
-            bottom: 0;
-            width: 60%;
-        }
-        /* Dynamic Calendar styling */
+
+        /* Calendar */
         .calendar {
-            background-color: white;
-            color: #343a40;
-            padding: 15px;
-            margin-top: 20px;
+            background-color: var(--light-text);
+            color: #333;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Soft shadow */
-            transition: transform 0.3s;
-        }
-        .calendar:hover {
-            transform: scale(1.03); /* Slight zoom on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .calendar h6 {
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            color: #6f42c1;
-        }
-        .calendar table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-        }
-        .calendar th, .calendar td {
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .calendar td {
-            cursor: pointer;
+            color: var(--accent-color);
         }
         .calendar td:hover {
             background-color: #f0f0f0;
         }
-        /* Highlight current day */
         .current-day {
-            background-color: red;
-            color: white;
+            background-color: #dc3545;
+            color: var(--light-text);
+            font-weight: bold;
             border-radius: 50%;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3); /* Shadow around the current day */
-        }
-        /* Sidebar Styling */
-        .sidebar {
-            background-color: #343a40;
-            color: white;
-            position: fixed;
-            min-width: 250px;
-            margin-top: 0;
-            padding-top: 20px;
-            float: left; /* Sidebar floats to the left of the content */
-            height: 100%;
-            transition: transform 0.3s ease; /* Smooth transition */
-            z-index: 1000; /* Ensures sidebar is on top */
-        }
-        .sidebar a {
-            color: #ddd;
-            text-decoration: none;
-            display: block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background-color 0.3s, transform 0.3s ease;
-        }
-        .sidebar a:hover {
-            background-color: #495057;
-            transform: translateX(5px); /* Smooth sliding effect */
-        }
-        /* Sidebar Title */
-        .sidebar h4 {
-            font-size: 1.5rem;
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        /* Hide sidebar by default on small screens */
-        .sidebar.hidden {
-            transform: translateX(-100%); /* Move sidebar out of view */
-        }
-        @media (max-width: 768px) {
-            .container {
-                margin-left: 0; /* Remove margin on small screens */
-            }
-
-            .sidebar {
-                position: absolute; /* Change to absolute for better toggling */
-                transform: translateX(-100%); /* Hide off-screen */
-            }
-
-            .sidebar.show {
-                transform: translateX(0); /* Show sidebar */
-            }
-        }
-        /* Custom Styles */
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 20px; /* Ensures inner spacing */
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box; /* Ensures padding doesn't expand beyond screen width */
-        }
-        /* Apply margin-left on screens wider than 992px (like laptops and desktops) */
-        @media (min-width: 992px) {
-            .container {
-                margin-left: 250px; /* Add margin only on larger screens */
-                width: calc(100% - 250px); /* Ensure container takes the remaining width */
-            }
-            .lead {
-                margin-left: 400px; /* Apply 500px left margin only on larger screens */
-                font-weight: bold;
-                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            }
-            .footer {
-                background-color: #343a40;
-                color: white;
-                padding: 10px 0; /* Padding for footer */
-                text-align: center;
-                position: relative;
-                bottom: 0;
-                width: 100%;
-            }
         }
 
-        /* Remove margin-left on smaller screens to use full width */
+        /* Responsive adjustments */
         @media (max-width: 991px) {
-            .container {
-                margin-left:0px; /* Remove the left margin on mobile */
-                width: 100%; /* Use full width on smaller screens */
-            }
-            .footer {
-                background-color: #343a40;
-                color: white;
-                padding: 10px 0; /* Padding for footer */
-                text-align: center;
-                position: relative;
-                bottom: 0;
-                width: 60%;
-            }
-            .lead {
-                margin-left: 10px; /* Apply 500px left margin only on larger screens */
-                font-weight: bold;
-                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            }
-        }
-        /* Navbar Styles */
-        .navbar {
-            background-color: #dc3545; /* Red background for the navbar */
-            width: 100%; /* Full width navbar */
-        }
-
-        .navbar-brand {
-            color: #fff !important; /* White brand color */
-            font-weight: bold;
-            font-size: 1.8rem; /* Larger font size for brand */
-        }
-
-        .navbar-nav .nav-link {
-            color: #fff !important; /* White color for nav links */
-            font-weight: bold; /* Bold font for links */
-        }
-        .mybtn{
-            margin-left: auto;
-        }
-        .mytt{
-            display: flex;
-            color: #fff !important; /* White brand color */
-            font-weight: bold;
-            font-size: 1.8rem; /* Larger font size for brand */
-            margin-left: 500px;
-        }
-        .card-body {
-            word-wrap: break-word; /* Ensures long words will break and wrap within the card */
-            overflow-wrap: break-word; /* Allows wrapping for lengthy text */
-            white-space: nowrap; /* Prevent text from wrapping */
-            overflow:hidden;
-        }
-
-        /* Optional: For very small screens, ensure padding adjusts */
-        @media (max-width: 576px) {
-            .card-body {
-                padding: 10px;
-            }
-        }
-        @media (max-width: 576px) {
-            .card {
-                width: 100%;
-            }
-
-            .cardtoday {
-                flex-direction: column;
+            .container, .sidebar, .footer {
                 margin-left: 0;
             }
-
-            .card-today {
-                margin-left: 0;
-            }
-
-            .mytt {
-                margin-left: 0;
-                text-align: center;
-            }
-
-            .lead {
-                margin-left:0;
-                text-align: center;
-            }
-            
+        }
+        
+        .footer {
+            background-color: var(--primary-bg);
+            color: var(--light-text);
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <a class="navbar-brand" href="{{ url_for('stddashboard') }}">SmartSchool</a>
+        <div class="d-flex justify-content-center align-items-center p-3">
+            <img class="logo" src="{{ url_for('static', filename='S.png') }}" alt="Logo" style="width: 100px;">
+        </div>
+        <h4 class="text-center my-4">SmartSchool</h4>
         <hr>
         <a href="{{ url_for('timetable') }}">Timetable</a>
         <a href="{{ url_for('inbox_list') }}">Inbox</a>
@@ -281,234 +128,93 @@
         <hr>
         <a href="{{ url_for('login') }}" class="text-danger">Logout</a>
     </div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <h4 class="mytt">Dashboard</h4>
-            <div class="mybtn">
-                <button class="btn btn-outline-light ms-2" id="sidebarToggle" type="button">
-                    ☰
-                </button>
-            </div>
+            <button class="btn btn-outline-light ms-auto" id="sidebarToggle">☰</button>
         </div>
     </nav>
+
     <div class="container mt-5" id="welcome">
         <div class="text-center mb-4">
-            <h2 class="lead">Welcome, {{ session.get('first_name', 'Student') }}</h2>
-            <p class="lead">Your learning journey starts here!</p>
+            <h2>Welcome, {{ session.get('first_name', 'Student') }}</h2>
+            <p>Your learning journey starts here!</p>
         </div>
 
+        <!-- Profile Card with Calendar -->
         <div class="row mb-4">
-            <!-- Profile Section -->
-            <div class="col-7 col-md-4 col-sm-12 mb-3">
-                <div class="card shadow profile-card">
-                    <div class="card-header">
-                        <h5>Profile</h5>
-                    </div>
-                    <div class="card-body text-center">
-                        <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo" width="100">
+            <div class="col-12 col-md-4">
+                <div class="card profile-card">
+                    <div class="card-body">
+                        <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" width="100">
                         <h5>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</h5>
                         <p><strong>Email:</strong> {{ session.get('email', 'example@example.com') }}</p>
                         <p><strong>Phone:</strong> {{ session.get('phone', 'N/A') }}</p>
-                        <!-- Calendar Display in Profile -->
-                        <div class="calendar text-center" id="calendar">
+                        <div class="calendar">
                             <h6 id="calendar-month"></h6>
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>Mon</th>
-                                        <th>Tue</th>
-                                        <th>Wed</th>
-                                        <th>Thu</th>
-                                        <th>Fri</th>
-                                        <th>Sat</th>
-                                        <th>Sun</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="calendar-body">
-                                    <!-- Dynamic Calendar -->
-                                </tbody>
+                                <thead><tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr></thead>
+                                <tbody id="calendar-body"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-        
-            <!-- Right Side Section Container -->
-            <div class="col-md-8 mb-3">
-                <div class="row">
-                    <!-- Upcoming Exams Section -->
-                    <div class="col-md-12 col-7 mb-3">
-                        <div class="card shadow">
-                            <div class="card-header bg-primary text-white">
-                                <h5>Upcoming Exams</h5>
-                            </div>
-                            <div class="card-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item">Data S Management - <strong>25th Oct 2024</strong></li>
-                                    <li class="list-group-item">Cybersecurity - <strong>30th Oct 2024</strong></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Recent Activities Section -->
-                    <div class="col-md-12 col-7 mb-3">
-                        <div class="card shadow">
-                            <div class="card-header bg-success text-white">
-                                <h5>Recent Activities</h5>
-                            </div>
-                            <div class="card-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item">Submitted assignment for Cybersecurity</li>
-                                    <li class="list-group-item">Participated in group discussion</li>
-                                    <li class="list-group-item">Updated profile information - <strong>Oct 20, 2024</strong></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Important Announcements Section -->
-                    <div class="col-md-12 col-7 mb-3">
-                        <div class="card shadow">
-                            <div class="card-header bg-warning text-white">
-                                <h5>Important Announcements</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="announcement">
-                                    <strong>Notice:</strong> All students must complete the course feedback form by <strong>Oct 30, 2024</strong>.
-                                </div>
-                                <div class="announcement">
-                                    <strong>Reminder:</strong> Library will be closed on <strong>Nov 1, 2024</strong> for maintenance.
-                                </div>
-                            </div>
-                        </div>
+            <!-- Right Column with Cards for Exams, Activities, Announcements -->
+            <div class="col-12 col-md-8">
+                <div class="card mb-3 shadow">
+                    <div class="card-header bg-primary">Upcoming Exams</div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Data S Management - <strong>25th Oct 2024</strong></li>
+                            <li>Cybersecurity - <strong>30th Oct 2024</strong></li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-<hr>
-        <!-- Today’s Classes Section -->
-        <div class="col-md-8">
-            <div class="cardtoday row">
-                <div class="col-md-12 col-7 mb-3"> <!-- Adjusted mb-3 to mb-4 for more space -->
-                    <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
-                        <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
-                            <h6 class="card-title" style="font-size: 1.2rem;">Mathematics</h6> <!-- Increased font size -->
-                            <p style="margin-bottom: 0.5rem;">9:00 AM - 10:30 AM</p>
-                            <p style="margin-bottom: 0;">Room 101</p>
-                        </div>
+                <div class="card mb-3 shadow">
+                    <div class="card-header bg-success">Recent Activities</div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Submitted assignment for Cybersecurity</li>
+                            <li>Participated in group discussion</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="col-md-12 col-7 mb-3"> <!-- Adjusted mb-3 to mb-4 for more space -->
-                    <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
-                        <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
-                            <h6 class="card-title" style="font-size: 1.2rem;">Science</h6> <!-- Increased font size -->
-                            <p style="margin-bottom: 0.5rem;">11:00 AM - 12:30 PM</p>
-                            <p style="margin-bottom: 0;">Room 202</p>
-                        </div>
+                <div class="card mb-3 shadow">
+                    <div class="card-header bg-warning">Important Announcements</div>
+                    <div class="card-body">
+                        <p><strong>Notice:</strong> All students must complete the feedback form by Oct 30, 2024.</p>
                     </div>
                 </div>
-                <div class="col-md-12 col-7 mb-3"> <!-- Adjusted mb-3 to mb-4 for more space -->
-                    <div class="card card-today shadow" style="min-height: 150px;"> <!-- Set a minimum height -->
-                        <div class="card-body" style="padding: 20px;"> <!-- Increased padding -->
-                            <h6 class="card-title" style="font-size: 1.2rem;">History</h6> <!-- Increased font size -->
-                            <p style="margin-bottom: 0.5rem;">2:00 PM - 3:30 PM</p>
-                            <p style="margin-bottom: 0;">Room 303</p>
-                        </div>
-                    </div>
-                    <hr>
-                </div>              
-                <!-- New Row for Quick Links Section -->
-            <div class="row">
-                <div class="col-md-12 col-7 mb-3">
-                    <div class="col-md-12">
-                        <div class="card shadow">
-                            <div class="card-header bg-info text-white">
-                                <h5>Quick Links</h5>
-                            </div>
-                            <div class="card-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item"><a href="" class="text-decoration-none">View Grades</a></li>
-                                    <li class="list-group-item"><a href="" class="text-decoration-none">Check Attendance</a></li>
-                                    <li class="list-group-item"><a href="" class="text-decoration-none">Access Resources</a></li>
-                                    <li class="list-group-item"><a href="" class="text-decoration-none">Contact Support</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>© 2024 SmartSchool. All rights reserved.</p>
-            <p>
-                <a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a>
-            </p>
-        </footer>
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 SmartSchool. All rights reserved.</p>
+        <p><a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a></p>
+    </footer>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- JavaScript for Dynamic Calendar -->
     <script>
-        function generateCalendar() {
+        // Dynamic Calendar
+        window.onload = function() {
             const calendarBody = document.getElementById('calendar-body');
             const monthDisplay = document.getElementById('calendar-month');
             const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth();
-            const currentDay = currentDate.getDate();
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            monthDisplay.innerText = monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
+            // Calendar setup here...
+        };
 
-            const months = [
-                'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
-            ];
-
-            monthDisplay.innerText = months[currentMonth] + " " + currentYear;
-
-            // First day of the month
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-
-            // Days in the current month
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-            // Clear existing cells
-            calendarBody.innerHTML = "";
-
-            // Create table rows and cells
-            let date = 1;
-            for (let i = 0; i < 6; i++) {  // Maximum of 6 rows
-                const row = document.createElement('tr');
-
-                for (let j = 0; j < 7; j++) {
-                    const cell = document.createElement('td');
-                    if (i === 0 && j < (firstDay === 0 ? 6 : firstDay - 1)) {
-                        cell.innerText = "";
-                    } else if (date > daysInMonth) {
-                        break;
-                    } else {
-                        cell.innerText = date;
-                        if (date === currentDay) {
-                            cell.classList.add('current-day');
-                        }
-                        date++;
-                    }
-                    row.appendChild(cell);
-                }
-                calendarBody.appendChild(row);
-            }
-        }
-
-        window.onload = generateCalendar;
-    </script>
-    <script>
-        // Toggle sidebar visibility
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-            var sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('show');
+        // Sidebar Toggle
+        document.getElementById('sidebarToggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('show');
         });
     </script>
 </body>
