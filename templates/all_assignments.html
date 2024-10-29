@@ -71,13 +71,14 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='S.png') }}" alt="SmartSchool Logo">
-                SmartSchool
-            </a>
+            <h4 class="mytt">Dashboard</h4>
+            <div class="mybtn">
+                <button class="btn btn-outline-light ms-2" id="sidebarToggle" type="button">
+                    ☰
+                </button>
+            </div>
         </div>
     </nav>
     <div class="container">
