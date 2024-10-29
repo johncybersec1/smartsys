@@ -286,9 +286,13 @@ def stddashboard():
     # Fetch all messages received by the user
     received_messages = Message.query.filter_by(receiver_id=user_id).order_by(Message.timestamp.desc()).all()
 
+    # Fetch all assignments and announcements for display in the student dashboard
+    assignments = Assignment.query.order_by(Assignment.due_date.asc()).all()  # Sorted by due date
+    announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()  # Sorted by creation date
+
     users = User.query.filter(User.id != user_id).all()
 
-    return render_template('stddashboard.html', user=user, received_messages=received_messages, users=users)
+    return render_template('stddashboard.html', user=user, received_messages=received_messages, assignments = assignments, announcements=announcements, users=users)
 
 # New route for the timetable with pagination
 @app.route('/timetable')

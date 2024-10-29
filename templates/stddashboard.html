@@ -352,37 +352,36 @@
                         </div>
                     </div>
 
-                    <!-- Recent Activities Section -->
-                    <div class="col-md-12 col-7 mb-3">
-                        <div class="card shadow">
-                            <div class="card-header bg-success text-white">
-                                <h5>Recent Activities</h5>
+                    <!-- Display Assignments -->
+                    <h2>Assignments</h2>
+                    <div class="assignments">
+                        {% for assignment in assignments %}
+                            <div class="card">
+                                <div class="card-header">{{ assignment.title }}</div>
+                                <div class="card-body">
+                                    <p>{{ assignment.description }}</p>
+                                    <small>Due on: {{ assignment.due_date.strftime('%Y-%m-%d') }}</small>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item">Submitted assignment for Cybersecurity</li>
-                                    <li class="list-group-item">Participated in group discussion</li>
-                                    <li class="list-group-item">Updated profile information - <strong>Oct 20, 2024</strong></li>
-                                </ul>
-                            </div>
-                        </div>
+                        {% else %}
+                            <p>No assignments available.</p>
+                        {% endfor %}
                     </div>
 
-                    <!-- Important Announcements Section -->
-                    <div class="col-md-12 col-7 mb-3">
-                        <div class="card shadow">
-                            <div class="card-header bg-warning text-white">
-                                <h5>Important Announcements</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="announcement">
-                                    <strong>Notice:</strong> All students must complete the course feedback form by <strong>Oct 30, 2024</strong>.
-                                </div>
-                                <div class="announcement">
-                                    <strong>Reminder:</strong> Library will be closed on <strong>Nov 1, 2024</strong> for maintenance.
+                    <!-- Display Announcements -->
+                    <h2>Announcements</h2>
+                    <div class="announcements">
+                        {% for announcement in announcements %}
+                            <div class="card">
+                                <div class="card-header">{{ announcement.title }}</div>
+                                <div class="card-body">
+                                    <p>{{ announcement.content }}</p>
+                                    <small>Posted on: {{ announcement.created_at.strftime('%Y-%m-%d') }}</small>
                                 </div>
                             </div>
-                        </div>
+                        {% else %}
+                            <p>No announcements available.</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
