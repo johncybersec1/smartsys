@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Assignments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>All Assignments</h2>
+        <div class="assignments mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Assignment List</h5>
+                </div>
+                <div class="card-body">
+                    {% if assignments %}
+                        <ul class="list-unstyled">
+                            {% for assignment in assignments %}
+                                <li class="mb-4">
+                                    <a href="{{ url_for('assignment_details', assignment_id=assignment.id) }}" class="text-decoration-none">
+                                        <strong>{{ assignment.title }}</strong>
+                                    </a>
+                                    <p>{{ assignment.description }}</p> <!-- Full description for each assignment -->
+                                    <small>Due on: {{ assignment.due_date.strftime('%Y-%m-%d') }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No assignments available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <a href="{{ url_for('stddashboard') }}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+    </div>
+</body>
+</html>

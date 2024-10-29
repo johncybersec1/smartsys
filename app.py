@@ -486,6 +486,10 @@ def logout():
         flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
+@app.route('/all_assignments')
+def all_assignments():
+    return render_template('all_assignments.html')
+
 @app.route('/get-started')
 def get_started():
     return render_template('get_started.html')
