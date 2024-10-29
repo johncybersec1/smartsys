@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Assignments</title>
+    <link rel="icon" href="{{ url_for('static', filename='fav.ico') }}" type="image/x-icon">
     <style>
         /* General styles */
         body {
@@ -15,21 +16,18 @@
         }
         .navbar {
             background-color: #dc3545;
+            padding: 10px;
         }
         .navbar-brand img {
-            height: 40px; /* Adjust size of the logo */
+            height: 40px;
             width: auto;
-            margin-right: 6px; /* Space between logo and text */
+            margin-right: 6px;
             border-radius: 50px;
         }
         .navbar a.navbar-brand {
             font-weight: bold;
             color: white;
             font-size: 1.8rem;
-        }
-        .navbar .nav-link {
-            color: white !important;
-            font-weight: 500;
         }
         .container {
             max-width: 800px;
@@ -39,40 +37,31 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
         h1 {
             text-align: center;
             color: #5d5c61;
             margin-bottom: 20px;
         }
-
-        /* Table styles */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-
         thead {
             background-color: #5d5c61;
             color: white;
         }
-
         th, td {
             padding: 12px;
             text-align: left;
             border: 1px solid #ddd;
         }
-
         tbody tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-
         tbody tr:hover {
             background-color: #ddd;
         }
-
-        /* No assignments message */
         .no-assignments {
             text-align: center;
             margin-top: 20px;

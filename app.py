@@ -488,11 +488,14 @@ def logout():
 
 @app.route('/all_assignments')
 def all_assignments():
-    # Fetch all assignments from the database
-    assignments = Assignment.query.order_by(Assignment.due_date.asc()).all()  # Fetch all assignments sorted by due date
-
-    # Pass the assignments to the template for rendering
-    return render_template('all_assignments.html', assignments=assignments)
+    try:
+        # Fetch all assignments from the database
+        assignments = Assignment.query.order_by(Assignment.due_date.asc()).all()
+        print(f"Assignments fetched: {[assignment.title for assignment in assignments]}")  # Debug print
+        return render_template('all_assignments.html', assignments=assignments)
+    except Exception as e:
+        print(f"Error fetching assignments: {e}")  # Print the error to console
+        return "Internal Server Error", 500
 
 @app.route('/get-started')
 def get_started():
