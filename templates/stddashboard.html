@@ -352,14 +352,17 @@
                         </div>
                     </div>
 
-                    <!-- Display Assignments -->
-                    <h2>Assignments</h2>
+                    <!-- Updated assignment loop in dashboard -->
                     <div class="assignments">
                         {% for assignment in assignments %}
                             <div class="card">
-                                <div class="card-header">{{ assignment.title }}</div>
+                                <div class="card-header">
+                                    <a href="{{ url_for('assignment_details', assignment_id=assignment.id) }}" class="text-decoration-none">
+                                        {{ assignment.title }}
+                                    </a>
+                                </div>
                                 <div class="card-body">
-                                    <p>{{ assignment.description }}</p>
+                                    <p>{{ assignment.description[:100] }}...</p> <!-- Show a brief snippet -->
                                     <small>Due on: {{ assignment.due_date.strftime('%Y-%m-%d') }}</small>
                                 </div>
                             </div>

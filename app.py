@@ -467,6 +467,15 @@ def create_announcement():
     
     return render_template('create_announcement.html')
 
+@app.route('/assignment/<int:assignment_id>')
+def assignment_details(assignment_id):
+    # Fetch the assignment based on its ID
+    assignment = Assignment.query.get(assignment_id)
+    if assignment:
+        return render_template('assignment_details.html', assignment=assignment)
+    else:
+        return "Assignment not found", 404
+
 @app.route('/logout', methods=['POST'])
 def logout():
     if 'user_id' in session:
