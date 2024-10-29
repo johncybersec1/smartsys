@@ -275,6 +275,7 @@
         <hr>
         <a href="{{ url_for('timetable') }}">Timetable</a>
         <a href="{{ url_for('inbox_list') }}">Inbox</a>
+        <a href="{{ url_for('all_assignments') }}">Assignments</a>
         <a href="#">Live Classes</a>
         <a href="#">Recorded Classes</a>
         <a href="#">Library</a>
@@ -352,23 +353,34 @@
                         </div>
                     </div>
 
-                    <!-- Updated assignment loop in dashboard -->
                     <div class="assignments">
-                        {% for assignment in assignments %}
-                            <div class="card">
-                                <div class="card-header">
-                                    <a href="{{ url_for('assignment_details', assignment_id=assignment.id) }}" class="text-decoration-none">
-                                        {{ assignment.title }}
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <p>{{ assignment.description[:100] }}...</p> <!-- Show a brief snippet -->
-                                    <small>Due on: {{ assignment.due_date.strftime('%Y-%m-%d') }}</small>
-                                </div>
+                        <!-- Single Card for All Assignments -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Assignments</h5>
                             </div>
-                        {% else %}
-                            <p>No assignments available.</p>
-                        {% endfor %}
+                            <div class="card-body">
+                                {% if assignments %}
+                                    <ul class="list-unstyled">
+                                        {% for assignment in assignments[:5] %} <!-- Limit to 5 assignments -->
+                                            <li class="mb-3">
+                                                <a href="{{ url_for('assignment_details', assignment_id=assignment.id) }}" class="text-decoration-none">
+                                                    <strong>{{ assignment.title }}</strong>
+                                                </a>
+                                                <p>{{ assignment.description[:100] }}...</p> <!-- Brief snippet of description -->
+                                                <small>Due on: {{ assignment.due_date.strftime('%Y-%m-%d') }}</small>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <!-- Link to view all assignments -->
+                                    <div class="mt-3">
+                                        <a href="{{ url_for('all_assignments') }}" class="btn btn-link">View All Assignments</a>
+                                    </div>
+                                {% else %}
+                                    <p>No assignments available.</p>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Display Announcements -->
