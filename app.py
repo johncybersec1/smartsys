@@ -488,7 +488,11 @@ def logout():
 
 @app.route('/all_assignments')
 def all_assignments():
-    return render_template('all_assignments.html')
+    # Fetch all assignments from the database
+    assignments = Assignment.query.order_by(Assignment.due_date.asc()).all()  # Fetch all assignments sorted by due date
+
+    # Pass the assignments to the template for rendering
+    return render_template('all_assignments.html', assignments=assignments)
 
 @app.route('/get-started')
 def get_started():

@@ -4,36 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Assignments</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> <!-- Adjust if needed -->
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>All Assignments</h2>
-        <div class="assignments mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Assignment List</h5>
-                </div>
-                <div class="card-body">
-                    {% if assignments %}
-                        <ul class="list-unstyled">
-                            {% for assignment in assignments %}
-                                <li class="mb-4">
-                                    <a href="{{ url_for('assignment_details', assignment_id=assignment.id) }}" class="text-decoration-none">
-                                        <strong>{{ assignment.title }}</strong>
-                                    </a>
-                                    <p>{{ assignment.description }}</p> <!-- Full description for each assignment -->
-                                    <small>Due on: {{ assignment.due_date.strftime('%Y-%m-%d') }}</small>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No assignments available.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <a href="{{ url_for('stddashboard') }}" class="btn btn-secondary mt-4">Back to Dashboard</a>
-    </div>
+    <h1>All Assignments</h1>
+    
+    {% if assignments %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assignment in assignments %}
+                    <tr>
+                        <td>{{ assignment.title }}</td>
+                        <td>{{ assignment.description }}</td>
+                        <td>{{ assignment.due_date.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No assignments available.</p>
+    {% endif %}
 </body>
 </html>
