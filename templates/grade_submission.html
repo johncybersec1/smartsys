@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3>Grade Submission</h3>
+    <p>Student: {{ submission.student.first_name }} {{ submission.student.last_name }}</p>
+    <p>Assignment: {{ submission.assignment.title }}</p>
+    <p>Submitted on: {{ submission.submitted_at }}</p>
+    <a href="{{ url_for('static', filename=submission.file_url) }}">Download Submission</a>
+
+    <form method="POST">
+        <label for="grade">Grade:</label>
+        <input type="text" name="grade" required>
+        <label for="feedback">Feedback:</label>
+        <textarea name="feedback"></textarea>
+        <button type="submit">Submit Grade</button>
+    </form>
+
+</body>
+</html>

@@ -291,8 +291,8 @@ def stddashboard():
     announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()  # Sorted by creation date
 
     users = User.query.filter(User.id != user_id).all()
-
-    return render_template('stddashboard.html', user=user, received_messages=received_messages, assignments = assignments, announcements=announcements, users=users)
+    submissions = Submission.query.filter_by(student_id=user_id).all()
+    return render_template('stddashboard.html', user=user, received_messages=received_messages, assignments = assignments, announcements=announcements, users=users, submissions = submissions)
 
 # New route for the timetable with pagination
 @app.route('/timetable')
@@ -495,12 +495,99 @@ def all_assignments():
         return render_template('all_assignments.html', assignments=assignments)
     except Exception as e:
         print(f"Error fetching assignments: {e}")  # Print the error to console
-        return "Internal Server Error", 500
+        return "Internal Server Error", 50055
 
 @app.route('/get-started')
 def get_started():
     return render_template('get_started.html')
 
+class Submission(db.Model):
+    __tablename__ = 'submissions'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
+    assignment_id = db.Column(db.Integer, db.ForeignKey('assignments.id'), nullable=False)
+    submitted_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    file_url = db.Column(db.String(200), nullable=False)  # URL to the submitted file
+    status = db.Column(db.String(50), default="Submitted")  # Status of the submission (e.g., Submitted, Graded)
+
+    student = db.relationship('User', backref='submissions')
+    assignment = db.relationship('Assignment', backref='submissions')
+
+    def __repr__(self):
+        return f'<Submission {self.id}, Student ID: {self.student_id}, Assignment ID: {self.assignment_id}>'
+
+@app.route('/submit_assignment/<int:assignment_id>', methods=['GET', 'POST'])
+def submit_assignment(assignment_id):
+    if 'user_id' not in session or session['role'] != 'student':
+        flash("You need to login as a student to submit assignments.", "danger")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Assuming a file upload is involved, with file saved in 'uploads/' directory
+        file = request.files['file']
+        if file:
+            file_url = os.path.join('uploads', file.filename)
+            file.save(file_url)
+
+            submission = Submission(
+                student_id=session['user_id'],
+                assignment_id=assignment_id,
+                file_url=file_url
+            )
+            db.session.add(submission)
+            db.session.commit()
+            flash("Assignment submitted successfully!", "success")
+            return redirect(url_for('stddashboard'))
+
+    assignment = Assignment.query.get(assignment_id)
+    return render_template('submit_assignment.html', assignment=assignment)
+
+class Grade(db.Model):
+    __tablename__ = 'grades'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    submission_id = db.Column(db.Integer, db.ForeignKey('submissions.id'), nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
+    grade = db.Column(db.String(10))  # Grade (e.g., A, B, 85%)
+    feedback = db.Column(db.Text, nullable=True)
+    graded_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    submission = db.relationship('Submission', backref='grade')
+    teacher = db.relationship('Teacher', backref='grades')
+
+    def __repr__(self):
+        return f'<Grade {self.id}, Submission ID: {self.submission_id}, Teacher ID: {self.teacher_id}>'
+
+@app.route('/grade_submission/<int:submission_id>', methods=['GET', 'POST'])
+def grade_submission(submission_id):
+    if 'teacher_id' not in session:
+        flash("You need to login as a teacher to grade assignments.", "danger")
+        return redirect(url_for('login'))
+
+    submission = Submission.query.get(submission_id)
+    if request.method == 'POST':
+        grade_value = request.form['grade']
+        feedback = request.form.get('feedback')
+
+        grade = Grade(
+            submission_id=submission_id,
+            teacher_id=session['teacher_id'],
+            grade=grade_value,
+            feedback=feedback
+        )
+        submission.status = "Graded"
+        db.session.add(grade)
+        db.session.commit()
+        flash("Grade submitted successfully!", "success")
+        return redirect(url_for('teacher_dashboard'))
+
+    return render_template('grade_submission.html', submission=submission)
+
+#view submission
+@app.route('/mygrades')
+def mygrades():
+    return render_template('mygrades.html')
 if __name__ == '__main__':
     app.debug = True
     socketio.run(app)

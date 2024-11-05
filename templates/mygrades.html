@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>My Submissions</h2>
+    <table>
+        <tr>
+            <th>Assignment</th>
+            <th>Submission Date</th>
+            <th>Status</th>
+            <th>Grade</th>
+            <th>Feedback</th>
+        </tr>
+        {% for submission in submissions %}
+        <tr>
+            <td>{{ submission.assignment.title }}</td>
+            <td>{{ submission.submitted_at }}</td>
+            <td>{{ submission.status }}</td>
+            <td>{{ submission.grade.grade if submission.grade else "Pending" }}</td>
+            <td>{{ submission.grade.feedback if submission.grade else "" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
