@@ -21,7 +21,7 @@ socketio = SocketIO(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+UPLOAD_FOLDER = 'C:/Users/mwang/Desktop/SchoolSmart_Project/smartsys/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 class UserRole(PyEnum):
@@ -547,9 +547,8 @@ def submit_assignment(assignment_id):
         # Validate file upload
         if file and allowed_file(file.filename):
             # Ensure the uploads folder exists
-            upload_folder = 'uploads'
-            if not os.path.exists(upload_folder):
-                os.makedirs(upload_folder)
+            if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])
 
             # Generate a unique filename based on the current timestamp to avoid conflicts
             timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -557,7 +556,7 @@ def submit_assignment(assignment_id):
             unique_filename = f"{timestamp}_{filename}"  # Add timestamp to filename for uniqueness
 
             # Define the path to save the file
-            file_path = os.path.join(upload_folder, unique_filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
 
             # Save the file
             file.save(file_path)
@@ -646,8 +645,8 @@ def download_submission_file(submission_id):
 # Define the route to serve files
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    # Serve the file from the 'uploads' folder
-    return send_from_directory(os.path.join(os.getcwd(), 'uploads'), filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 @app.route('/view_grades')
 def view_grades():
