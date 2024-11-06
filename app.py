@@ -546,7 +546,7 @@ def submit_assignment(assignment_id):
                 os.makedirs(upload_folder)
 
             # Generate a unique filename based on the current timestamp to avoid conflicts
-            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
             filename = secure_filename(file.filename)
             unique_filename = f"{timestamp}_{filename}"  # Add timestamp to filename for uniqueness
 
