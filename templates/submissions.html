@@ -8,19 +8,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="icon" href="{{ url_for('static', filename='fav.ico') }}" type="image/x-icon">
+
     <style>
+        /* Background */
         body {
-            background-color: #f4f7fa;
+            background: linear-gradient(to right, #fe7b7b, #fa6363);
             font-family: 'Arial', sans-serif;
         }
 
         .navbar {
-            background-color: #dc3545;
+            background-color: transparent;
         }
 
         .navbar-brand img {
             height: 40px;
-            margin-right: 8px;
+            margin-right: 6px;
             border-radius: 50%;
         }
 
@@ -30,21 +32,65 @@
             font-size: 1.8rem;
         }
 
+        .navbar .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        /* Notification Style */
         .notification {
             background-color: #f8d7da;
             border-left: 5px solid #dc3545;
+            padding: 1rem;
+            margin-bottom: 20px;
+            border-radius: 8px;
         }
 
+        .notification h5 {
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        /* Submission Content */
         .submission-content {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 1rem;
             border-radius: 8px;
-            background-color: #f9f9f9;
+            background-color: white;
             margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .grade-section {
-            margin-top: 20px;
+        .submission-content h4 {
+            color: #f36349;
+        }
+
+        .submission-content p {
+            color: #6c757d;
+        }
+
+        /* Grading Button */
+        .btn-warning {
+            background: linear-gradient(to right, #ff5f5f, #fe7b7b);
+            color: white;
+            border-radius: 25px;
+            padding: 0.5rem 1.5rem;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(to right, #fe7b7b, #fa6363);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 3rem;
+            padding: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -62,9 +108,9 @@
     <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="text-center">All Submissions</h2>
+                <h2 class="text-center text-white">All Submissions</h2>
 
-                <div class="notification p-3 mt-3">
+                <div class="notification">
                     <h5><i class="fas fa-info-circle"></i> Notifications</h5>
                     <ul class="list-unstyled">
                         <li>Review the assignments below and grade them.</li>
@@ -82,17 +128,17 @@
 
                             <!-- Show Submission Content -->
                             {% if submission.file_url %}
-                                <p><strong>File Submitted:</strong></p>
-                                <a href="{{ url_for('uploaded_file', filename=submission.file_url) }}" class="btn btn-info" target="_blank">View / Download File</a>
+                            <p><strong>File Submitted:</strong></p>
+                            <a href="{{ url_for('uploaded_file', filename=submission.file_url) }}" class="btn btn-info" target="_blank">View / Download File</a>
                             {% else %}
-                                <p>No file submitted.</p>
+                            <p>No file submitted.</p>
                             {% endif %}
 
                             <!-- Grading Interface -->
                             {% if submission.status != "Graded" %}
                             <p><a href="{{ url_for('grade_submission', submission_id=submission.id) }}" class="btn btn-warning">Grade This Submission</a></p>
                             {% else %}
-                                <p><span class="badge bg-success">Graded</span></p>
+                            <p><span class="badge bg-success">Graded</span></p>
                             {% endif %}
                         </div>
                         {% endfor %}
@@ -106,6 +152,9 @@
     <footer>
         <p>&copy; 2024 SmartSchool. All rights reserved.</p>
     </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

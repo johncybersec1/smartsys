@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade Submission | SmartSchool</title>
+    <title>Your Grades | SmartSchool</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -34,34 +34,29 @@
             font-weight: 500;
         }
 
-        /* Grade Submission Card */
-        .grade-card {
-            max-width: 600px;
+        /* Grades Table Styling */
+        .grades-card {
+            max-width: 900px;
             margin: 5% auto;
             padding: 2rem;
             background-color: white;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
-        .grade-card h2 {
+        .grades-card h2 {
             color: #f36349;
             font-weight: bold;
             margin-bottom: 1.5rem;
             text-align: center;
         }
-        .form-group label {
-            color: #6c757d;
-            font-weight: 500;
-        }
-        .form-control {
-            border-radius: 8px;
-            padding: 0.8rem;
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
         }
         .btn-cta {
-            width: 100%;
             background: linear-gradient(to right, #ff5f5f, #fe7b7b);
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             padding: 0.75rem;
             border: none;
             border-radius: 25px;
@@ -95,21 +90,38 @@
         </div>
     </nav>
 
-    <!-- Grade Submission Card -->
-    <div class="grade-card">
-        <h2>Grade Submission for {{ submission.student.name }}</h2>
-        
-        <form action="{{ url_for('grade_submission', submission_id=submission.id) }}" method="POST">
-            <div class="form-group">
-                <label for="grade">Grade</label>
-                <input type="text" class="form-control" id="grade" name="grade" required>
-            </div>
-            <div class="form-group mt-3">
-                <label for="feedback">Feedback</label>
-                <textarea class="form-control" id="feedback" name="feedback" rows="4"></textarea>
-            </div>
-            <button type="submit" class="btn btn-cta mt-3">Submit Grade</button>
-        </form>
+    <!-- Grades Table Card -->
+    <div class="grades-card">
+        <h2>Your Grades</h2>
+
+        {% if grades %}
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Assignment</th>
+                        <th>Grade</th>
+                        <th>Feedback</th>
+                        <th>Date Graded</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grades %}
+                        <tr>
+                            <td>{{ grade.submission.assignment.title }}</td>
+                            <td>{{ grade.grade }}</td>
+                            <td>{{ grade.feedback if grade.feedback else 'No feedback provided' }}</td>
+                            <td>{{ grade.graded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="alert alert-info">You have no grades yet.</p>
+        {% endif %}
+
+        {% if not grades %}
+            <a href="{{ url_for('view_assignments') }}" class="btn btn-cta mt-3">View Available Assignments</a>
+        {% endif %}
     </div>
 
     <!-- Footer -->
