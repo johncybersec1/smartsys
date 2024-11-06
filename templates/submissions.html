@@ -83,20 +83,14 @@
                             <!-- Show Submission Content -->
                             {% if submission.file_url %}
                                 <p><strong>File Submitted:</strong></p>
-                                <a href="{{ submission.file_url }}" class="btn btn-info" target="_blank">View / Download File</a>
+                                <a href="{{ url_for('uploaded_file', filename=submission.file_url) }}" class="btn btn-info" target="_blank">View / Download File</a>
                             {% else %}
                                 <p>No file submitted.</p>
                             {% endif %}
 
                             <!-- Grading Interface -->
                             {% if submission.status != "Graded" %}
-                            <form action="{{ url_for('grade_submission', submission_id=submission.id) }}" method="POST" class="grade-section">
-                                <div class="mb-3">
-                                    <label for="grade" class="form-label">Grade</label>
-                                    <input type="number" class="form-control" id="grade" name="grade" min="0" max="100" required>
-                                </div>
-                                <button type="submit" class="btn btn-success">Submit Grade</button>
-                            </form>
+                            <p><a href="{{ url_for('grade_submission', submission_id=submission.id) }}" class="btn btn-warning">Grade This Submission</a></p>
                             {% else %}
                                 <p><span class="badge bg-success">Graded</span></p>
                             {% endif %}

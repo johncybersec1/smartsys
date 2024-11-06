@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_sqlalchemy import SQLAlchemy
@@ -20,6 +20,9 @@ socketio = SocketIO(app)
 # Use pyMysSQL for the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
 db = SQLAlchemy(app)
+
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 class UserRole(PyEnum):
     student = 'student'
@@ -554,16 +557,16 @@ def submit_assignment(assignment_id):
             unique_filename = f"{timestamp}_{filename}"  # Add timestamp to filename for uniqueness
 
             # Define the path to save the file
-            file_url = os.path.join(upload_folder, unique_filename)
+            file_path = os.path.join(upload_folder, unique_filename)
 
             # Save the file
-            file.save(file_url)
+            file.save(file_path)
 
             # Save submission in the database
             submission = Submission(
                 student_id=session['user_id'],
                 assignment_id=assignment_id,
-                file_url=file_url
+                file_url=unique_filename  # Store just the filename
             )
             db.session.add(submission)
             db.session.commit()
@@ -640,6 +643,10 @@ def download_submission_file(submission_id):
         return redirect(url_for('submissions'))
 
     return send_file(submission.file_path, as_attachment=True)
+# Define the route to serve files
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 @app.route('/mygrades')
 def mygrades():
     return render_template('mygrades.html')
