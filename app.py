@@ -649,6 +649,25 @@ def uploaded_file(filename):
     # Serve the file from the 'uploads' folder
     return send_from_directory(os.path.join(os.getcwd(), 'uploads'), filename)
 
+@app.route('/view_grades')
+def view_grades():
+    # Check if the user is logged in and is a student
+    if 'user_id' not in session or session.get('role') != 'UserRole.student':
+        flash("You need to log in as a student to view your grades.", "danger")
+        return redirect(url_for('login'))
+
+    # Get the student ID from the session
+    student_id = session['user_id']
+
+    # Query grades for the logged-in student
+    grades = Grade.query.join(Submission).join(Assignment).filter(Submission.student_id == student_id).all()
+
+    # Check if grades exist
+    if not grades:
+        flash("You don't have any grades yet.", "info")
+
+    return render_template('view_grades.html', grades=grades)
+
 @app.route('/mygrades')
 def mygrades():
     return render_template('mygrades.html')

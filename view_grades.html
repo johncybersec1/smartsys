@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Grades</title>
+    <!-- Add your CSS file link here -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Your Grades</h2>
+
+        {% if grades %}
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Assignment</th>
+                        <th>Grade</th>
+                        <th>Feedback</th>
+                        <th>Date Graded</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grades %}
+                        <tr>
+                            <td>{{ grade.submission.assignment.title }}</td>
+                            <td>{{ grade.grade }}</td>
+                            <td>{{ grade.feedback if grade.feedback else 'No feedback provided' }}</td>
+                            <td>{{ grade.graded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="alert alert-info">You have no grades yet.</p>
+        {% endif %}
+        
+        <!-- If the student has no grades -->
+        {% if not grades %}
+            <a href="{{ url_for('view_assignments') }}" class="btn btn-primary mt-3">View Available Assignments</a>
+        {% endif %}
+    </div>
+
+    <!-- Optional JS links (Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
