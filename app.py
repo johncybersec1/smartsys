@@ -23,6 +23,7 @@ class UserRole(PyEnum):
     student = 'student'
     teacher = 'teacher'
 
+
 class Message(db.Model):  # Corrected to db.Model
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)
@@ -522,10 +523,13 @@ class Submission(db.Model):
 @app.route('/submit_assignment/<int:assignment_id>', methods=['GET', 'POST'])
 def submit_assignment(assignment_id):
     print("Session data at submit_assignment:", session) 
-    if 'user_id' not in session or session['role'] != 'UserRole.student':
+    
+    # Check if the user is logged in as a student
+    if 'user_id' not in session or session.get('role') != 'UserRole.student':
         flash("You need to log in as a student to submit assignments.", "danger")
         return redirect(url_for('login'))
 
+    # Retrieve the assignment
     assignment = Assignment.query.get(assignment_id)
     if not assignment:
         flash("Assignment not found.", "danger")
@@ -533,14 +537,26 @@ def submit_assignment(assignment_id):
 
     if request.method == 'POST':
         file = request.files['file']
-        
+
         # Validate file upload
         if file and allowed_file(file.filename):
-            # Save the file with a unique name
+            # Ensure the uploads folder exists
+            upload_folder = 'uploads'
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
+
+            # Generate a unique filename based on the current timestamp to avoid conflicts
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
             filename = secure_filename(file.filename)
-            file_url = os.path.join('uploads', filename)
+            unique_filename = f"{timestamp}_{filename}"  # Add timestamp to filename for uniqueness
+
+            # Define the path to save the file
+            file_url = os.path.join(upload_folder, unique_filename)
+
+            # Save the file
             file.save(file_url)
 
+            # Save submission in the database
             submission = Submission(
                 student_id=session['user_id'],
                 assignment_id=assignment_id,
@@ -548,6 +564,7 @@ def submit_assignment(assignment_id):
             )
             db.session.add(submission)
             db.session.commit()
+
             flash("Assignment submitted successfully!", "success")
             return redirect(url_for('stddashboard'))
         else:
