@@ -8,6 +8,8 @@ from flask_socketio import SocketIO, emit, join_room
 from sqlalchemy import Enum as SQLAEnum
 from enum import Enum as PyEnum
 from werkzeug.utils import secure_filename
+from flask import send_file
+
 
 
 app = Flask(__name__)
