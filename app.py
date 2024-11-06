@@ -522,7 +522,7 @@ class Submission(db.Model):
 @app.route('/submit_assignment/<int:assignment_id>', methods=['GET', 'POST'])
 def submit_assignment(assignment_id):
     print("Session data at submit_assignment:", session) 
-    if 'user_id' not in session or session['role'] != 'student':
+    if 'user_id' not in session or session['role'] != 'UserRole.student':
         flash("You need to log in as a student to submit assignments.", "danger")
         return redirect(url_for('login'))
 
