@@ -423,8 +423,9 @@ def teacher_dashboard():
 
     assignments = Assignment.query.filter_by(teacher_id=teacher_id).all()
     announcements = Announcement.query.filter_by(teacher_id=teacher_id).all()
+    submissions = Submission.query.filter(Submission.assignment_id.in_([a.id for a in assignments])).all()
 
-    return render_template('teacher_dashboard.html', teacher=teacher, assignments=assignments, announcements=announcements)
+    return render_template('teacher_dashboard.html', teacher=teacher, assignments=assignments, announcements=announcements, submissions = submissions)
 @app.route('/teacher/assignments/create', methods=['GET', 'POST'])
 def create_assignment():
     if 'teacher_id' not in session:
@@ -616,8 +617,27 @@ def grade_submission(submission_id):
         return redirect(url_for('teacher_dashboard'))
 
     return render_template('grade_submission.html', submission=submission)
+@app.route('/submissions')
+def submissions():
+    if 'teacher_id' not in session:
+        flash("You need to login as a teacher to view submissions.", "danger")
+        return redirect(url_for('login'))
 
+    # Query all submissions for the teacher
+    submissions = Submission.query.all()
+
+    return render_template('submissions.html', submissions=submissions)
 #view submission
+@app.route('/download_submission_file/<int:submission_id>')
+def download_submission_file(submission_id):
+    submission = Submission.query.get_or_404(submission_id)
+
+    # Make sure the submission has a file path
+    if not submission.file_path:
+        flash("No file found for this submission.", "danger")
+        return redirect(url_for('submissions'))
+
+    return send_file(submission.file_path, as_attachment=True)
 @app.route('/mygrades')
 def mygrades():
     return render_template('mygrades.html')

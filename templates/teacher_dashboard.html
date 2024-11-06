@@ -158,6 +158,9 @@
                         <a class="nav-link" href="#"><i class="fas fa-bullhorn"></i> Announcements</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('submissions') }}"><i class="fas fa-inbox"></i> Submissions</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-graduation-cap"></i> Grades</a>
                     </li>
                     <li class="nav-item">
@@ -171,15 +174,6 @@
 
             <div class="col-md-10">
                 <h2 class="text-center">Welcome, {{ teacher.name }}!</h2>
-
-                <!-- Notifications Section -->
-                <div class="notification p-3 mt-3">
-                    <h5><i class="fas fa-info-circle"></i> Notifications</h5>
-                    <ul class="list-unstyled">
-                        <li>Don't forget to submit your grades by next Friday!</li>
-                        <li>Your assignment on "Math Basics" is due tomorrow.</li>
-                    </ul>
-                </div>
 
                 <!-- Dashboard Sections -->
                 <div class="row mt-4">
@@ -244,30 +238,30 @@
                         </ul>
                         <a href="{{ url_for('create_announcement') }}" class="btn btn-info mt-3">Create Announcement</a>
                     </div>
-                </div>
-                <!-- Submissions Section -->
-                <div class="col-md-12 dashboard-section">
-                    <h4><i class="fas fa-tasks"></i> Submissions</h4>
-                    <ul class="list-group">
-                        {% for submission in submissions %}
-                        <li class="list-group-item">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5>Submission by: {{ submission.student.name }}</h5>
-                                    <p><strong>Assignment:</strong> {{ submission.assignment.title }}</p>
-                                    <p><strong>Status:</strong> {{ submission.status }}</p>
+                    <!-- Submissions Section -->
+                    <div class="col-md-12 dashboard-section">
+                        <h4><i class="fas fa-tasks"></i> Submissions</h4>
+                        <ul class="list-group">
+                            {% for submission in submissions %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5>Submission by: {{ submission.student.name }}</h5>
+                                        <p><strong>Assignment:</strong> {{ submission.assignment.title }}</p>
+                                        <p><strong>Status:</strong> {{ submission.status }}</p>
+                                    </div>
+                                    {% if submission.status != "Graded" %}
+                                    <a href="{{ url_for('grade_submission', submission_id=submission.id) }}" class="btn btn-warning">Grade</a>
+                                    {% else %}
+                                    <span class="badge bg-success">Graded</span>
+                                    {% endif %}
                                 </div>
-                                {% if submission.status != "Graded" %}
-                                <a href="{{ url_for('grade_submission', submission_id=submission.id) }}" class="btn btn-warning">Grade</a>
-                                {% else %}
-                                <span class="badge bg-success">Graded</span>
-                                {% endif %}
-                            </div>
-                        </li>
-                        {% else %}
-                        <li class="list-group-item">No submissions yet.</li>
-                        {% endfor %}
-                    </ul>
+                            </li>
+                            {% else %}
+                            <li class="list-group-item">No submissions yet.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- Chart Section -->
