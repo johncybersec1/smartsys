@@ -3,16 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment Details</title>
+    <title>Assignment Details | SmartSchool</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='fav.ico') }}" type="image/x-icon">
+
+    <style>
+        /* Background */
+        body {
+            background: linear-gradient(to right, #fe7b7b, #fa6363);
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: transparent;
+        }
+        .navbar-brand img {
+            height: 40px;
+            width: auto;
+            margin-right: 6px;
+            border-radius: 50px;
+        }
+        .navbar a.navbar-brand {
+            font-weight: bold;
+            color: white;
+            font-size: 1.8rem;
+        }
+        .navbar .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        /* Assignment Details Card */
+        .details-card {
+            max-width: 600px;
+            margin: 5% auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.8s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .details-card h2 {
+            color: #f36349;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .details-card p {
+            font-size: 1rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(to right, #ff5f5f, #fe7b7b);
+            color: white;
+            font-size: 1.1rem;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #fe7b7b, #fa6363);
+        }
+        .btn-secondary {
+            width: 100%;
+            margin-top: 1rem;
+            background: #6c757d;
+            color: white;
+            border-radius: 25px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='S.png') }}" alt="SmartSchool Logo">
+                SmartSchool
+            </a>
+        </div>
+    </nav>
+
+    <!-- Assignment Details Card -->
+    <div class="details-card">
         <h2>{{ assignment.title }}</h2>
         <p><strong>Due Date:</strong> {{ assignment.due_date.strftime('%Y-%m-%d') }}</p>
         <p><strong>Description:</strong> {{ assignment.description }}</p>
+
+        <!-- Submit Button -->
+        <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="btn btn-primary mt-4">
+            Submit Assignment
+        </a>
+
         <a href="{{ url_for('stddashboard') }}" class="btn btn-secondary mt-4">Back to Dashboard</a>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

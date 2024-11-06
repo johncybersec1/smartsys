@@ -7,6 +7,8 @@ import pandas as pd
 from flask_socketio import SocketIO, emit, join_room
 from sqlalchemy import Enum as SQLAEnum
 from enum import Enum as PyEnum
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 
@@ -520,14 +522,22 @@ class Submission(db.Model):
 @app.route('/submit_assignment/<int:assignment_id>', methods=['GET', 'POST'])
 def submit_assignment(assignment_id):
     if 'user_id' not in session or session['role'] != 'student':
-        flash("You need to login as a student to submit assignments.", "danger")
+        flash("You need to log in as a student to submit assignments.", "danger")
         return redirect(url_for('login'))
 
+    assignment = Assignment.query.get(assignment_id)
+    if not assignment:
+        flash("Assignment not found.", "danger")
+        return redirect(url_for('stddashboard'))
+
     if request.method == 'POST':
-        # Assuming a file upload is involved, with file saved in 'uploads/' directory
         file = request.files['file']
-        if file:
-            file_url = os.path.join('uploads', file.filename)
+        
+        # Validate file upload
+        if file and allowed_file(file.filename):
+            # Save the file with a unique name
+            filename = secure_filename(file.filename)
+            file_url = os.path.join('uploads', filename)
             file.save(file_url)
 
             submission = Submission(
@@ -539,9 +549,14 @@ def submit_assignment(assignment_id):
             db.session.commit()
             flash("Assignment submitted successfully!", "success")
             return redirect(url_for('stddashboard'))
+        else:
+            flash("Invalid file type or no file uploaded. Please try again.", "danger")
 
-    assignment = Assignment.query.get(assignment_id)
     return render_template('submit_assignment.html', assignment=assignment)
+
+def allowed_file(filename):
+    allowed_extensions = {'pdf', 'docx', 'pptx', 'txt'}  # Example extensions
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 class Grade(db.Model):
     __tablename__ = 'grades'

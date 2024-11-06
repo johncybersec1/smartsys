@@ -128,6 +128,7 @@
                         <th>Title</th>
                         <th>Description</th>
                         <th>Due Date</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,6 +137,13 @@
                             <td>{{ assignment.title }}</td>
                             <td>{{ assignment.description }}</td>
                             <td>{{ assignment.due_date.strftime('%Y-%m-%d') }}</td>
+                            <!-- Submit button linking to the submit_assignment route -->
+                            <td>
+                                <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" 
+                                class="btn btn-primary btn-sm">
+                                Submit
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
