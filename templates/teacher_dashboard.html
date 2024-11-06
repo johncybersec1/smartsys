@@ -242,7 +242,7 @@
                     <div class="col-md-6 dashboard-section">
                         <h4><i class="fas fa-tasks"></i> Submissions</h4>
                         <ul class="list-group">
-                            {% for submission in submissions %}
+                            {% for submission in submissions[:3] %}  <!-- Show only first 3 submissions -->
                             <li class="list-group-item">
                                 <div class="d-flex justify-content-between">
                                     <div>
@@ -257,9 +257,12 @@
                                     {% endif %}
                                 </div>
                             </li>
-                            {% else %}
-                            <li class="list-group-item">No submissions yet.</li>
                             {% endfor %}
+                            {% if submissions|length > 3 %}
+                            <li class="list-group-item text-center">
+                                <a href="{{ url_for('submissions_page') }}" class="btn btn-info">View All Submissions</a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>

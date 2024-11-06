@@ -646,7 +646,9 @@ def download_submission_file(submission_id):
 # Define the route to serve files
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    # Serve the file from the 'uploads' folder
+    return send_from_directory(os.path.join(os.getcwd(), 'uploads'), filename)
+
 @app.route('/mygrades')
 def mygrades():
     return render_template('mygrades.html')
