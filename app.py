@@ -24,7 +24,6 @@ app.config["JWT_SECRET_KEY"] = os.urandom(24)
 # Flask-Login Configuration
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
 
 
 # Use pyMysSQL for the MySQL connection
@@ -243,6 +242,8 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
+        print(f"Attempting login for {email}")  # Debugging
+
         # Check if the user is a student
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
@@ -284,7 +285,9 @@ def contacts():
 @login_required
 def stddashboard():
     user_id = current_user.id
-    if not user_id:
+    print(user_id)
+    if user.role != UserRole.student:
+        print("Not a student")
         return redirect(url_for('login'))
 
     # Retrieve the current user from the database
