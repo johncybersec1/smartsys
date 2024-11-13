@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory, make_response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -300,10 +300,9 @@ def login():
 
                 flash('Login successful!', 'success')
 
-                return jsonify({
-                'access_token': access_token,
-                'redirect_url': url_for('stddashboard')
-                })
+                response = make_response(redirect(url_for('stddashboard')))
+                response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='Lax')
+                return response
     
 
         teacher = Teacher.query.filter_by(email=email).first()
@@ -313,10 +312,10 @@ def login():
                
                 flash('Login successful!', 'success')
 
-                return jsonify({
-                'access_token': access_token,
-                'redirect_url': url_for('teacher_dashboard')
-                })
+                response = make_response(redirect(url_for('teacher_dashboard')))
+                response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='Lax')
+
+                return response
 
         # If login fails for both student and teacher
         flash('Login failed. Please check your credentials.', 'danger')
