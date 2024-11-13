@@ -1,20 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory, make_response
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 import datetime
-from flask import jsonify
 import pandas as pd
 from flask_socketio import SocketIO, emit, join_room
 from sqlalchemy import Enum as SQLAEnum
 from enum import Enum as PyEnum
 from werkzeug.utils import secure_filename
 from flask import send_file
-from functools import wraps
-import jwt
+
 
 app = Flask(__name__)
 
@@ -23,41 +20,12 @@ socketio = SocketIO(app)
 
 # JWT Configuration
 app.config["JWT_SECRET_KEY"] = os.urandom(24)
-jwt = JWTManager(app)
 
 # Flask-Login Configuration
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-SECRET_KEY = os.urandom(24)
-
-def decode_jwt(token):
-    try:
-        # Decode the JWT token using your secret key
-        decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        return decoded['identity']  # Adjust the key based on your token structure
-    except jwt.ExpiredSignatureError:
-        print("Token has expired.")
-        return None
-    except jwt.InvalidTokenError:
-        print("Invalid token.")
-        return None
-
-
-@app.route('/secure-data', methods=['GET'])
-def secure_data():
-    # Get the token from the request headers
-    token = request.headers.get('Authorization')
-    if token:
-        if token.startswith('Bearer '):
-            token = token[7:]  # Remove the 'Bearer ' prefix
-        user_id = decode_jwt(token)
-        if user_id:
-            return jsonify({"message": "Access granted", "user_id": user_id}), 200
-        else:
-            return jsonify({"message": "Invalid or expired token"}), 401
-    return jsonify({"message": "Token missing"}), 400
 
 # Use pyMysSQL for the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
@@ -70,17 +38,7 @@ class UserRole(PyEnum):
     student = 'student'
     teacher = 'teacher'
 
-# Define a decorator to check if the user is a teacher
-def role_required(role):
-    def decorator(func):
-        @wraps(func)
-        def wrapped_function(*args, **kwargs):
-            if current_user.role != role:
-                flash("You need to log in as a teacher to view submissions.", "danger")
-                return redirect(url_for('login'))  # Redirect to login if role is not teacher
-            return func(*args, **kwargs)
-        return wrapped_function
-    return role_required
+
 
 class Message(db.Model):  # Corrected to db.Model
     __tablename__ = 'messages'
@@ -172,9 +130,9 @@ def inbox(receiver_id):
     return render_template('inbox_list.html', messages=formatted_messages, receiver = receiver, users=users, receiver_id=receiver_id)
 
 @app.route('/inbox', methods=['GET'])
-@jwt_required
+@login_required
 def inbox_list():
-    user_id = get_jwt_identity()
+    user_id = current_user.id
 
     # Fetch all unique users the current user has chatted with
     unique_receivers = db.session.query(Message.receiver_id).filter(Message.sender_id == user_id).distinct()
@@ -224,22 +182,15 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f'<User {self.first_name}>'
 # Define user_loader function for Flask-Login
+
 @login_manager.user_loader
 def load_user(user_id):
-    # Replace the following with how you load a user from your database
-    return User.query.get(user_id)  # This assumes you're using SQLAlchemy
-@login_manager.request_loader
-def load_user_from_request(request):
-    # Check for JWT in headers
-    token = request.headers.get('Authorization')
-    if token:
-        try:
-            # Extract the user ID from the JWT token
-            user_id = decode_jwt(token)  # Replace with your actual JWT decoding logic
-            return User.query.get(user_id)
-        except Exception as e:
-            return None  # Handle invalid token case
-    return None
+    # Check the role stored in the session to load the correct model
+    if session.get('role') == 'teacher':
+        return Teacher.query.get(int(user_id))  # Load teacher
+    elif session.get('role') == 'student':
+        return User.query.get(int(user_id))  # Load student
+    return None  # If no role is set or session has expired, return None
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -296,26 +247,17 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
                 login_user(user) #flask-login login
-                access_token = create_access_token(identity=user.id)  # JWT creation
-
+                session['role'] = str(user.role)  # Store user role in session
                 flash('Login successful!', 'success')
-
-                response = make_response(redirect(url_for('stddashboard')))
-                response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='Lax')
-                return response
+                return redirect(url_for('stddashboard')) 
     
 
         teacher = Teacher.query.filter_by(email=email).first()
         if teacher and check_password_hash(teacher.password, password):
                 login_user(teacher)  # Flask-Login login
-                access_token = create_access_token(identity=teacher.id) #JWT creation
-               
+                session['role'] = str(teacher.role)
                 flash('Login successful!', 'success')
-
-                response = make_response(redirect(url_for('teacher_dashboard')))
-                response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='Lax')
-
-                return response
+                return redirect(url_for('teacher_dashboard')) 
 
         # If login fails for both student and teacher
         flash('Login failed. Please check your credentials.', 'danger')
@@ -339,9 +281,9 @@ def contacts():
 
 # COMPUTER SCIENCE semester V academic year 2024/2025
 @app.route('/stddashboard', methods=['GET', 'POST'])
-@jwt_required()  # Ensures the JWT token is valid
+@login_required
 def stddashboard():
-    user_id = get_jwt_identity()
+    user_id = current_user.id
     if not user_id:
         return redirect(url_for('login'))
 
@@ -361,9 +303,9 @@ def stddashboard():
 
 # New route for the timetable with pagination
 @app.route('/timetable')
-@jwt_required()
+@login_required
 def timetable():
-    user_id = get_jwt_identity()
+    user_id = current_user.id
     if not user_id:
         flash("You need to login first!", "danger")
         return redirect(url_for('login'))
@@ -404,9 +346,9 @@ def timetable():
     return render_template('timetable.html', timetable_html=timetable_html)
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])
-@jwt_required()
+@login_required
 def reply_message(message_id):
-    user_id = get_jwt_identity()
+    user_id = current_user.id
     message = Message.query.get(message_id)
 
     if message:
@@ -482,6 +424,9 @@ def teacher_dashboard():
     teacher_id = current_user.id
     
     teacher = Teacher.query.get(teacher_id)
+    if current_user.role != 'teacher':
+        flash("Access denied. Teachers only.", "danger")
+        return redirect(url_for('login')) 
 
     if teacher is None:
         flash('Teacher not found.', 'danger')
@@ -502,9 +447,12 @@ def teacher_dashboard():
         submissions=submissions
     )
 @app.route('/teacher/assignments/create', methods=['GET', 'POST'])
-@login_required   # Ensures the JWT token is valid
+@login_required  
 def create_assignment():
     teacher_id = current_user.id
+    if current_user.role != 'teacher':
+        flash("Access denied. Teachers only.", "danger")
+        return redirect(url_for('login')) 
 
     if request.method == 'POST':
         title = request.form['title']
@@ -529,6 +477,9 @@ def create_assignment():
 @login_required
 def create_announcement():
     teacher_id = current_user.id
+    if current_user.role != 'teacher':
+        flash("Access denied. Teachers only.", "danger")
+        return redirect(url_for('login')) 
     
     if request.method == 'POST':
         title = request.form['title']
@@ -560,7 +511,7 @@ def assignment_details(assignment_id):
 @login_required
 def logout():
     logout_user()  # Flask-Login logout
-    session.pop('access_token', None)  # Remove JWT token from session if stored
+    session.clear()
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 @app.route('/all_assignments')
@@ -694,7 +645,6 @@ def grade_submission(submission_id):
     return render_template('grade_submission.html', submission=submission)
 @app.route('/submissions')
 @login_required
-@role_required('teacher')
 def submissions():
 
     # Query all submissions for the teacher
