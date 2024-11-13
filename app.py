@@ -184,12 +184,15 @@ class User(db.Model, UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-    # Check the role stored in the session to load the correct model
-    if session.get('role') == 'teacher':
-        return Teacher.query.get(int(user_id))  # Load teacher
-    elif session.get('role') == 'student':
-        return User.query.get(int(user_id))  # Load student
-    return None  # If no role is set or session has expired, return None
+    role_in_session = session.get('role')  # Role stored as 'student' or 'teacher'
+
+    if role_in_session == UserRole.teacher.value:
+        return Teacher.query.get(int(user_id))  # Load teacher from db
+
+    elif role_in_session == UserRole.student.value:
+        return User.query.get(int(user_id))  # Load student from db
+
+    return None  # If no role is set in session, return Non
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
