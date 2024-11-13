@@ -14,7 +14,7 @@ from enum import Enum as PyEnum
 from werkzeug.utils import secure_filename
 from flask import send_file
 from functools import wraps
-
+import jwt
 
 app = Flask(__name__)
 
@@ -30,6 +30,34 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+SECRET_KEY = os.urandom(24)
+
+def decode_jwt(token):
+    try:
+        # Decode the JWT token using your secret key
+        decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        return decoded['identity']  # Adjust the key based on your token structure
+    except jwt.ExpiredSignatureError:
+        print("Token has expired.")
+        return None
+    except jwt.InvalidTokenError:
+        print("Invalid token.")
+        return None
+
+
+@app.route('/secure-data', methods=['GET'])
+def secure_data():
+    # Get the token from the request headers
+    token = request.headers.get('Authorization')
+    if token:
+        if token.startswith('Bearer '):
+            token = token[7:]  # Remove the 'Bearer ' prefix
+        user_id = decode_jwt(token)
+        if user_id:
+            return jsonify({"message": "Access granted", "user_id": user_id}), 200
+        else:
+            return jsonify({"message": "Invalid or expired token"}), 401
+    return jsonify({"message": "Token missing"}), 400
 
 # Use pyMysSQL for the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
@@ -195,6 +223,23 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f'<User {self.first_name}>'
+# Define user_loader function for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    # Replace the following with how you load a user from your database
+    return User.query.get(user_id)  # This assumes you're using SQLAlchemy
+@login_manager.request_loader
+def load_user_from_request(request):
+    # Check for JWT in headers
+    token = request.headers.get('Authorization')
+    if token:
+        try:
+            # Extract the user ID from the JWT token
+            user_id = decode_jwt(token)  # Replace with your actual JWT decoding logic
+            return User.query.get(user_id)
+        except Exception as e:
+            return None  # Handle invalid token case
+    return None
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

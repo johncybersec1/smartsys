@@ -10,3 +10,4 @@ flask_socketio
 Flask-JWT-Extended 
 Flask-Login
 cryptography
+pyjwt
