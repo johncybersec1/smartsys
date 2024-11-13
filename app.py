@@ -82,12 +82,9 @@ def join_room(data):
     emit('room_joined', {'room': room}, room=room)
 
 @app.route('/send_message', methods=['POST'])
+@login_required
 def send_message():
-    if 'user_id' not in session:
-        flash("You need to login first!", "danger")
-        return redirect(url_for('login'))
-
-    sender_id = session['user_id']
+    sender_id = current_user.id
     receiver_id = request.form['receiver_id']  # Get the receiver_id from the form
     content = request.form['content']  # Get the message content from the form
 
@@ -101,11 +98,7 @@ def send_message():
 
 @app.route('/inbox/<int:receiver_id>', methods=['GET', 'POST'])
 def inbox(receiver_id):
-    if 'user_id' not in session:
-        flash("You need to login first!", "danger")
-        return redirect(url_for('login'))
-
-    user_id = session['user_id']
+    user_id = current_user.id
     receiver = User.query.filter_by(id=receiver_id).first()
 
     # Fetch messages between the current user and the selected receiver
@@ -147,11 +140,7 @@ def inbox_list():
 
 @app.route('/contact')
 def contact():
-    if 'user_id' not in session:
-        flash("You need to login first!", "danger")
-        return redirect(url_for('login'))
-
-    user_id = session['user_id']
+    user_id = current_user.id
     # Fetch all users except the current one
     users = User.query.filter(User.id != user_id).all()
 
@@ -287,6 +276,7 @@ def contacts():
 @app.route('/stddashboard', methods=['GET', 'POST'])
 @login_required
 def stddashboard():
+    print(f"Current user: {current_user}")  # Debugging line
     user_id = current_user.id
     print(user_id)
     if user.role != UserRole.student:
