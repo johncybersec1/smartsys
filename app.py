@@ -247,7 +247,7 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
                 login_user(user) #flask-login login
-                session['role'] = str(user.role)  # Store user role in session
+                print(f'User {user.id} logged in as {user.role}')
                 flash('Login successful!', 'success')
                 return redirect(url_for('stddashboard')) 
     
@@ -255,9 +255,9 @@ def login():
         teacher = Teacher.query.filter_by(email=email).first()
         if teacher and check_password_hash(teacher.password, password):
                 login_user(teacher)  # Flask-Login login
-                session['role'] = str(teacher.role)
+                print(f'Teacher {teacher.id} logged in')  # Debugging outpu
                 flash('Login successful!', 'success')
-                return redirect(url_for('teacher_dashboard')) 
+                return redirect(url_for('teacher_dashboard'))
 
         # If login fails for both student and teacher
         flash('Login failed. Please check your credentials.', 'danger')
@@ -288,7 +288,7 @@ def stddashboard():
         return redirect(url_for('login'))
 
     # Retrieve the current user from the database
-    user = User.query.get(user_id)
+    user = current_user
 
     # Fetch all messages received by the user
     received_messages = Message.query.filter_by(receiver_id=user_id).order_by(Message.timestamp.desc()).all()
