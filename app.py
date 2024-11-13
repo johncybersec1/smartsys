@@ -1,21 +1,35 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 import datetime
+from flask import jsonify
 import pandas as pd
 from flask_socketio import SocketIO, emit, join_room
 from sqlalchemy import Enum as SQLAEnum
 from enum import Enum as PyEnum
 from werkzeug.utils import secure_filename
 from flask import send_file
-
+from functools import wraps
 
 
 app = Flask(__name__)
 
 app.secret_key = os.urandom(24) 
 socketio = SocketIO(app)
+
+# JWT Configuration
+app.config["JWT_SECRET_KEY"] = os.urandom(24)
+jwt = JWTManager(app)
+
+# Flask-Login Configuration
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 
 # Use pyMysSQL for the MySQL connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['db_config']
@@ -28,6 +42,17 @@ class UserRole(PyEnum):
     student = 'student'
     teacher = 'teacher'
 
+# Define a decorator to check if the user is a teacher
+def role_required(role):
+    def decorator(func):
+        @wraps(func)
+        def wrapped_function(*args, **kwargs):
+            if current_user.role != role:
+                flash("You need to log in as a teacher to view submissions.", "danger")
+                return redirect(url_for('login'))  # Redirect to login if role is not teacher
+            return func(*args, **kwargs)
+        return wrapped_function
+    return role_required
 
 class Message(db.Model):  # Corrected to db.Model
     __tablename__ = 'messages'
@@ -119,12 +144,9 @@ def inbox(receiver_id):
     return render_template('inbox_list.html', messages=formatted_messages, receiver = receiver, users=users, receiver_id=receiver_id)
 
 @app.route('/inbox', methods=['GET'])
+@jwt_required
 def inbox_list():
-    if 'user_id' not in session:
-        flash("You need to login first!", "danger")
-        return redirect(url_for('login'))
-
-    user_id = session['user_id']
+    user_id = get_jwt_identity()
 
     # Fetch all unique users the current user has chatted with
     unique_receivers = db.session.query(Message.receiver_id).filter(Message.sender_id == user_id).distinct()
@@ -152,7 +174,7 @@ def contact():
 
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'students'  # This matches the table name in your MySQL database
 
     id = db.Column(db.Integer, primary_key=True)
@@ -227,39 +249,29 @@ def login():
 
         # Check if the user is a student
         user = User.query.filter_by(email=email).first()
-        if user:
-            print(f"Student found: {user.first_name} {user.last_name}")
-            if check_password_hash(user.password, password):
-                # Successful login for student
-                session['user_id'] = user.id
-                session['first_name'] = user.first_name
-                session['last_name'] = user.last_name
-                session['email'] = user.email
-                session['phone'] = user.phone
-                session['profile_photo'] = user.profile_photo
-                session['role'] = str(user.role)  # Store user role in session
+        if user and check_password_hash(user.password, password):
+                login_user(user) #flask-login login
+                access_token = create_access_token(identity=user.id)  # JWT creation
+
                 flash('Login successful!', 'success')
-                return redirect(url_for('stddashboard'))
-            else:
-                print("Incorrect password for student.")
-        else:
-            print("No student found with that email.")
+
+                return jsonify({
+                'access_token': access_token,
+                'redirect_url': url_for('stddashboard')
+                })
+    
 
         teacher = Teacher.query.filter_by(email=email).first()
-        if teacher:
-            print(f"Teacher found: {teacher.name}")
-            if check_password_hash(teacher.password, password):
-                # Successful login for teacher
-                session['teacher_id'] = teacher.id
-                session['name'] = teacher.name
-                session['email'] = teacher.email
-                session['role'] = str(teacher.role)
+        if teacher and check_password_hash(teacher.password, password):
+                login_user(teacher)  # Flask-Login login
+                access_token = create_access_token(identity=teacher.id) #JWT creation
+               
                 flash('Login successful!', 'success')
-                return redirect(url_for('teacher_dashboard'))
-            else:
-                print("Incorrect password for teacher.")
-        else:
-            print("No teacher found with that email.")
+
+                return jsonify({
+                'access_token': access_token,
+                'redirect_url': url_for('teacher_dashboard')
+                })
 
         # If login fails for both student and teacher
         flash('Login failed. Please check your credentials.', 'danger')
@@ -283,8 +295,9 @@ def contacts():
 
 # COMPUTER SCIENCE semester V academic year 2024/2025
 @app.route('/stddashboard', methods=['GET', 'POST'])
+@jwt_required()  # Ensures the JWT token is valid
 def stddashboard():
-    user_id = session.get('user_id')
+    user_id = get_jwt_identity()
     if not user_id:
         return redirect(url_for('login'))
 
@@ -304,8 +317,9 @@ def stddashboard():
 
 # New route for the timetable with pagination
 @app.route('/timetable')
+@jwt_required()
 def timetable():
-    user_id = session.get('user_id')
+    user_id = get_jwt_identity()
     if not user_id:
         flash("You need to login first!", "danger")
         return redirect(url_for('login'))
@@ -346,18 +360,22 @@ def timetable():
     return render_template('timetable.html', timetable_html=timetable_html)
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])
+@jwt_required()
 def reply_message(message_id):
-    if 'user_id' not in session:
-        flash("You need to login first!", "danger")
-        return redirect(url_for('login'))
-
-    sender_id = session['user_id']
+    user_id = get_jwt_identity()
     message = Message.query.get(message_id)
 
     if message:
         # Create a reply message
-        reply_content = request.form['reply_content']
-        reply_message = Message(sender_id=sender_id, receiver_id=message.sender_id, content=reply_content)
+        reply_content = request.form.get('reply_content')
+        if not reply_content:
+            flash('Reply content cannot be empty.', 'danger')
+            return redirect(url_for('inbox', receiver_id=message.sender_id))
+        
+        from markupsafe import escape
+        reply_content = escape(reply_content)
+    
+        reply_message = Message(sender_id=user_id, receiver_id=message.sender_id, content=reply_content)
 
         db.session.add(reply_message)
         db.session.commit()
@@ -368,7 +386,7 @@ def reply_message(message_id):
     return redirect(url_for('inbox', receiver_id=message.sender_id))
 #Teacher section
 
-class Teacher(db.Model):
+class Teacher(db.Model, UserMixin):
     __tablename__ = 'teachers'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(100), nullable = False)
@@ -415,26 +433,34 @@ def teacher_register():
     return render_template('teacher_register.html')
 
 @app.route('/teacher/dashboard')
+@login_required  # Ensures the user is logged in
 def teacher_dashboard():
-    if 'teacher_id' not in session:
-        return redirect(url_for('teacher_login'))
-
-    teacher_id = session['teacher_id']
+    teacher_id = current_user.id
+    
     teacher = Teacher.query.get(teacher_id)
 
     if teacher is None:
         flash('Teacher not found.', 'danger')
         return redirect(url_for('teacher_login'))
-
+    
     assignments = Assignment.query.filter_by(teacher_id=teacher_id).all()
-    announcements = Announcement.query.filter_by(teacher_id=teacher_id).all()
-    submissions = Submission.query.filter(Submission.assignment_id.in_([a.id for a in assignments])).all()
+    assignments_ids = [assignment.id for assignment in assignments]
 
-    return render_template('teacher_dashboard.html', teacher=teacher, assignments=assignments, announcements=announcements, submissions = submissions)
+    # Using a single query to fetch all submissions for the assignments the teacher has
+    submissions = Submission.query.filter(Submission.assignment_id.in_(assignments_ids)).all()
+    announcements = Announcement.query.filter_by(teacher_id=teacher_id).all()
+
+    return render_template(
+        'teacher_dashboard.html',
+        teacher=teacher,
+        assignments=assignments,
+        announcements=announcements,
+        submissions=submissions
+    )
 @app.route('/teacher/assignments/create', methods=['GET', 'POST'])
+@login_required   # Ensures the JWT token is valid
 def create_assignment():
-    if 'teacher_id' not in session:
-        return redirect(url_for('teacher_login'))
+    teacher_id = current_user.id
 
     if request.method == 'POST':
         title = request.form['title']
@@ -445,7 +471,7 @@ def create_assignment():
             title=title, 
             description=description, 
             due_date=due_date, 
-            teacher_id=session['teacher_id']
+            teacher_id=teacher_id
         )
         db.session.add(assignment)
         db.session.commit()
@@ -456,9 +482,9 @@ def create_assignment():
 
 
 @app.route('/teacher/announcements/create', methods=['GET', 'POST'])
+@login_required
 def create_announcement():
-    if 'teacher_id' not in session:
-        return redirect(url_for('teacher_login'))
+    teacher_id = current_user.id
     
     if request.method == 'POST':
         title = request.form['title']
@@ -467,7 +493,7 @@ def create_announcement():
         announcement = Announcement(
             title=title, 
             content=content, 
-            teacher_id=session['teacher_id']
+            teacher_id=teacher_id
         )
         db.session.add(announcement)
         db.session.commit()
@@ -477,6 +503,7 @@ def create_announcement():
     return render_template('create_announcement.html')
 
 @app.route('/assignment/<int:assignment_id>')
+@login_required
 def assignment_details(assignment_id):
     # Fetch the assignment based on its ID
     assignment = Assignment.query.get(assignment_id)
@@ -486,16 +513,14 @@ def assignment_details(assignment_id):
         return "Assignment not found", 404
 
 @app.route('/logout', methods=['POST'])
+@login_required
 def logout():
-    if 'user_id' in session:
-        session.pop('user_id', None)
-        flash('You have been logged out.', 'success')
-    elif 'teacher_id' in session:
-        session.pop('teacher_id', None)
-        flash('You have been logged out.', 'success')
+    logout_user()  # Flask-Login logout
+    session.pop('access_token', None)  # Remove JWT token from session if stored
+    flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
-
 @app.route('/all_assignments')
+@login_required
 def all_assignments():
     try:
         # Fetch all assignments from the database
@@ -504,7 +529,7 @@ def all_assignments():
         return render_template('all_assignments.html', assignments=assignments)
     except Exception as e:
         print(f"Error fetching assignments: {e}")  # Print the error to console
-        return "Internal Server Error", 50055
+        return "Internal Server Error", 500
 
 @app.route('/get-started')
 def get_started():
@@ -527,6 +552,7 @@ class Submission(db.Model):
         return f'<Submission {self.id}, Student ID: {self.student_id}, Assignment ID: {self.assignment_id}>'
 
 @app.route('/submit_assignment/<int:assignment_id>', methods=['GET', 'POST'])
+@login_required
 def submit_assignment(assignment_id):
     print("Session data at submit_assignment:", session) 
     
@@ -598,6 +624,7 @@ class Grade(db.Model):
         return f'<Grade {self.id}, Submission ID: {self.submission_id}, Teacher ID: {self.teacher_id}>'
 
 @app.route('/grade_submission/<int:submission_id>', methods=['GET', 'POST'])
+@login_required
 def grade_submission(submission_id):
     if 'teacher_id' not in session:
         flash("You need to login as a teacher to grade assignments.", "danger")
@@ -622,10 +649,9 @@ def grade_submission(submission_id):
 
     return render_template('grade_submission.html', submission=submission)
 @app.route('/submissions')
+@login_required
+@role_required('teacher')
 def submissions():
-    if 'teacher_id' not in session:
-        flash("You need to login as a teacher to view submissions.", "danger")
-        return redirect(url_for('login'))
 
     # Query all submissions for the teacher
     submissions = Submission.query.all()
@@ -649,6 +675,7 @@ def uploaded_file(filename):
 
 
 @app.route('/view_grades')
+@login_required
 def view_grades():
     # Check if the user is logged in and is a student
     if 'user_id' not in session or session.get('role') != 'UserRole.student':
@@ -668,6 +695,7 @@ def view_grades():
     return render_template('view_grades.html', grades=grades)
 
 @app.route('/mygrades')
+@login_required
 def mygrades():
     return render_template('mygrades.html')
 if __name__ == '__main__':
