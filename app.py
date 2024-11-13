@@ -274,6 +274,7 @@ def contacts():
 
 # COMPUTER SCIENCE semester V academic year 2024/2025
 @app.route('/stddashboard', methods=['GET', 'POST'])
+@login_required
 def stddashboard():
     print(f"Current user: {current_user}")  # Debugging line
     user_id = current_user.id
