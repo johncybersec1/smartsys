@@ -239,6 +239,12 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
                 login_user(user) #flask-login login
+                session['user_id'] = user.id
+                session['first_name'] = user.first_name
+                session['last_name'] = user.last_name
+                session['email'] = user.email
+                session['phone'] = user.phone
+                session['profile_photo'] = user.profile_photo
                 session['role'] = UserRole.student.value  # Set session role
                 print(f'User {user.id} logged in as {user.role}')
                 flash('Login successful!', 'success')
@@ -249,6 +255,9 @@ def login():
         if teacher and check_password_hash(teacher.password, password):
                 login_user(teacher)  # Flask-Login login
                 print(f'Teacher {teacher.id} logged in')  # Debugging outpu
+                session['teacher_id'] = teacher.id
+                session['name'] = teacher.name
+                session['email'] = teacher.email
                 session['role'] = UserRole.teacher.value  # Set session role
                 flash('Login successful!', 'success')
                 return redirect(url_for('teacher_dashboard'))
@@ -417,9 +426,9 @@ def teacher_dashboard():
     teacher_id = current_user.id
     
     teacher = Teacher.query.get(teacher_id)
-    if current_user.role != 'teacher':
-        flash("Access denied. Teachers only.", "danger")
-        return redirect(url_for('login')) 
+    if session.get('role') != UserRole.teacher.value:  # Verify role is 'student'
+        flash("Unauthorized access - only teachers can view this page", "danger")
+        return redirect(url_for('login'))
 
     if teacher is None:
         flash('Teacher not found.', 'danger')
