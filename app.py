@@ -287,12 +287,14 @@ def contacts():
 @app.route('/stddashboard', methods=['GET', 'POST'])
 @login_required
 def stddashboard():
+    user_id = current_user.id
+    user = Teacher.query.get(user_id)
     if session.get('role') != UserRole.student.value:  # Verify role is 'student'
         flash("Unauthorized access - only students can view this page", "danger")
         return redirect(url_for('login'))
-    print(f"Current user: {current_user}")  # Debugging line
-    user_id = current_user.id
-    print(user_id)
+    if user is None:
+        flash('Teacher not found.', 'danger')
+        return redirect(url_for('login'))
 
     # Fetch all messages received by the user
     received_messages = Message.query.filter_by(receiver_id=user_id).order_by(Message.timestamp.desc()).all()
@@ -433,7 +435,7 @@ def teacher_dashboard():
 
     if teacher is None:
         flash('Teacher not found.', 'danger')
-        return redirect(url_for('teacher_login'))
+        return redirect(url_for('login'))
     
     assignments = Assignment.query.filter_by(teacher_id=teacher_id).all()
     assignments_ids = [assignment.id for assignment in assignments]
