@@ -10,6 +10,7 @@ from flask_socketio import SocketIO, emit, join_room
 from sqlalchemy import Enum as SQLAEnum
 from enum import Enum as PyEnum
 from werkzeug.utils import secure_filename
+from werkzeug.utils import safe_join
 from flask import send_file
 
 
@@ -447,14 +448,14 @@ def teacher_dashboard():
         assignments=assignments,
         announcements=announcements,
         submissions=submissions
-    )
+        )
 @app.route('/teacher/assignments/create', methods=['GET', 'POST'])
 @login_required  
 def create_assignment():
     teacher_id = current_user.id
-    if current_user.role != 'teacher':
-        flash("Access denied. Teachers only.", "danger")
-        return redirect(url_for('login')) 
+    if not teacher_id:
+        flash("You need to login first!", "danger")
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
         title = request.form['title']
@@ -479,9 +480,9 @@ def create_assignment():
 @login_required
 def create_announcement():
     teacher_id = current_user.id
-    if current_user.role != 'teacher':
-        flash("Access denied. Teachers only.", "danger")
-        return redirect(url_for('login')) 
+    if not teacher_id:
+        flash("You need to login first!", "danger")
+        return redirect(url_for('login'))
     
     if request.method == 'POST':
         title = request.form['title']
@@ -553,9 +554,9 @@ class Submission(db.Model):
 def submit_assignment(assignment_id):
     print("Session data at submit_assignment:", session) 
     
-    # Check if the user is logged in as a student
-    if 'user_id' not in session or session.get('role') != 'UserRole.student':
-        flash("You need to log in as a student to submit assignments.", "danger")
+    user_id = current_user.id
+    if not user_id:
+        flash("You need to login first!", "danger")
         return redirect(url_for('login'))
 
     # Retrieve the assignment
@@ -667,15 +668,22 @@ def download_submission_file(submission_id):
 # Define the route to serve files
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    # Ensure safe file path joining
+    try:
+        file_path = safe_join(app.config['UPLOAD_FOLDER'], filename)
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    except Exception as e:
+        flash("File could not be found or accessed.", "danger")
+        return redirect(url_for('teacher_dashboard'))  # Or another page
 
 
 @app.route('/view_grades')
 @login_required
 def view_grades():
     # Check if the user is logged in and is a student
-    if 'user_id' not in session or session.get('role') != 'UserRole.student':
-        flash("You need to log in as a student to view your grades.", "danger")
+    user_id = current_user.id
+    if not user_id:
+        flash("You need to login first!", "danger")
         return redirect(url_for('login'))
 
     # Get the student ID from the session
