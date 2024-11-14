@@ -288,12 +288,8 @@ def contacts():
 @login_required
 def stddashboard():
     user_id = current_user.id
-    user = Teacher.query.get(user_id)
     if session.get('role') != UserRole.student.value:  # Verify role is 'student'
         flash("Unauthorized access - only students can view this page", "danger")
-        return redirect(url_for('login'))
-    if user is None:
-        flash('Teacher not found.', 'danger')
         return redirect(url_for('login'))
 
     # Fetch all messages received by the user
