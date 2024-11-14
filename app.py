@@ -508,7 +508,7 @@ def assignment_details(assignment_id):
     else:
         return "Assignment not found", 404
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()  # Flask-Login logout
