@@ -18,12 +18,11 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24) 
 socketio = SocketIO(app)
 
-# JWT Configuration
-app.config["JWT_SECRET_KEY"] = os.urandom(24)
 
 # Flask-Login Configuration
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'  # Redirect to 'login' if unauthorized
 
 
 # Use pyMysSQL for the MySQL connection
@@ -240,6 +239,7 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
                 login_user(user) #flask-login login
+                session['role'] = UserRole.student.value  # Set session role
                 print(f'User {user.id} logged in as {user.role}')
                 flash('Login successful!', 'success')
                 return redirect(url_for('stddashboard')) 
@@ -249,6 +249,7 @@ def login():
         if teacher and check_password_hash(teacher.password, password):
                 login_user(teacher)  # Flask-Login login
                 print(f'Teacher {teacher.id} logged in')  # Debugging outpu
+                session['role'] = UserRole.teacher.value  # Set session role
                 flash('Login successful!', 'success')
                 return redirect(url_for('teacher_dashboard'))
 
@@ -276,15 +277,12 @@ def contacts():
 @app.route('/stddashboard', methods=['GET', 'POST'])
 @login_required
 def stddashboard():
+    if session.get('role') != UserRole.student.value:  # Verify role is 'student'
+        flash("Unauthorized access - only students can view this page", "danger")
+        return redirect(url_for('login'))
     print(f"Current user: {current_user}")  # Debugging line
     user_id = current_user.id
     print(user_id)
-    if user.role != UserRole.student:
-        print("Not a student")
-        return redirect(url_for('login'))
-
-    # Retrieve the current user from the database
-    user = current_user
 
     # Fetch all messages received by the user
     received_messages = Message.query.filter_by(receiver_id=user_id).order_by(Message.timestamp.desc()).all()
@@ -292,10 +290,9 @@ def stddashboard():
     # Fetch all assignments and announcements for display in the student dashboard
     assignments = Assignment.query.order_by(Assignment.due_date.asc()).all()  # Sorted by due date
     announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()  # Sorted by creation date
-
     users = User.query.filter(User.id != user_id).all()
     submissions = Submission.query.filter_by(student_id=user_id).all()
-    return render_template('stddashboard.html', user=user, received_messages=received_messages, assignments = assignments, announcements=announcements, users=users, submissions = submissions)
+    return render_template('stddashboard.html', user=current_user, received_messages=received_messages, assignments = assignments, announcements=announcements, users=users, submissions = submissions)
 
 # New route for the timetable with pagination
 @app.route('/timetable')
