@@ -12,17 +12,124 @@
     <link rel="stylesheet" href="static/styles.css">
     <link rel="icon" href="{{ url_for('static', filename='fav.ico') }}" type="image/x-icon">
     <style>
-        .body{
-            background-color: linear-gradient(to right, #fe7b7b, #fa6363);
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #ff4b4b, #ffffff);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #ff4b4b;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #fff;
         }
         .navbar-brand img {
-            height: 40px; /* Adjust size of the logo */
+            height: 40px;
             width: auto;
-            margin-right: 4px; /* Space between logo and text */
-            border-radius: 50px;
+            margin-right: 8px;
+            border-radius: 50%;
         }
-        .hero-section{
-            background: linear-gradient(to right, #e57373, #ffffff);
+        .navbar-nav .nav-link {
+            color: #ffffff;
+            margin-right: 15px;
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffdddd;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #ff4b4b, #ffffff);
+            color: #fff;
+            padding: 80px 0;
+            text-align: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #ff6666;
+        }
+        .hero-section h2 {
+            font-size: 2.8rem;
+            font-weight: bold;
+        }
+        .hero-section p {
+            font-size: 1.25rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+        .cta-btn {
+            margin-top: 20px;
+            padding: 12px 28px;
+            background-color: #fff;
+            color: #ff4b4b;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .cta-btn:hover {
+            background-color: #ffdddd;
+            transform: translateY(-3px);
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 60px 0;
+            background-color: #ffffff;
+            text-align: center;
+        }
+        .about-section h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ff4b4b;
+        }
+        .about-section p {
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+        }
+        .card h5 {
+            font-size: 1.25rem;
+            color: #ff4b4b;
+        }
+        .card p {
+            color: #555;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px 0;
+            background-color: #ff4b4b;
+            color: #ffffff;
+            text-align: center;
+            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .footer p, .footer a {
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        .footer a:hover {
+            color: #ffdddd;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -40,21 +147,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('services') }}">Services</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('contacts') }}">Contacts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contacts') }}">Contacts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
                 </ul>
             </div>
         </div>
@@ -63,7 +160,7 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h2><b>Welcome to SmartSchool</b></h2>
+            <h2>Welcome to SmartSchool</h2>
             <p>Efficient, Modern, and User-Friendly School Management System</p>
             <a href="{{ url_for('get_started') }}" class="btn cta-btn">Get Started</a>
         </div>
@@ -72,15 +169,10 @@
     <!-- About Section -->
     <section class="about-section">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h2>About Our System</h2>
-                    <p>
-                        SmartSchool is a comprehensive and innovative school management system designed to automate and simplify the day-to-day activities of schools. From attendance tracking to performance reporting, our system covers all aspects of school management.
-                    </p>
-                </div>
-            </div>
-
+            <h2>About Our System</h2>
+            <p>
+                SmartSchool is a comprehensive and innovative school management system designed to automate and simplify the day-to-day activities of schools. From attendance tracking to performance reporting, our system covers all aspects of school management.
+            </p>
             <div class="row mt-5">
                 <div class="col-md-4">
                     <div class="card">
