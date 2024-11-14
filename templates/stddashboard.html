@@ -195,7 +195,7 @@
                 text-align: center;
                 position: relative;
                 bottom: 0;
-                width: 100%;
+                width: 78%;
             }
             .lead {
                 margin-left: 10px; /* Apply 500px left margin only on larger screens */
@@ -387,7 +387,7 @@
 
                     <!-- Display Announcements -->
                     <h2>Announcements</h2>
-                    <div class="announcements">
+                    <div class="announcements col-md-12 col-7 mb-3">
                         {% for announcement in announcements %}
                             <div class="card">
                                 <div class="card-header">{{ announcement.title }}</div>
@@ -402,7 +402,6 @@
                     </div>
                 </div>
             </div>
-<hr>
         <!-- Today’s Classes Section -->
         <div class="col-md-8">
             <div class="cardtoday row">
