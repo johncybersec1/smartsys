@@ -1,4 +1,3 @@
-<!-- templates/about.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,15 +12,56 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="static/styles.css">
     <style>
-        .about-section{
-            background: linear-gradient(to right, #e57373, #ffffff);
+        .about-section {
+            background-image: url("/static/back3.jpg");
+            background-size: cover;
+            color: white;
+            padding: 60px 0;
+        }
+        .about-card {
+            background: rgba(34, 34, 34, 0.9); /* Dark grey background */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-icon {
+            font-size: 40px;
+            color: #007bff;
+        }
+        .timeline {
+            margin-top: 50px;
+            border-left: 3px solid #007bff;
+            padding-left: 20px;
+        }
+        .timeline h4 {
+            color: #007bff;
+        }
+        .testimonial-carousel {
+            margin-top: 50px;
+        }
+        .cta-banner {
+            background: #212529;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 50px;
+            border-radius: 10px;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        .mainb{
+            color: red;
+            font-size: 40px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('home') }}">SmartSchool</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +73,7 @@
                         <a class="nav-link" href="{{ url_for('home') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                        <a class="nav-link active" href="{{ url_for('about') }}">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('services') }}">Services</a>
@@ -45,41 +85,113 @@
             </div>
         </div>
     </nav>
+
     <!-- About Us Content -->
-    <section class="about-section py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">About Us</h2>
-            <div class="row">
-                <div class="col-md-12">
-                    <p class="lead">
-                        Welcome to <strong>SmartSchool</strong>, a pioneering project designed to transform the way schools and universities manage daily operations. SmartSchool is a student-initiated system, currently under development, with the ultimate goal of simplifying and enhancing the experience for students, teachers, administrators, and even visitors.
-                    </p>
-                    <p class="lead">
-                        Created by two dedicated students from WSPA University in Lublin, Poland. SmartSchool is a response to the challenges faced by educational institutions today. Our vision is to revolutionize school management systems by integrating cutting-edge technology to streamline processes, improve communication, and make academic life more efficient.
-                    </p>
-                    <p class="lead">
-                        Although still in its development phase, SmartSchool has ambitious plans for the future. We are working tirelessly to implement this system across multiple schools, offering tools and features that will:
-                    </p>
-                    <ul class="lead">
-                        <li><strong>Simplify student management:</strong> From tracking academic progress to scheduling and attendance, SmartSchool aims to put all relevant information in one easy-to-access platform for both students and educators.</li>
-                        <li><strong>Enhance teacher workflows:</strong> By automating administrative tasks and providing seamless communication tools, SmartSchool allows teachers to focus on what matters most—teaching.</li>
-                        <li><strong>Improve visitor experience:</strong> The system will also cater to university visitors, providing them with a guided and efficient way to navigate campuses and access relevant resources.</li>
-                    </ul>
-                    <p class="lead">
-                        Our mission is to create a smarter, more efficient future for educational institutions by leveraging technology to solve everyday challenges. We believe that by building a platform that fosters productivity, collaboration, and accessibility, we can make a lasting impact on the academic community.
-                    </p>
-                    <p class="lead">
-                        As we continue to develop SmartSchool, we are looking forward to expanding our partnerships with schools and universities across the globe, ensuring that educational management is no longer a burden, but a seamless and intuitive experience for everyone involved.
-                    </p>
-                    <p class="lead text-center">
-                        Thank you for being part of our journey.<br>
-                        <strong>The SmartSchool Team</strong>
-                    </p>
+    <section class="about-section">
+        <div class="container text-center">
+            <h2 class="mb-5 mainb">About Us</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card about-card p-4">
+                        <div class="card-body">
+                            <div class="card-icon mb-3">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <h5 class="card-title">Who We Are</h5>
+                            <p class="card-text">
+                                SmartSchool is a student-driven initiative designed to revolutionize how educational institutions manage their daily operations.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card about-card p-4">
+                        <div class="card-body">
+                            <div class="card-icon mb-3">
+                                <i class="bi bi-gear-fill"></i>
+                            </div>
+                            <h5 class="card-title">What We Do</h5>
+                            <p class="card-text">
+                                We simplify workflows, enhance communication, and create intuitive solutions for students, educators, and administrators.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card about-card p-4">
+                        <div class="card-body">
+                            <div class="card-icon mb-3">
+                                <i class="bi bi-globe"></i>
+                            </div>
+                            <h5 class="card-title">Our Vision</h5>
+                            <p class="card-text">
+                                To build smarter, tech-driven educational environments that empower institutions worldwide to achieve excellence.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Timeline -->
+    <section class="timeline container">
+        <h3>Our Journey</h3>
+        <div class="mb-4">
+            <h4>2021</h4>
+            <p>SmartSchool was conceptualized by two students at WSPA University, driven by the need for smarter educational management solutions.</p>
+        </div>
+        <div class="mb-4">
+            <h4>2023</h4>
+            <p>Prototype development and initial testing began across selected educational institutions in Poland.</p>
+        </div>
+        <div class="mb-4">
+            <h4>2024</h4>
+            <p>SmartSchool is ready for global implementation, with partnerships established across multiple institutions.</p>
+        </div>
+    </section>
+
+    <!-- Testimonial Carousel -->
+    <section class="testimonial-carousel container">
+        <h3 class="text-center mb-5">What People Say About Us</h3>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="d-flex flex-column align-items-center">
+                        <p class="text-black">"SmartSchool transformed how our school operates, saving us countless hours every week!"</p>
+                        <small>- John Doe, Principal</small>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="d-flex flex-column align-items-center">
+                        <p class="text-black">"A game-changer for students and teachers alike. Highly recommend it!"</p>
+                        <small>- Jane Smith, Educator</small>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="d-flex flex-column align-items-center">
+                        <p class="text-black">"The perfect blend of technology and education management. Brilliant work!"</p>
+                        <small>- Emily Johnson, Administrator</small>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Call-to-Action Banner -->
+    <section class="cta-banner">
+        <h3>Ready to Transform Your Institution?</h3>
+        <p>Contact us today to learn how SmartSchool can make a difference!</p>
+        <a href="{{ url_for('contacts') }}" class="btn btn-primary">Get in Touch</a>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
@@ -93,6 +205,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </body>
 </html>

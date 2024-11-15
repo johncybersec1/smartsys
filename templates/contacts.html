@@ -10,11 +10,38 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="static/styles.css">
+    <style>
+        .contact-section {
+            background-image: url("/static/back3.jpg");
+            background-size: cover;
+            color: white;
+        }
+        .contact-details {
+            background: rgba(34, 34, 34, 0.9);
+            color: white;
+            border-radius: 8px;
+        }
+        .contact-form {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: black;
+        }
+        .map-section iframe {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+        .header {
+            background: linear-gradient(to right, #dc3545, #ff6f61);
+        }
+    </style>
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('home') }}">SmartSchool</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,7 +59,7 @@
                         <a class="nav-link" href="{{ url_for('services') }}">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('contacts') }}">Contacts</a>
+                        <a class="nav-link active" href="{{ url_for('contacts') }}">Contacts</a>
                     </li>
                 </ul>
             </div>
@@ -40,44 +67,88 @@
     </nav>
 
     <!-- Header Section -->
-    <header class="header text-center py-5 text-white" style="background-color: #dc3545;">
+    <header class="header text-center py-5 text-white">
         <div class="container">
             <h1 class="display-4">Contact Us</h1>
-            <p class="lead">Get in touch with us for any inquiries or further information.</p>
+            <p class="lead">We are here to answer your questions and provide you with the best support.</p>
         </div>
     </header>
 
     <!-- Contact Information Section -->
     <section class="contact-section py-5">
         <div class="container">
-            <div class="row justify-content-center">
+            <div class="row g-4">
+                <!-- Contact Details -->
                 <div class="col-lg-6">
-                    <div class="contact-details p-4 shadow-sm text-center">
-                        <h3>Reach Out to Us</h3>
-                        <p>We'd love to hear from you! Whether you're a student, teacher, or visitor, feel free to reach out for any questions or information about SmartSchool.</p>
-                        <ul class="list-unstyled mt-4">
+                    <div class="contact-details p-4 shadow-sm">
+                        <h3 class="text-center mb-4">Reach Out to Us</h3>
+                        <ul class="list-unstyled">
                             <li class="mb-3">
                                 <strong>Email:</strong> 
-                                <a href="mailto:info@smartschool.com">mwangijohn294@gmail.com</a>
+                                <a href="mailto:mwangijohn294@gmail.com" class="text-white">mwangijohn294@gmail.com</a>
                             </li>
                             <li class="mb-3">
                                 <strong>Phone:</strong> 
-                                <a href="tel:+123456789">+48 697 543 120</a>
+                                <a href="tel:+48697543120" class="text-white">+48 697 543 120</a>
                             </li>
                             <li class="mb-3">
                                 <strong>Address:</strong> 
                                 Bursaki 12, 20-150 Lublin
                             </li>
                             <li class="mb-3">
-                                <strong>University Name:</strong> 
+                                <strong>University:</strong> 
                                 WSPA University
                             </li>
                             <li class="mb-3">
                                 <strong>LinkedIn:</strong> 
-                                <a href="https://www.linkedin.com/in/johnpetermwangi/">linkedin.com/in/smartschool</a>
+                                <a href="https://www.linkedin.com/in/johnpetermwangi/" class="text-white">linkedin.com/in/smartschool</a>
                             </li>
                         </ul>
                     </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="col-lg-6">
+                    <div class="contact-form">
+                        <h3 class="text-center mb-4">Send Us a Message</h3>
+                        <form action="/send-message" method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Your Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Your Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Your Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-danger">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section py-5">
+        <div class="container">
+            <h3 class="text-center mb-4">Find Us Here</h3>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3117.0351613825696!2d22.566876376987416!3d51.270115328009624!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x472257533487c4e5%3A0x41bd88185bb53925!2sWy%C5%BCsza%20Szko%C5%82a%20Przedsi%C4%99biorczo%C5%9Bci%20i%20Administracji%20w%20Lublinie!5e1!3m2!1sen!2spl!4v1731667485696!5m2!1sen!2spl" 
+                    width="600" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
             </div>
         </div>
