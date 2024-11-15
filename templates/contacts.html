@@ -11,6 +11,12 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="static/styles.css">
     <style>
+        .navbar{
+            background-color: red;
+        }
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
         .contact-section {
             background-image: url("/static/back3.jpg");
             background-size: cover;
@@ -41,7 +47,7 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('home') }}">SmartSchool</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
