@@ -13,7 +13,7 @@
     <style>
         /* Override Bootstrap styles for a custom look */
         body {
-            background-color: #f4f7fa; /* Light background for better contrast */
+            background: linear-gradient(to right, red, white);
             font-family: 'Arial', sans-serif;
         }
         h2 {
@@ -46,15 +46,6 @@
             border-left: 5px solid #ffc107; /* Yellow left border */
             padding: 15px; /* Padding for better spacing */
             margin-bottom: 15px; /* Space between announcements */
-        }
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 10px 0; /* Padding for footer */
-            text-align: center;
-            position: relative;
-            bottom: 0;
-            width: 60%;
         }
         /* Dynamic Calendar styling */
         .calendar {
@@ -103,35 +94,88 @@
         }
         /* Sidebar Styling */
         .sidebar {
-            background-color: #343a40;
+            background-color: #2c3e50;  /* Darker shade for a professional look */
             color: white;
             position: fixed;
-            min-width: 250px;
-            margin-top: 0;
-            padding-top: 20px;
-            float: left; /* Sidebar floats to the left of the content */
+            top: 0;
+            left: 0;
+            width: 250px;
             height: 100%;
-            transition: transform 0.3s ease; /* Smooth transition */
-            z-index: 1000; /* Ensures sidebar is on top */
+            padding-top: 20px;
+            z-index: 1000;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);  /* Soft shadow on the right for depth */
+            border-radius: 8px 0 0 8px;  /* Rounded corners on the left side */
+            transition: all 0.3s ease;  /* Smooth transition */
         }
-        .sidebar a {
+
+        /* Sidebar Header (Logo + Title) */
+        .sidebar .navbar-brand {
+            font-size: 1.6rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .sidebar .navbar-brand img {
+            width: 30px;
+            margin-right: 10px;
+        }
+
+        /* Sidebar Links */
+        .sidebar .menu-item {
             color: #ddd;
             text-decoration: none;
             display: block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background-color 0.3s, transform 0.3s ease;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
-        .sidebar a:hover {
-            background-color: #495057;
-            transform: translateX(5px); /* Smooth sliding effect */
+
+        .sidebar .menu-item:hover {
+            background-color: #16a085;  /* Nice teal color for hover effect */
+            transform: translateX(10px);  /* Smooth sliding effect */
+            color: white;  /* Ensure text remains white */
         }
+
+        .sidebar .menu-item i {
+            margin-right: 10px;
+        }
+
+        /* Active Link Styling */
+        .sidebar .menu-item.active {
+            background-color: #1abc9c;  /* Greenish active background */
+            font-weight: bold;
+        }
+
+        /* Logout Link */
+        .sidebar .menu-item.text-danger {
+            color: #e74c3c !important;
+            margin-top: auto; /* Push logout to the bottom */
+        }
+
         /* Sidebar Title */
         .sidebar h4 {
             font-size: 1.5rem;
             color: #ffffff;
             text-align: center;
             margin-bottom: 20px;
+        }
+
+        /* For Mobile Devices */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                transform: translateX(-100%);  /* Hide sidebar initially */
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);  /* Show sidebar when toggled */
+            }
         }
         /* Hide sidebar by default on small screens */
         .sidebar.hidden {
@@ -166,19 +210,13 @@
                 margin-left: 250px; /* Add margin only on larger screens */
                 width: calc(100% - 250px); /* Ensure container takes the remaining width */
             }
-            .lead {
-                margin-left: 400px; /* Apply 500px left margin only on larger screens */
-                font-weight: bold;
-                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            }
             .footer {
-                background-color: #343a40;
-                color: white;
-                padding: 10px 0; /* Padding for footer */
+                background: transparent;
+                color: black;
                 text-align: center;
-                position: relative;
                 bottom: 0;
                 width: 100%;
+                margin: 0px;
             }
         }
 
@@ -189,24 +227,19 @@
                 width: 100%; /* Use full width on smaller screens */
             }
             .footer {
-                background-color: #343a40;
-                color: white;
-                padding: 10px 0; /* Padding for footer */
+                background: transparent;
+                color: black;
                 text-align: center;
-                position: relative;
                 bottom: 0;
-                width: 78%;
-            }
-            .lead {
-                margin-left: 10px; /* Apply 500px left margin only on larger screens */
-                font-weight: bold;
-                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                width: 100%;
+                margin: 0px;
             }
         }
         /* Navbar Styles */
         .navbar {
             background-color: #dc3545; /* Red background for the navbar */
             width: 100%; /* Full width navbar */
+            height: 75px;
         }
 
         .navbar-brand {
@@ -260,29 +293,38 @@
                 margin-left: 0;
                 text-align: center;
             }
-
-            .lead {
-                margin-left:0;
-                text-align: center;
-            }
             
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <a class="navbar-brand" href="{{ url_for('stddashboard') }}">SmartSchool</a>
+        <a class="navbar-brand" href="{{ url_for('stddashboard') }}">
+            <img src="logo.png" alt="Logo" class="sidebar-logo"> SmartSchool
+        </a>
         <hr>
-        <a href="{{ url_for('timetable') }}">Timetable</a>
-        <a href="{{ url_for('inbox_list') }}">Inbox</a>
-        <a href="{{ url_for('all_assignments') }}">Assignments</a>
-        <a href="{{ url_for('view_grades') }}">Grades</a>
-        <a href="#">Live Classes</a>
-        <a href="#">Recorded Classes</a>
-        <a href="#">Library</a>
+        <a href="{{ url_for('timetable') }}" class="menu-item"><i class="fas fa-calendar-alt"></i> Timetable</a>
+        <a href="{{ url_for('inbox_list') }}" class="menu-item"><i class="fas fa-envelope"></i> Inbox</a>
+        <a href="{{ url_for('all_assignments') }}" class="menu-item"><i class="fas fa-file-alt"></i> Assignments</a>
+        <a href="{{ url_for('view_grades') }}" class="menu-item"><i class="fas fa-graduation-cap"></i> Grades</a>
+        <a href="#" class="menu-item"><i class="fas fa-video"></i> Live Classes</a>
+        <a href="#" class="menu-item"><i class="fas fa-play-circle"></i> Recorded Classes</a>
+        <a href="#" class="menu-item"><i class="fas fa-book"></i> Library</a>
         <hr>
-        <a href="{{ url_for('logout') }}" class="text-danger">Logout</a>
+        <a href="{{ url_for('logout') }}" class="text-danger menu-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
@@ -296,10 +338,6 @@
         </div>
     </nav>
     <div class="container mt-5" id="welcome">
-        <div class="text-center mb-4">
-            <h2 class="lead">Welcome, {{ session.get('first_name', 'Student') }}</h2>
-            <p class="lead">Your learning journey starts here!</p>
-        </div>
 
         <div class="row mb-4">
             <!-- Profile Section -->
@@ -335,6 +373,22 @@
                         </div>
                     </div>
                 </div>
+        
+                <!-- Announcements Section -->
+                <div class="announcements mt-4">
+                    <h5>Announcements</h5>
+                    {% for announcement in announcements %}
+                        <div class="card mb-3">
+                            <div class="card-header">{{ announcement.title }}</div>
+                            <div class="card-body">
+                                <p>{{ announcement.content }}</p>
+                                <small>Posted on: {{ announcement.created_at.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p>No announcements available.</p>
+                    {% endfor %}
+                </div>
             </div>
         
             <!-- Right Side Section Container -->
@@ -354,9 +408,9 @@
                             </div>
                         </div>
                     </div>
-
+        
+                    <!-- Assignments Section -->
                     <div class="assignments col-md-12 col-7 mb-3">
-                        <!-- Single Card for All Assignments -->
                         <div class="card">
                             <div class="card-header">
                                 <h5>Assignments</h5>
@@ -364,12 +418,12 @@
                             <div class="card-body">
                                 {% if assignments %}
                                     <ul class="list-unstyled">
-                                        {% for assignment in assignments[:5] %} <!-- Limit to 5 assignments -->
+                                        {% for assignment in assignments[:5] %}
                                             <li class="mb-3">
                                                 <a href="{{ url_for('assignment_details', assignment_id=assignment.id) }}" class="text-decoration-none">
                                                     <strong>{{ assignment.title }}</strong>
                                                 </a>
-                                                <p>{{ assignment.description[:100] }}...</p> <!-- Brief snippet of description -->
+                                                <p>{{ assignment.description[:100] }}...</p>
                                                 <small>Due on: {{ assignment.due_date.strftime('%Y-%m-%d') }}</small>
                                             </li>
                                         {% endfor %}
@@ -383,22 +437,6 @@
                                 {% endif %}
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Display Announcements -->
-                    <h2>Announcements</h2>
-                    <div class="announcements col-md-12 col-7 mb-3">
-                        {% for announcement in announcements %}
-                            <div class="card">
-                                <div class="card-header">{{ announcement.title }}</div>
-                                <div class="card-body">
-                                    <p>{{ announcement.content }}</p>
-                                    <small>Posted on: {{ announcement.created_at.strftime('%Y-%m-%d') }}</small>
-                                </div>
-                            </div>
-                        {% else %}
-                            <p>No announcements available.</p>
-                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -455,18 +493,19 @@
             </div>
             </div>
         </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>© 2024 SmartSchool. All rights reserved.</p>
-            <p>
-                <a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a>
-            </p>
-        </footer>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 SmartSchool. All rights reserved.</p>
+        <p>
+            <a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a>
+        </p>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <!-- JavaScript for Dynamic Calendar -->
     <script>
         function generateCalendar() {
