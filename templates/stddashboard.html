@@ -16,16 +16,40 @@
             background: linear-gradient(to right, red, white);
             font-family: 'Arial', sans-serif;
         }
-        h2 {
-            color: #343a40; /* Darker text color for headings */
+        body, .container {
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
+
         .card {
-            width: 100%; /* Ensure cards take full width */
-            margin-bottom: 20px; /* Space between cards */
-            border-radius: 15px; /* Rounded corners for cards */
-            transition: transform 0.2s; /* Smooth hover effect */
+            width: 100%; /* Make the card take full width */
             max-width: 100%;
             box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .card-body {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .profile-card, .calendar {
+            width: 100%; /* Ensure they fit within the container */
+            margin: 0 auto;
+        }
+
+        .card-today {
+            min-height: auto; /* Ensure cards are not too tall */
+        }
+
+        /* Adjust layout for smaller screens */
+        @media (max-width: 767px) {
+            .col-sm-12, .col-7, .col-md-4, .col-md-12 {
+                width: 80% !important;
+                margin-bottom: 20px;
+            }
+        }
+        h2 {
+            color: #343a40; /* Darker text color for headings */
         }
         .card:hover {
             transform: scale(1.02); /* Scale up on hover */
@@ -271,11 +295,6 @@
 
         /* Optional: For very small screens, ensure padding adjusts */
         @media (max-width: 576px) {
-            .card-body {
-                padding: 10px;
-            }
-        }
-        @media (max-width: 576px) {
             .card {
                 width: 100%;
             }
@@ -313,7 +332,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <a class="navbar-brand" href="{{ url_for('stddashboard') }}">
-            <img src="logo.png" alt="Logo" class="sidebar-logo"> SmartSchool
+            <img src="/static/S.png" alt="Logo" class="sidebar-logo"> SmartSchool
         </a>
         <hr>
         <a href="{{ url_for('timetable') }}" class="menu-item"><i class="fas fa-calendar-alt"></i> Timetable</a>
@@ -341,7 +360,7 @@
 
         <div class="row mb-4">
             <!-- Profile Section -->
-            <div class="col-7 col-md-4 col-sm-12 mb-3">
+            <div class="col-md-4 col-sm-12 mb-3">
                 <div class="card shadow profile-card">
                     <div class="card-header">
                         <h5>Profile</h5>
@@ -375,7 +394,7 @@
                 </div>
         
                 <!-- Announcements Section -->
-                <div class="announcements mt-4">
+                <div class="announcements mt-2">
                     <h5>Announcements</h5>
                     {% for announcement in announcements %}
                         <div class="card mb-3">
