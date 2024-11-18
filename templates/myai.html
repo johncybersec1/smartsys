@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Language Tutor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .chat-box {
+            margin-top: 20px;
+        }
+
+        .chat-log {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .chat-log p {
+            margin: 5px 0;
+        }
+
+        .chat-log .user {
+            text-align: right;
+            color: #007bff;
+        }
+
+        .chat-log .bot {
+            text-align: left;
+            color: #444;
+        }
+
+        .chat-input {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+        }
+
+        .chat-input button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            font-size: 16px;
+        }
+
+        .chat-input button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Language Tutor</h1>
+        <div class="chat-box">
+            <div id="chat-log" class="chat-log"></div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Type your question..." />
+                <button id="send-button">Ask</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("send-button").addEventListener("click", async () => {
+            const userInput = document.getElementById("user-input").value;
+            const chatLog = document.getElementById("chat-log");
+
+            if (!userInput) return;
+
+            // Display user's message
+            const userMessage = document.createElement("p");
+            userMessage.className = "user";
+            userMessage.textContent = userInput;
+            chatLog.appendChild(userMessage);
+
+            // Send user input to the backend
+            try {
+                const response = await fetch("/ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message: userInput }),
+                });
+
+                const data = await response.json();
+
+                // Display AI's response
+                const botMessage = document.createElement("p");
+                botMessage.className = "bot";
+                botMessage.textContent = data.response || "Error: Unable to fetch response.";
+                chatLog.appendChild(botMessage);
+
+            } catch (error) {
+                const errorMessage = document.createElement("p");
+                errorMessage.className = "bot";
+                errorMessage.textContent = "Error: Unable to communicate with the server.";
+                chatLog.appendChild(errorMessage);
+            }
+
+            chatLog.scrollTop = chatLog.scrollHeight; // Scroll to the bottom
+            document.getElementById("user-input").value = ""; // Clear input field
+        });
+    </script>
+</body>
+</html>

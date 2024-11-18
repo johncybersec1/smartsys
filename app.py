@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory, make_response
+from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory, jsonify
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -12,7 +12,7 @@ from enum import Enum as PyEnum
 from werkzeug.utils import secure_filename
 from werkzeug.utils import safe_join
 from flask import send_file
-
+from transformers import pipeline
 
 app = Flask(__name__)
 
@@ -32,6 +32,10 @@ db = SQLAlchemy(app)
 
 UPLOAD_FOLDER = 'C:/Users/mwang/Desktop/SchoolSmart_Project/smartsys/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+#AI tutor model
+model_name = "Qwen/Qwen2.5-Coder-32B-Instruct"
+pipe = pipeline("text-generation", model=model_name)
 
 class UserRole(PyEnum):
     student = 'student'
@@ -700,6 +704,26 @@ def view_grades():
 @login_required
 def mygrades():
     return render_template('mygrades.html')
+
+@app.route('/myai')
+@login_required
+def myai():
+    return render_template("myai.html")
+
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.json
+    user_message = data.get("message", "")
+
+    if not user_message:
+        return jsonify({"error": "No message provided"}), 400
+    try:
+        response = pipe(user_message, max_length=200, num_return_sequences=1)
+        ai_response = response[0]['generated_text']
+        return jsonify({"response": ai_response})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.debug = True
     socketio.run(app)

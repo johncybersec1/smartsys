@@ -8,4 +8,5 @@ pandas
 openpyxl
 flask_socketio
 Flask-Login
+transformers
 cryptography
