@@ -34,7 +34,7 @@ UPLOAD_FOLDER = 'C:/Users/mwang/Desktop/SchoolSmart_Project/smartsys/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #AI tutor model
-text_generator = pipeline("text-generation", model="gpt2")
+text_generator = pipeline("text-generation", model="gpt2", device_map="cpu")
 
 class UserRole(PyEnum):
     student = 'student'
