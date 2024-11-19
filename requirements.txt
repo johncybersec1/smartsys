@@ -11,4 +11,5 @@ Flask-Login
 transformers
 torch
 tensorflow
+tf-keras
 cryptography
