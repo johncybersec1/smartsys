@@ -34,8 +34,7 @@ UPLOAD_FOLDER = 'C:/Users/mwang/Desktop/SchoolSmart_Project/smartsys/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #AI tutor model
-model_name = "Qwen/Qwen2.5-Coder-32B-Instruct"
-pipe = pipeline("text-generation", model=model_name)
+text_generator = pipeline("text-generation", model="gpt2")
 
 class UserRole(PyEnum):
     student = 'student'
@@ -712,17 +711,15 @@ def myai():
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.json
-    user_message = data.get("message", "")
-
+    user_message = request.json.get("message", "")
     if not user_message:
-        return jsonify({"error": "No message provided"}), 400
-    try:
-        response = pipe(user_message, max_length=200, num_return_sequences=1)
-        ai_response = response[0]['generated_text']
-        return jsonify({"response": ai_response})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Message is required"}), 400
+
+    # Generate AI response using GPT-2
+    ai_response = text_generator(user_message, max_length=50, num_return_sequences=1)
+    response_text = ai_response[0]["generated_text"]
+
+    return jsonify({"response": response_text})
 
 if __name__ == '__main__':
     app.debug = True
