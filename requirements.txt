@@ -8,8 +8,4 @@ pandas
 openpyxl
 flask_socketio
 Flask-Login
-transformers
-torch
-tensorflow
-tf-keras
 cryptography

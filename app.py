@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session,send_from_directory
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -12,7 +12,6 @@ from enum import Enum as PyEnum
 from werkzeug.utils import secure_filename
 from werkzeug.utils import safe_join
 from flask import send_file
-from transformers import pipeline
 
 app = Flask(__name__)
 
@@ -33,8 +32,6 @@ db = SQLAlchemy(app)
 UPLOAD_FOLDER = 'C:/Users/mwang/Desktop/SchoolSmart_Project/smartsys/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-#AI tutor model
-text_generator = pipeline("text-generation", model="gpt2", device_map="cpu")
 
 class UserRole(PyEnum):
     student = 'student'
@@ -703,23 +700,6 @@ def view_grades():
 @login_required
 def mygrades():
     return render_template('mygrades.html')
-
-@app.route('/myai')
-@login_required
-def myai():
-    return render_template("myai.html")
-
-@app.route("/ask", methods=["POST"])
-def ask():
-    user_message = request.json.get("message", "")
-    if not user_message:
-        return jsonify({"error": "Message is required"}), 400
-
-    # Generate AI response using GPT-2
-    ai_response = text_generator(user_message, max_length=50, num_return_sequences=1)
-    response_text = ai_response[0]["generated_text"]
-
-    return jsonify({"response": response_text})
 
 if __name__ == '__main__':
     app.debug = True
