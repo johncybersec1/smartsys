@@ -182,7 +182,7 @@ class Todo(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow())  # Optional due date for the task
     
     # Relationship to link back to the Student model
-    student = db.relationship('User', backref=db.backref('todos', lazy=True))
+    student = db.relationship('User')
 
     def __repr__(self):
         return (f"<Todo id={self.id}, task='{self.task[:20]}...', "
