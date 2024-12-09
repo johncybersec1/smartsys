@@ -174,11 +174,11 @@ class User(db.Model, UserMixin):
 class Todo(db.Model):
     __tablename__ = 'todo_list'  # Explicitly naming the table
     id = db.Column(db.Integer, primary_key=True)
-    task = db.Column(db.String(255), nullable=False)  # Shortened length to 255 for consistency
-    description = db.Column(db.Text, nullable=True)  # Optional detailed description of the task
-    due_date = db.Column(db.DateTime, nullable=True)  # Optional due date for the task
-    is_completed = db.Column(db.Boolean, default=False, nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)  # Link to the Student table
+    task = db.Column(db.String(255), nullable=False)  # Shortened length to 255 for consistency
+    is_completed = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # Optional due date for the task
     
     # Relationship to link back to the Student model
     student = db.relationship('User', backref=db.backref('todos', lazy=True))
