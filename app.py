@@ -187,25 +187,36 @@ class Todo(db.Model):
         return (f"<Todo id={self.id}, task='{self.task[:20]}...', "
                 f"is_completed={self.is_completed}, due_date={self.due_date}>")
 
+@app.route('/add_task', methods=['POST'])
+@login_required
+def add_task():
+    task_text = request.form.get('task')
+    if task_text:
+        # Create a new to-do task and associate it with the current user (student)
+        new_task = Todo(task=task_text, student_id=current_user.id)
+        db.session.add(new_task)
+        db.session.commit()
+    return redirect(url_for('stddashboard'))  # Redirect to the student dashboard
+
 @app.route('/delete_task/<int:id>', methods=['POST'])
+@login_required
 def delete_task(id):
-    student_id = current_user.id
-    if student_id:
-        task = Todo.query.get_or_404(id)
-        if task.student_id == student_id:
-            db.session.delete(task)
-            db.session.commit()
-    return redirect(url_for('todo'))
+    task = Todo.query.get_or_404(id)
+    if task.student_id == current_user.id:
+        db.session.delete(task)
+        db.session.commit()
+    return redirect(url_for('stddashboard'))  # Redirect to the student dashboard
+
 
 @app.route('/update_task/<int:id>', methods=['POST'])
+@login_required
 def update_task(id):
-    student_id = current_user.id
-    if student_id:
-        task = Todo.query.get_or_404(id)
-        if task.student_id == student_id:
-            task.is_completed = not task.is_completed  # Toggle completion status
-            db.session.commit()
-    return redirect(url_for('todo'))
+    task = Todo.query.get_or_404(id)
+    if task.student_id == current_user.id:
+        task.is_completed = not task.is_completed  # Toggle completion status
+        db.session.commit()
+    return redirect(url_for('stddashboard'))  # Redirect to the student dashboard
+
 
 @login_manager.user_loader
 def load_user(user_id):

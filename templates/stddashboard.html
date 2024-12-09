@@ -18,7 +18,7 @@
                 <li><a href="{{ url_for('view_grades') }}">📊 Grades</a></li>
                 <li><a href="{{ url_for('inbox_list') }}">📨 Messages</a></li>
                 <li><a href="#">⚙️ Settings</a></li>
-                <li><a href="{{ url_for('logout') }}" class="logout">🚪 Logout</a></li>
+                <li><a href="{{ url_for('logout') }}" class="logout">Logout</a></li>
             </ul>
         </aside>
 
@@ -65,27 +65,33 @@
                                 <input type="text" name="task" class="form-control me-2" placeholder="Add a new task" required>
                                 <button type="submit" class="btn btn-primary">Add</button>
                             </form>
-                    
+                        
                             <!-- Display To-Do List -->
                             <ul class="list-group">
-                                {% for todo in todos %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <input type="checkbox" 
-                                               onchange="document.getElementById('update-task-{{ todo.id }}').submit()"
-                                               {% if todo.is_completed %}checked{% endif %}>
-                                        <span class="{% if todo.is_completed %}text-decoration-line-through{% endif %}">
-                                            {{ todo.task }}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <form id="update-task-{{ todo.id }}" action="{{ url_for('update_task', id=todo.id) }}" method="POST" style="display:inline;"></form>
-                                        <form action="{{ url_for('delete_task', id=todo.id) }}" method="POST" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
-                                    </div>
-                                </li>
-                                {% endfor %}
+                                {% if todos %}
+                                    {% for todo in todos %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <input type="checkbox" 
+                                                onchange="document.getElementById('update-task-{{ todo.id }}').submit()"
+                                                {% if todo.is_completed %}checked{% endif %}>
+                                            <span class="{% if todo.is_completed %}text-decoration-line-through{% endif %}">
+                                                {{ todo.task }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <form id="update-task-{{ todo.id }}" action="{{ url_for('update_task', id=todo.id) }}" method="POST" style="display:inline;">
+                                                <!-- Hidden form to update task completion -->
+                                            </form>
+                                            <form action="{{ url_for('delete_task', id=todo.id) }}" method="POST" style="display:inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="list-group-item">No tasks available.</li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
