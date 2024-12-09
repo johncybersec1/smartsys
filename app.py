@@ -11,7 +11,7 @@ from enum import Enum as PyEnum
 from werkzeug.utils import secure_filename
 from werkzeug.utils import safe_join
 from flask import send_file
-from datetime import datetime
+import datetime
 
 
 app = Flask(__name__)
@@ -46,7 +46,7 @@ class Message(db.Model):  # Corrected to db.Model
     sender_id = db.Column(db.Integer, db.ForeignKey('students.id'))
     receiver_id = db.Column(db.Integer, db.ForeignKey('students.id'))
     content = db.Column(db.String(600), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow())
     sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
 
@@ -178,8 +178,8 @@ class Todo(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)  # Link to the Student table
     task = db.Column(db.String(255), nullable=False)  # Shortened length to 255 for consistency
     is_completed = db.Column(db.Boolean, default=False, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # Optional due date for the task
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow())  # Optional due date for the task
     
     # Relationship to link back to the Student model
     student = db.relationship('User', backref=db.backref('todos', lazy=True))
