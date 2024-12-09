@@ -3,405 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard | SmartSchool</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='fav.ico') }}" type="image/x-icon">
-    <style>
-        /* Override Bootstrap styles for a custom look */
-        body {
-            background-color: #e61b00;
-            background-image: url("/static/3px-tile.png");
-            font-family: 'Arial', sans-serif;
-        }
-        body, .container {
-            overflow-x: hidden; /* Prevent horizontal scrolling */
-        }
-
-        .card {
-            width: 100%; /* Make the card take full width */
-            max-width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        .card-body {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        .profile-card, .calendar {
-            width: 100%; /* Ensure they fit within the container */
-            margin: 0 auto;
-        }
-
-        .card-today {
-            min-height: auto; /* Ensure cards are not too tall */
-        }
-
-        /* Adjust layout for smaller screens */
-        @media (max-width: 767px) {
-            .col-sm-12, .col-7, .col-md-4, .col-md-12 {
-                width: 80% !important;
-                margin-bottom: 20px;
-            }
-        }
-        h2 {
-            color: #343a40; /* Darker text color for headings */
-        }
-        .card:hover {
-            transform: scale(1.02); /* Scale up on hover */
-        }
-        .profile-card {
-            background: linear-gradient(45deg, #6f42c1, #e83e8c); /* Gradient background */
-            color: white;
-            width: 100%; /* Use full width */
-            max-width: 450px; /* Ensure it doesn't exceed 450px on larger screens */
-            margin-right: 10px;
-        }
-        .profile-card img {
-            border-radius: 50%; /* Circular profile picture */
-            border: 3px solid white; /* Border around the profile picture */
-        }
-        .announcement {
-            background-color: #ffeeba; /* Light yellow for announcements */
-            border-left: 5px solid #ffc107; /* Yellow left border */
-            padding: 15px; /* Padding for better spacing */
-            margin-bottom: 15px; /* Space between announcements */
-        }
-        /* Dynamic Calendar styling */
-        .calendar {
-            background-color: white;
-            color: #343a40;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Soft shadow */
-            transition: transform 0.3s;
-        }
-        .calendar:hover {
-            transform: scale(1.03); /* Slight zoom on hover */
-        }
-        .calendar h6 {
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            color: #6f42c1;
-        }
-        .calendar table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-        }
-        .calendar th, .calendar td {
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .calendar td {
-            cursor: pointer;
-        }
-        .calendar td:hover {
-            background-color: #f0f0f0;
-        }
-        /* Highlight current day */
-        .current-day {
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3); /* Shadow around the current day */
-        }
-        /* Sidebar Styling */
-        .sidebar {
-            background-color: rgba(255, 99, 71, 0.4); /* Light Tomato Red with 20% opacity */
-            color: white;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100%;
-            padding-top: 20px;
-            z-index: 1000;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);  /* Soft shadow on the right for depth */
-            border-radius: 8px 0 0 8px;  /* Rounded corners on the left side */
-            transition: all 0.3s ease;  /* Smooth transition */
-        }
-
-        /* Sidebar Header (Logo + Title) */
-        .sidebar .navbar-brand {
-            font-size: 1.6rem;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .sidebar .navbar-brand img {
-            width: 30px;
-            margin-right: 10px;
-        }
-
-        /* Sidebar Links */
-        .sidebar .menu-item {
-            color: #ddd;
-            text-decoration: none;
-            display: block;
-            padding: 12px 20px;
-            font-size: 1.1rem;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .sidebar .menu-item:hover {
-            background-color: #16a085;  /* Nice teal color for hover effect */
-            transform: translateX(10px);  /* Smooth sliding effect */
-            color: white;  /* Ensure text remains white */
-        }
-
-        .sidebar .menu-item i {
-            margin-right: 10px;
-        }
-
-        /* Active Link Styling */
-        .sidebar .menu-item.active {
-            background-color: #1abc9c;  /* Greenish active background */
-            font-weight: bold;
-        }
-
-        /* Logout Link */
-        .sidebar .menu-item.text-danger {
-            color: #e74c3c !important;
-            margin-top: auto; /* Push logout to the bottom */
-        }
-
-        /* Sidebar Title */
-        .sidebar h4 {
-            font-size: 1.5rem;
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* For Mobile Devices */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: absolute;
-                transform: translateX(-100%);  /* Hide sidebar initially */
-            }
-            
-            .sidebar.show {
-                transform: translateX(0);  /* Show sidebar when toggled */
-            }
-        }
-        /* Hide sidebar by default on small screens */
-        .sidebar.hidden {
-            transform: translateX(-100%); /* Move sidebar out of view */
-        }
-        @media (max-width: 768px) {
-            .container {
-                margin-left: 0; /* Remove margin on small screens */
-            }
-
-            .sidebar {
-                position: absolute; /* Change to absolute for better toggling */
-                transform: translateX(-100%); /* Hide off-screen */
-            }
-
-            .sidebar.show {
-                transform: translateX(0); /* Show sidebar */
-            }
-        }
-        /* Custom Styles */
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 20px; /* Ensures inner spacing */
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box; /* Ensures padding doesn't expand beyond screen width */
-        }
-        /* Apply margin-left on screens wider than 992px (like laptops and desktops) */
-        @media (min-width: 992px) {
-            .container {
-                margin-left: 250px; /* Add margin only on larger screens */
-                width: calc(100% - 250px); /* Ensure container takes the remaining width */
-            }
-            .footer {
-                background: transparent;
-                color: black;
-                text-align: center;
-                bottom: 0;
-                width: 100%;
-                margin: 0px;
-            }
-        }
-
-        /* Remove margin-left on smaller screens to use full width */
-        @media (max-width: 991px) {
-            .container {
-                margin-left:0px; /* Remove the left margin on mobile */
-                width: 100%; /* Use full width on smaller screens */
-            }
-            .footer {
-                background: transparent;
-                color: black;
-                text-align: center;
-                bottom: 0;
-                width: 100%;
-                margin: 0px;
-            }
-        }
-        /* Navbar Styles */
-        .navbar {
-            background-color:red;
-            width: 100%; /* Full width navbar */
-            height: 75px;
-        }
-
-        .navbar-brand {
-            color: #fff !important; /* White brand color */
-            font-weight: bold;
-            font-size: 1.8rem; /* Larger font size for brand */
-        }
-
-        .navbar-nav .nav-link {
-            color: #fff !important; /* White color for nav links */
-            font-weight: bold; /* Bold font for links */
-        }
-        .mybtn{
-            margin-left: auto;
-        }
-        .mytt{
-            display: flex;
-            color: #fff !important; /* White brand color */
-            font-weight: bold;
-            font-size: 1.8rem; /* Larger font size for brand */
-            margin-left: 500px;
-        }
-        .card-body {
-            word-wrap: break-word; /* Ensures long words will break and wrap within the card */
-            overflow-wrap: break-word; /* Allows wrapping for lengthy text */
-            white-space: nowrap; /* Prevent text from wrapping */
-            overflow:hidden;
-        }
-
-        /* Optional: For very small screens, ensure padding adjusts */
-        @media (max-width: 576px) {
-            .card {
-                width: 100%;
-            }
-
-            .cardtoday {
-                flex-direction: column;
-                margin-left: 0;
-            }
-
-            .card-today {
-                margin-left: 0;
-            }
-
-            .mytt {
-                margin-left: 0;
-                text-align: center;
-            }
-            
-        }
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="mystyles.css">
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <a class="navbar-brand" href="{{ url_for('stddashboard') }}">
-            <img src="/static/S.png" alt="Logo" class="sidebar-logo"> SmartSchool
-        </a>
-        <br>
-        <a href="{{ url_for('timetable') }}" class="menu-item"><i class="fas fa-calendar-alt"></i> Timetable</a>
-        <hr>
-        <a href="{{ url_for('inbox_list') }}" class="menu-item"><i class="fas fa-envelope"></i> Inbox</a>
-        <hr>
-        <a href="{{ url_for('all_assignments') }}" class="menu-item"><i class="fas fa-file-alt"></i> Assignments</a>
-        <hr>
-        <a href="{{ url_for('view_grades') }}" class="menu-item"><i class="fas fa-graduation-cap"></i> Grades</a>
-        <hr>
-        <a href="#" class="menu-item"><i class="fas fa-video"></i> Live Classes</a>
-        <hr>
-        <a href="#" class="menu-item"><i class="fas fa-play-circle"></i> Recorded Classes</a>
-        <hr>
-        <a href="" class="menu-item"><i class="fas fa-book"></i> Library</a>
-        <hr>
-        <a href="{{ url_for('logout') }}" class="menu-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </div>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <h4 class="mytt">Dashboard</h4>
-            <div class="mybtn">
-                <button class="btn btn-outline-light ms-2" id="sidebarToggle" type="button">
-                    ☰
-                </button>
-            </div>
-        </div>
-    </nav>
-    <div class="container mt-5" id="welcome">
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>SmartSchool</h2>
+            <ul>
+                <li><a href="#">🏠 Dashboard</a></li>
+                <li><a href="{{ url_for('timetable') }}">📚 Materials</a></li>
+                <li><a href="{{ url_for('all_assignments') }}">📝 Assignments</a></li>
+                <li><a href="{{ url_for('view_grades') }}">📊 Grades</a></li>
+                <li><a href="{{ url_for('inbox_list') }}">📨 Messages</a></li>
+                <li><a href="#">⚙️ Settings</a></li>
+                <li><a href="{{ url_for('logout') }}" class="logout">🚪 Logout</a></li>
+            </ul>
+        </aside>
 
-        <div class="row mb-4">
-            <!-- Profile Section -->
-            <div class="col-md-4 col-sm-12 mb-3">
-                <div class="card shadow profile-card">
-                    <div class="card-header">
-                        <h5>Profile</h5>
-                    </div>
-                    <div class="card-body text-center">
-                        <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo" width="100">
-                        <h5>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</h5>
-                        <p><strong>Email:</strong> {{ session.get('email', 'example@example.com') }}</p>
-                        <p><strong>Phone:</strong> {{ session.get('phone', 'N/A') }}</p>
-                        <!-- Calendar Display in Profile -->
-                        <div class="calendar text-center" id="calendar">
-                            <h6 id="calendar-month"></h6>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Mon</th>
-                                        <th>Tue</th>
-                                        <th>Wed</th>
-                                        <th>Thu</th>
-                                        <th>Fri</th>
-                                        <th>Sat</th>
-                                        <th>Sun</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="calendar-body">
-                                    <!-- Dynamic Calendar -->
-                                </tbody>
-                            </table>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <h1>Welcome, Student</h1>
+                <div class="profile">
+                    <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo" width="100" alt="Profile Picture">
+                    <span>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</span>
+                </div>
+            </header>
+            <section>
+                <div class="calendar text-center" id="calendar">
+                    <h6 id="calendar-month"></h6>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mon</th>
+                                <th>Tue</th>
+                                <th>Wed</th>
+                                <th>Thu</th>
+                                <th>Fri</th>
+                                <th>Sat</th>
+                                <th>Sun</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendar-body">
+                            <!-- Dynamic Calendar -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dashboard-content">
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>To-Do List</h3>
+                        </div>
+                        <div class="card-body">
+                            <!-- Form to Add a New Task -->
+                            <form action="{{ url_for('add_task') }}" method="POST" class="mb-3 d-flex">
+                                <input type="text" name="task" class="form-control me-2" placeholder="Add a new task" required>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </form>
+                    
+                            <!-- Display To-Do List -->
+                            <ul class="list-group">
+                                {% for todo in todos %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <input type="checkbox" 
+                                               onchange="document.getElementById('update-task-{{ todo.id }}').submit()"
+                                               {% if todo.is_completed %}checked{% endif %}>
+                                        <span class="{% if todo.is_completed %}text-decoration-line-through{% endif %}">
+                                            {{ todo.task }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <form id="update-task-{{ todo.id }}" action="{{ url_for('update_task', id=todo.id) }}" method="POST" style="display:inline;"></form>
+                                        <form action="{{ url_for('delete_task', id=todo.id) }}" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
-                </div>
-        
-                <!-- Announcements Section -->
-                <div class="announcements mt-2">
+                    
+                    <div class="card">
+                        <h3>Math Homework</h3>
+                        <p>Due tomorrow: Algebra and Geometry exercises.</p>
+                        <button>View Details</button>
+                    </div>
+                    <div class="announcements mt-2">
                     {% for announcement in announcements %}
                         <div class="card mb-3">
                             <div class="card-header">{{ announcement.title }}</div>
@@ -414,26 +108,11 @@
                         <p>No announcements available.</p>
                     {% endfor %}
                 </div>
-            </div>
-        
-            <!-- Right Side Section Container -->
-            <div class="col-md-8 mb-3">
-                <div class="row">
-                    <!-- Upcoming Exams Section -->
-                    <div class="col-md-12 col-7 mb-3">
-                        <div class="card shadow">
-                            <div class="card-header bg-primary text-white">
-                                <h5>Upcoming Exams</h5>
-                            </div>
-                            <div class="card-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item">Data S Management - <strong>25th Oct 2024</strong></li>
-                                    <li class="list-group-item">Cybersecurity - <strong>30th Oct 2024</strong></li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="card">
+                        <h3>Physics Notes</h3>
+                        <p>New materials added for Quantum Mechanics.</p>
+                        <button>Access Materials</button>
                     </div>
-        
                     <!-- Assignments Section -->
                     <div class="assignments col-md-12 col-7 mb-3">
                         <div class="card">
@@ -463,45 +142,21 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        <!-- Today’s Classes Section -->
-        <div class="col-md-8">            
-                <!-- New Row for Quick Links Section -->
-            <div class="row">
-                <div class="col-md-12 col-7 mb-3">
-                    <div class="col-md-12">
-                        <div class="card shadow">
-                            <div class="card-header bg-info text-white">
-                                <h5>Quick Links</h5>
-                            </div>
-                            <div class="card-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item"><a href="{{ url_for('view_grades') }}" class="text-decoration-none">View Grades</a></li>
-                                    <li class="list-group-item"><a href="" class="text-decoration-none">Check Attendance</a></li>
-                                    <li class="list-group-item"><a href="" class="text-decoration-none">Access Resources</a></li>
-                                    <li class="list-group-item"><a href="" class="text-decoration-none">Contact Support</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="card">
+                        <h3>Assignment Upload</h3>
+                        <p>Upload your completed project report here.</p>
+                        <button>Upload</button>
                     </div>
                 </div>
-            </div>
-            </div>
-        </div>
+            </section>
+            <footer class="footer">
+                <p>© 2024 SmartSchool. All rights reserved.</p>
+                <p>
+                    <a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a>
+                </p>
+            </footer>
+        </main>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>© 2024 SmartSchool. All rights reserved.</p>
-        <p>
-            <a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a>
-        </p>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <!-- JavaScript for Dynamic Calendar -->
     <script>
         function generateCalendar() {
@@ -553,13 +208,6 @@
         }
 
         window.onload = generateCalendar;
-    </script>
-    <script>
-        // Toggle sidebar visibility
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-            var sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('show');
-        });
     </script>
 </body>
 </html>

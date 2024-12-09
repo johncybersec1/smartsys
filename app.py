@@ -165,11 +165,55 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())  # Auto timestamp for user creation
     profile_photo = db.Column(db.String(200))
     role = db.Column(SQLAEnum(UserRole), default=UserRole.student, nullable=False)
+    todos = db.relationship('Todo', back_populates='student', cascade='all, delete-orphan')
 
 
     def __repr__(self):
         return f'<User {self.first_name}>'
-# Define user_loader function for Flask-Login
+
+class Todo(db.Model):
+    __tablename__ = 'todo_list'  # Explicitly naming the table
+    id = db.Column(db.Integer, primary_key=True)
+    task = db.Column(db.String(255), nullable=False)  # Shortened length to 255 for consistency
+    description = db.Column(db.Text, nullable=True)  # Optional detailed description of the task
+    due_date = db.Column(db.DateTime, nullable=True)  # Optional due date for the task
+    is_completed = db.Column(db.Boolean, default=False, nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)  # Link to the Student table
+    
+    # Relationship to link back to the Student model
+    student = db.relationship('User', backref=db.backref('todos', lazy=True))
+
+    def __repr__(self):
+        return (f"<Todo id={self.id}, task='{self.task[:20]}...', "
+                f"is_completed={self.is_completed}, due_date={self.due_date}>")
+
+@app.route('/')
+def todo():
+    # Get the student's to-do list using the session's student_id
+    student_id = current_user.id # Assuming session management
+    # Get the to-do list for the logged-in student
+    todos = Todo.query.filter_by(student_id=student_id).order_by(Todo.created_at.desc()).all()
+    return render_template('stddashboard.html', todos=todos)
+
+@app.route('/delete_task/<int:id>', methods=['POST'])
+def delete_task(id):
+    student_id = current_user.id
+    if student_id:
+        task = Todo.query.get_or_404(id)
+        if task.student_id == student_id:
+            db.session.delete(task)
+            db.session.commit()
+    return redirect(url_for('todo'))
+
+@app.route('/update_task/<int:id>', methods=['POST'])
+def update_task(id):
+    student_id = current_user.id
+    if student_id:
+        task = Todo.query.get_or_404(id)
+        if task.student_id == student_id:
+            task.is_completed = not task.is_completed  # Toggle completion status
+            db.session.commit()
+    return redirect(url_for('todo'))
 
 @login_manager.user_loader
 def load_user(user_id):

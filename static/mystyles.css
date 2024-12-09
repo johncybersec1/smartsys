@@ -1,0 +1,208 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #e4ebf5);
+    display: flex;
+    height: 100vh;
+    color: #333;
+}
+
+/* Dashboard Layout */
+.dashboard {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: rgba(14, 12, 12, 0.6);
+    width: 250px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    height: 1100px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+    margin-bottom: 40px;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.logout {
+    margin-top: auto;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Dashboard Content */
+.dashboard-content {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+/* Cards */
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.card button {
+    background: #3b3f58;
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.card button:hover {
+    background: #f36349;
+}
+/* Dynamic Calendar styling */
+.calendar {
+    background-color: white;
+    color: #343a40;
+    margin-bottom: 10px;
+    margin-top: 2px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Soft shadow */
+    transition: transform 0.3s;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 380px;
+    height: 300px;
+}
+.calendar:hover {
+    transform: scale(1.03); /* Slight zoom on hover */
+}
+.calendar h6 {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #6f42c1;
+}
+.calendar table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+.calendar th, .calendar td {
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.calendar td {
+    cursor: pointer;
+}
+.calendar td:hover {
+    background-color: #f0f0f0;
+}
+/* Highlight current day */
+.current-day {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3); /* Shadow around the current day */
+}
+.footer {
+    background: transparent;
+    color: black;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    margin-top: 10px;
+}
