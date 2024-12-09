@@ -187,14 +187,6 @@ class Todo(db.Model):
         return (f"<Todo id={self.id}, task='{self.task[:20]}...', "
                 f"is_completed={self.is_completed}, due_date={self.due_date}>")
 
-@app.route('/')
-def todo():
-    # Get the student's to-do list using the session's student_id
-    student_id = current_user.id # Assuming session management
-    # Get the to-do list for the logged-in student
-    todos = Todo.query.filter_by(student_id=student_id).order_by(Todo.created_at.desc()).all()
-    return render_template('stddashboard.html', todos=todos)
-
 @app.route('/delete_task/<int:id>', methods=['POST'])
 def delete_task(id):
     student_id = current_user.id
@@ -344,7 +336,11 @@ def stddashboard():
     announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()  # Sorted by creation date
     users = User.query.filter(User.id != user_id).all()
     submissions = Submission.query.filter_by(student_id=user_id).all()
-    return render_template('stddashboard.html', user=current_user, received_messages=received_messages, assignments = assignments, announcements=announcements, users=users, submissions = submissions)
+
+    # Fetch the user's to-do list
+    todos = Todo.query.filter_by(student_id=user_id).order_by(Todo.created_at.desc()).all()
+
+    return render_template('stddashboard.html', user=current_user, received_messages=received_messages, assignments = assignments, announcements=announcements, users=users, submissions = submissions, todos = todos)
 
 # New route for the timetable with pagination
 @app.route('/timetable')
