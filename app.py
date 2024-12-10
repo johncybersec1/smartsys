@@ -363,14 +363,11 @@ def timetable():
         flash("You need to login first!", "danger")
         return redirect(url_for('login'))
 
-    # Load the entire Excel sheet as it is
-    df = pd.read_excel('schedule.xlsx')
-
-    # Convert the entire DataFrame to HTML (without any changes)
-    timetable_html = df.to_html(classes='table table-bordered table-striped text-center', index=False)
-
-    # Render the timetable on the page
-    return render_template('timetable.html', timetable_html=timetable_html)
+    # Embed Google Sheets iframe code
+    google_sheets_embed_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYdN6R4Dj9V2xNN-Y4LfN7eW9Tm9b7mZaVQYvRIZ5OUnFnYIcJoY4EVo171cjCDGWpST5LEd3VvYWG/pubhtml"
+    
+    # Render the timetable on the page with the iframe URL
+    return render_template('timetable.html', google_sheets_embed_url=google_sheets_embed_url)
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])
 @login_required

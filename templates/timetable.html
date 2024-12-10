@@ -10,8 +10,8 @@
 <body>
     <div class="container mt-4">
         <h1 class="mb-4">Timetable</h1>
-        <!-- Display the timetable as HTML table -->
-        {{ timetable_html|safe }}
+        <!-- Embed the Google Sheets iframe -->
+        <iframe src="{{ google_sheets_embed_url }}" width="100%" height="600"></iframe>
     </div>
 </body>
 </html>
