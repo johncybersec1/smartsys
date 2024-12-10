@@ -753,6 +753,11 @@ def view_grades():
 def mygrades():
     return render_template('mygrades.html')
 
+@app.route('/settings')
+@login_required
+def settings():
+    return render_template('settings.html')
+
 if __name__ == '__main__':
     app.debug = True
     socketio.run(app)
