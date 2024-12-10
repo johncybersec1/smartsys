@@ -6,12 +6,34 @@
     <title>Timetable</title>
     <!-- Include Bootstrap CSS for styling (optional) -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container{
+            margin-left: 150px;
+        }
+        body {
+            background-image: url('/static/stddash.jpg');
+            background-size:3000px;
+            background-repeat: no-repeat;
+        }
+        .backl{
+            margin: 20px;
+            color: whitesmoke;
+        }
+        .backl a {
+            color: white; /* Sets the text color of the link to white */
+            text-decoration: none; /* Removes the underline from the link */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
         <h1 class="mb-4">Timetable</h1>
         <!-- Embed the Google Sheets iframe -->
-        <iframe src="{{ google_sheets_embed_url }}" width="100%" height="600"></iframe>
+        <iframe src="{{ google_sheets_embed_url }}" width=1600px height=800px></iframe>
+    </div>
+    <!-- Back to Dashboard Link -->
+    <div class="backl">
+        <a href="{{ url_for('stddashboard') }}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
     </div>
 </body>
 </html>
