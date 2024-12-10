@@ -12,7 +12,9 @@
     <style>
         /* Background */
         body {
-            background: linear-gradient(to right, #fe7b7b, #fa6363);
+            background-image: url('/static/stddash.jpg');
+            background-size:3000px;
+            background-repeat: no-repeat;
             font-family: 'Arial', sans-serif;
         }
         .navbar {
@@ -44,7 +46,7 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
         .grades-card h2 {
-            color: #f36349;
+            color:rgba(0, 123, 255);
             font-weight: bold;
             margin-bottom: 1.5rem;
             text-align: center;
@@ -54,7 +56,7 @@
             vertical-align: middle;
         }
         .btn-cta {
-            background: linear-gradient(to right, #ff5f5f, #fe7b7b);
+            background:  rgba(0, 123, 255); 
             color: white;
             font-size: 1.1rem;
             padding: 0.75rem;
@@ -63,8 +65,9 @@
             font-weight: bold;
             transition: background 0.3s ease;
         }
-        .btn-cta:hover {
-            background: linear-gradient(to right, #fe7b7b, #fa6363);
+        .btn-cta:hover{
+            background: rgb(2, 44, 90);
+            color: white;
         }
 
         /* Custom Footer */
@@ -76,6 +79,15 @@
             font-size: 0.9rem;
             opacity: 0.9;
         }
+        .backl{
+            margin: 20px;
+            color: whitesmoke;
+        }
+        .backl a {
+            color: white; /* Sets the text color of the link to white */
+            text-decoration: none; /* Removes the underline from the link */
+        }
+
     </style>
 </head>
 <body>
@@ -89,6 +101,10 @@
             </a>
         </div>
     </nav>
+    <!-- Back to Dashboard Link -->
+    <div class="backl">
+        <a href="{{ url_for('stddashboard') }}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
 
     <!-- Grades Table Card -->
     <div class="grades-card">

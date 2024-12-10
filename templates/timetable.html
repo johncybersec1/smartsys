@@ -3,92 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timetable | SmartSchool</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="static/styles.css">
-    <link rel="icon" href="{{ url_for('static', filename='fav.ico') }}" type="image/x-icon">
-    <style>
-        body {
-            background-color: #b8d9e1; /* Light background for contrast */
-            font-family: 'Arial', sans-serif;
-        }
-        h4 {
-            color: #343a40; /* Darker text color for headings */
-            margin-bottom: 20px; /* Spacing below the title */
-        }
-        .table {
-            border-radius: 10px; /* Rounded corners for table */
-            overflow: hidden; /* Ensure no overflow */
-        }
-        th {
-            background-color: #007bff; /* Blue header */
-            color: white; /* White text for headers */
-        }
-        td {
-            background-color: #686ee5; /* White background for cells */
-            transition: background-color 0.3s; /* Smooth background transition */
-        }
-        td:hover {
-            background-color: #f06fe1; /* Light blue on hover */
-        }
-        .no-class {
-            color: #6c757d; /* Grey color for "No class" text */
-            font-style: italic; /* Italics for better emphasis */
-        }
-        .footer {
-            margin-top: 20px; /* Spacing for footer */
-            background-color: #343a40; /* Dark footer background */
-            color: white; /* White text for footer */
-            text-align: center; /* Center footer text */
-            padding: 10px 0; /* Padding for footer */
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
-        .pagination {
-            justify-content: center; /* Center pagination links */
-        }
-    </style>
+    <title>Timetable</title>
+    <!-- Include Bootstrap CSS for styling (optional) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">SmartSchool</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('stddashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="container mt-5">
-        <h4 class="text-center">Your Timetable</h4>
-        <div id="timetable-content">
-            {{ timetable_html | safe }}  <!-- Render the timetable HTML here -->
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>© 2024 SmartSchool. All rights reserved.</p>
-            <p>
-                <a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a>
-            </p>
-        </footer>
+    <div class="container mt-4">
+        <h1 class="mb-4">Timetable</h1>
+        <!-- Display the timetable as HTML table -->
+        {{ timetable_html|safe }}
     </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

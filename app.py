@@ -363,39 +363,13 @@ def timetable():
         flash("You need to login first!", "danger")
         return redirect(url_for('login'))
 
-    # Load the timetable from the Excel file
+    # Load the entire Excel sheet as it is
     df = pd.read_excel('schedule.xlsx')
 
-    # Filter out rows with 'DAY' and 'GROUP' in the 'Computer Science sem' column
-    df_filtered = df[~df['COMPUTER SCIENCE semester V academic year 2024/2025'].isin(['DAY', 'GROUP', 'Exams: Data security management', 'HOUR'])]
+    # Convert the entire DataFrame to HTML (without any changes)
+    timetable_html = df.to_html(classes='table table-bordered table-striped text-center', index=False)
 
-    # Extract the required columns
-    time_slots = df_filtered['COMPUTER SCIENCE semester V academic year 2024/2025']
-    monday_schedule = df_filtered['Unnamed: 1']
-    tuesday_schedule = df_filtered['Unnamed: 2']
-    wednesday_schedule = df_filtered['Unnamed: 3']
-    thursday_schedule = df_filtered['Unnamed: 4']
-    friday_schedule = df_filtered['Unnamed: 5']
-
-    # Create the timetable DataFrame
-    timetable = pd.DataFrame({
-        'Time': time_slots,
-        'Monday': monday_schedule,
-        'Tuesday': tuesday_schedule,
-        'Wednesday': wednesday_schedule,
-        'Thursday': thursday_schedule,
-        'Friday': friday_schedule
-    })
-
-    # Replace NaN values with 'No class'
-    timetable.fillna(' - ', inplace=True)
-
-    # Replace \n characters with <br> for HTML line breaks
-    timetable = timetable.applymap(lambda x: x.replace('\n', '<br>') if isinstance(x, str) else x)
-
-    # Convert the full timetable to HTML
-    timetable_html = timetable.to_html(classes='table table-bordered table-striped text-center', index=False, escape=False)
-
+    # Render the timetable on the page
     return render_template('timetable.html', timetable_html=timetable_html)
 
 @app.route('/reply_message/<int:message_id>', methods=['POST'])
