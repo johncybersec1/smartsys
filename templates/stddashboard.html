@@ -24,15 +24,15 @@
             </ul>
         </aside>
 
+        <div class="profile-container">
+            <div class="profile">
+                <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo" width="100" alt="Profile Picture">
+                <span>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</span>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <main class="main-content">
-            <header>
-                <h1>Welcome, Student</h1>
-                <div class="profile">
-                    <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo" width="100" alt="Profile Picture">
-                    <span>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</span>
-                </div>
-            </header>
             <section>
                 <div class="calendar text-center" id="calendar">
                     <h6 id="calendar-month"></h6>

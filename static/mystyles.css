@@ -14,6 +14,23 @@ body {
     height: 100vh;
     color: #333;
 }
+/* Profile Container Styling (Fixed Positioning) */
+.profile-container {
+    position: fixed; /* Fixed to the viewport */
+    top: 20px; /* 20px from the top */
+    right: 20px; /* 20px from the right */
+    display: flex;
+    align-items: right;
+    gap: 10px;
+    z-index: 1000; /* Ensures it's on top of other elements */
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds shadow for a more elevated look */
+    width: 250px;
+    font-size: 11px;
+    background-color: whitesmoke;
+}
+/* 
 
 /* Dashboard Layout */
 .dashboard {
