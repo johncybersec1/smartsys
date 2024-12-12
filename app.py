@@ -733,8 +733,10 @@ def settings():
 RSS_FEEDS = {
     "technology": "https://feeds.feedburner.com/TheHackersNews",
     "science": "https://www.sciencedaily.com/rss/top/science.xml",
-    "education": "https://www.edsurge.com/research/news.rss",
-    "health": "https://www.medicalnewstoday.com/rss"
+    "education": "https://www.eschoolnews.com/teaching-and-learning/feed/",
+    "health": "https://www.modernhealthcare.com/section/rss/news?days=7&topics=81631",
+    "architecture" : "https://architectureau.com/editorspick/rss.xml",
+    "music" : "https://pitchfork.com/feed/feed-news/rss"
 }
 
 @app.route('/blogs', methods=['GET'])
