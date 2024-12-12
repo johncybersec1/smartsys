@@ -739,10 +739,11 @@ def blog():
     # Extract blog posts from the feed
     posts = []
     for entry in feed.entries:
-        #Get thumbnail URL if it exists
+        # Get the image URL from the enclosure tag if it exists
         image_url = None
-        if 'media_content' in entry and entry.media_content:
-            image_url = entry.media_content[0]['url']  # Extract the first media content
+        if 'enclosure' in entry:
+            # Extract the image URL from the enclosure tag
+            image_url = entry.enclosures[0]['url'] if entry.enclosures else None
 
         posts.append({
             "title": entry.title,
