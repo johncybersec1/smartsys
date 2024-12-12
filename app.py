@@ -739,14 +739,17 @@ RSS_FEEDS = {
 
 @app.route('/blogs', methods=['GET'])
 def blogs():
-    # Get the selected topic from the query parameter, default to 'cs'
-    topic = request.args.get('topic', 'cs')
+    # Get the selected topic from the query parameter, default to 'technology'
+    topic = request.args.get('topic', 'technology').lower()  # Use .lower() to make it case-insensitive
+    
+    # Check if the selected topic is valid
     if topic not in RSS_FEEDS:
         return "Topic not found", 404
-
+    
     # Fetch and parse the RSS feed for the selected topic
     feed = feedparser.parse(RSS_FEEDS[topic])
     posts = []
+
     for entry in feed.entries[:10]:  # Limit to 10 posts
         image_url = None
         if 'enclosures' in entry and entry.enclosures:
@@ -759,6 +762,9 @@ def blogs():
             "published": entry.published,
             "image_url": image_url
         })
+    
+    # Debugging: Print out the topic for verification
+    print(f"Requested topic: {topic}")
 
     return render_template('myblog.html', topic=topic.capitalize(), posts=posts, topics=RSS_FEEDS)
 
