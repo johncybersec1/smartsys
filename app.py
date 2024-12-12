@@ -739,11 +739,11 @@ def blog():
     # Extract blog posts from the feed
     posts = []
     for entry in feed.entries:
-        # Get the image URL from the enclosure tag if it exists
         image_url = None
-        if 'enclosure' in entry:
-            # Extract the image URL from the enclosure tag
-            image_url = entry.enclosures[0]['url'] if entry.enclosures else None
+
+        # Check if 'enclosures' field exists and extract the image URL
+        if hasattr(entry, 'enclosures') and entry.enclosures:
+            image_url = entry.enclosures[0].get('url', None)
 
         posts.append({
             "title": entry.title,
@@ -754,6 +754,7 @@ def blog():
         })
 
     return render_template('myblog.html', posts=posts)
+
 
 if __name__ == '__main__':
     app.debug = True
