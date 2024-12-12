@@ -12,6 +12,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.utils import safe_join
 from flask import send_file
 import datetime
+import feedparser
 
 
 app = Flask(__name__)
@@ -728,6 +729,24 @@ def mygrades():
 @login_required
 def settings():
     return render_template('settings.html')
+
+@app.route('/blog')
+def blog():
+    # The Hacker News RSS feed URL
+    rss_url = "https://feeds.feedburner.com/TheHackersNews"
+    feed = feedparser.parse(rss_url)
+
+    # Extract blog posts from the feed
+    posts = []
+    for entry in feed.entries:
+        posts.append({
+            "title": entry.title,
+            "link": entry.link,
+            "summary": entry.summary,
+            "published": entry.published
+        })
+
+    return render_template('myblog.html', posts=posts)
 
 if __name__ == '__main__':
     app.debug = True

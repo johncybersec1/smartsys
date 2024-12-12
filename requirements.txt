@@ -9,3 +9,4 @@ openpyxl
 flask_socketio
 Flask-Login
 cryptography
+feedparser
