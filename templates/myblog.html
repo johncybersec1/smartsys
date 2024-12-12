@@ -31,6 +31,9 @@
             {% for post in posts %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
+                    {% if post.image_url %}
+                    <img src="{{ post.image_url }}" class="card-img-top" alt="Blog Thumbnail">
+                    {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ post.title }}</h5>
                         <p class="card-text">{{ post.summary | safe }}</p>

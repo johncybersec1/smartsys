@@ -739,11 +739,17 @@ def blog():
     # Extract blog posts from the feed
     posts = []
     for entry in feed.entries:
+        #Get thumbnail URL if it exists
+        image_url = None
+        if 'media_content' in entry and entry.media_content:
+            image_url = entry.media_content[0]['url']  # Extract the first media content
+
         posts.append({
             "title": entry.title,
             "link": entry.link,
             "summary": entry.summary,
-            "published": entry.published
+            "published": entry.published,
+            "image_url": image_url
         })
 
     return render_template('myblog.html', posts=posts)
