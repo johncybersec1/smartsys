@@ -730,20 +730,27 @@ def mygrades():
 def settings():
     return render_template('settings.html')
 
-@app.route('/blog')
-def blog():
-    # The Hacker News RSS feed URL
-    rss_url = "https://feeds.feedburner.com/TheHackersNews"
-    feed = feedparser.parse(rss_url)
+RSS_FEEDS = {
+    "technology": "https://feeds.feedburner.com/TheHackersNews",
+    "science": "https://www.sciencedaily.com/rss/top/science.xml",
+    "education": "https://www.edsurge.com/research/news.rss",
+    "health": "https://www.medicalnewstoday.com/rss"
+}
 
-    # Extract blog posts from the feed
+@app.route('/blogs', methods=['GET'])
+def blogs():
+    # Get the selected topic from the query parameter, default to 'cs'
+    topic = request.args.get('topic', 'cs')
+    if topic not in RSS_FEEDS:
+        return "Topic not found", 404
+
+    # Fetch and parse the RSS feed for the selected topic
+    feed = feedparser.parse(RSS_FEEDS[topic])
     posts = []
-    for entry in feed.entries:
+    for entry in feed.entries[:10]:  # Limit to 10 posts
         image_url = None
-
-        # Check if 'enclosures' field exists and extract the image URL
-        if hasattr(entry, 'enclosures') and entry.enclosures:
-            image_url = entry.enclosures[0].get('url', None)
+        if 'enclosures' in entry and entry.enclosures:
+            image_url = entry.enclosures[0]['url']
 
         posts.append({
             "title": entry.title,
@@ -753,7 +760,7 @@ def blog():
             "image_url": image_url
         })
 
-    return render_template('myblog.html', posts=posts)
+    return render_template('myblog.html', topic=topic.capitalize(), posts=posts, topics=RSS_FEEDS)
 
 
 if __name__ == '__main__':
