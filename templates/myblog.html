@@ -30,6 +30,7 @@
             text-align: center;
             width: 90%;
             max-width: 1200px;
+            height: 800px;
             padding: 20px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
@@ -53,7 +54,7 @@
         }
 
         .topic-select button {
-            background-color: #3498db;
+            background-color: dimgray;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -74,7 +75,8 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.2);
+            background: dimgray;
+            color: white;
             backdrop-filter: blur(10px);
             border-radius: 12px;
             width: 100%;
@@ -169,7 +171,7 @@
 
         <!-- Blog Posts -->
         <div class="row">
-            {% for post in posts %}
+            {% for post in posts[:8] %}
             <div class="col-md-3">
                 <div class="card">
                     {% if post.image_url %}
