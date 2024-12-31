@@ -27,14 +27,14 @@
     </style>
 </head>
 <body>
+    <!-- Back to Dashboard Link -->
+    <div class="backl">
+        <a href="{{ url_for('stddashboard') }}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
     <div class="container mt-4">
         <h1 class="mb-4">Timetable</h1>
         <!-- Embed the Google Sheets iframe -->
         <iframe src="{{ google_sheets_embed_url }}" width=1600px height=800px></iframe>
-    </div>
-    <!-- Back to Dashboard Link -->
-    <div class="backl">
-        <a href="{{ url_for('stddashboard') }}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
     </div>
 </body>
 </html>

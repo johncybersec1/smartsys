@@ -740,6 +740,7 @@ RSS_FEEDS = {
 }
 
 @app.route('/blogs', methods=['GET'])
+@login_required
 def blogs():
     # Get the selected topic from the query parameter, default to 'technology'
     topic = request.args.get('topic', 'technology').lower()  # Use .lower() to make it case-insensitive
