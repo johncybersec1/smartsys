@@ -1,3 +1,8 @@
+
+![Smart School Logo] (https://github.com/johncybersec1/smartsys/blob/main/Screenshot%20From%202025-01-28%2013-56-03.png)
+![Smart School Interface](https://example.com/smart-school-image.png)
+
+
 # Smart School System
 
 Smart School is an educational platform designed to facilitate seamless interaction between students and teachers. This web application is an ongoing personal project aimed at enhancing online learning experiences while also serving as a medium for improving my understanding of web security and development.
