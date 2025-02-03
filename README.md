@@ -1,7 +1,5 @@
 
-![Smart School Logo] (https://github.com/johncybersec1/smartsys/blob/main/Screenshot%20From%202025-01-28%2013-56-03.png)
-![Smart School Interface](https://example.com/smart-school-image.png)
-
+![Smart School Interface](https://github.com/johncybersec1/smartsys/blob/main/interface.jpg?raw=true)
 
 # Smart School System
 
