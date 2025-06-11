@@ -135,7 +135,7 @@ def inbox_list():
     all_user_ids = unique_receivers.union(unique_senders).all()
 
     # Fetch User objects for the unique IDs
-    unique_users = User.query.filter(User.id.in_([uid[0] for uid in all_user_ids])).all()
+    unique_users = User.query.filter(User.id != user_id).all()
 
     return render_template('inbox_list.html', users=unique_users)
 
