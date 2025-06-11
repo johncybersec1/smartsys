@@ -24,7 +24,7 @@
             </ul>
         </aside>
 
-        <a href="{{ url_for('settings') }}" class="profile-container">
+        <a href="#" class="profile-container">
             <div class="profile">
                 <img src="{{ url_for('static', filename=session.get('profile_photo', 'default.jpg')) }}" alt="Profile Photo" class="img-fluid mb-3" id="profile-photo" width="100" alt="Profile Picture">
                 <span>{{ session.get('first_name', 'Student') }} {{ session.get('last_name', '') }}</span>
